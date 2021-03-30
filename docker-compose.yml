@@ -1,0 +1,44 @@
+version: '3.8'
+
+services:
+  oc_blog_php:
+    container_name: oc_blog_php
+    build:
+      context: .
+      dockerfile: ./docker/php/Dockerfile
+    volumes:
+      - .:/srv:rw
+
+  oc_blog_db:
+    container_name: oc_blog_db
+    image: postgres
+    environment:
+      POSTGRES_USER: sulli
+      POSTGRES_PASSWORD: secret
+      POSTGRES_DB: aldeis_toolbox
+      PGDATA: /var/lib/postgresql/data/
+    ports:
+      - 8020:5432
+
+  oc_blog_pgadmin:
+    container_name: oc_blog_pgadmin
+    image: dpage/pgadmin4:5.1
+    volumes:
+      - ./docker/pgadmin/servers.json:/pgadmin4/servers.json:ro
+    environment:
+      PGADMIN_DEFAULT_EMAIL: sullivan@blog.com
+      PGADMIN_DEFAULT_PASSWORD: azeqsdwxc
+      PGADMIN_LISTEN_PORT: 80
+    ports:
+      - 8021:80
+
+  oc_blog_nginx:
+    container_name: oc_blog_nginx
+    image: nginx:1.19.5-alpine
+    volumes:
+      - './public/:/srv/public:ro'
+      - './docker/nginx/default.conf:/etc/nginx/conf.d/default.conf:ro'
+    ports:
+      - 8022:80
+    depends_on:
+      - oc_blog_php
