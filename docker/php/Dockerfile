@@ -16,7 +16,7 @@ RUN apt install -yqq \
 RUN docker-php-ext-install \
     opcache \
     pdo \
-    pdo_pgsql
+    pdo_mysql
 
 # Install APCU through PECL and enable it
 RUN pecl install apcu && \

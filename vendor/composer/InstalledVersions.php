@@ -19,7 +19,7 @@ private static $installed = array (
     'aliases' => 
     array (
     ),
-    'reference' => '214a106bbf12a3d14eb645b7875cc2ad21f121d4',
+    'reference' => '4588800645f445436e2a5295252a606a80f8b424',
     'name' => '__root__',
   ),
   'versions' => 
@@ -31,25 +31,25 @@ private static $installed = array (
       'aliases' => 
       array (
       ),
-      'reference' => '214a106bbf12a3d14eb645b7875cc2ad21f121d4',
+      'reference' => '4588800645f445436e2a5295252a606a80f8b424',
     ),
     'filp/whoops' => 
     array (
-      'pretty_version' => '2.11.0',
-      'version' => '2.11.0.0',
+      'pretty_version' => '2.12.0',
+      'version' => '2.12.0.0',
       'aliases' => 
       array (
       ),
-      'reference' => 'f6e14679f948d8a5cfb866fa7065a30c66bd64d3',
+      'reference' => 'd501fd2658d55491a2295ff600ae5978eaad7403',
     ),
     'phpstan/phpstan' => 
     array (
-      'pretty_version' => '0.12.82',
-      'version' => '0.12.82.0',
+      'pretty_version' => '0.12.83',
+      'version' => '0.12.83.0',
       'aliases' => 
       array (
       ),
-      'reference' => '3920f0fb0aff39263d3a4cb0bca120a67a1a6a11',
+      'reference' => '4a967cec6efb46b500dd6d768657336a3ffe699f',
     ),
     'psr/log' => 
     array (
