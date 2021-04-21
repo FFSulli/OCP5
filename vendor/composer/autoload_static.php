@@ -13,51 +13,59 @@ class ComposerStaticInit12b595aaa9dd088235ea36e92f888508
     );
 
     public static $prefixLengthsPsr4 = array (
-        'W' => 
+        'W' =>
         array (
             'Whoops\\' => 7,
         ),
-        'T' => 
+        'T' =>
         array (
             'Twig\\' => 5,
         ),
-        'S' => 
+        'S' =>
         array (
             'Symfony\\Polyfill\\Mbstring\\' => 26,
             'Symfony\\Polyfill\\Ctype\\' => 23,
         ),
-        'P' => 
+        'P' =>
         array (
             'Psr\\Log\\' => 8,
         ),
-        'A' => 
+        'C' =>
+        array (
+            'Config\\' => 7,
+        ),
+        'A' =>
         array (
             'App\\' => 4,
         ),
     );
 
     public static $prefixDirsPsr4 = array (
-        'Whoops\\' => 
+        'Whoops\\' =>
         array (
             0 => __DIR__ . '/..' . '/filp/whoops/src/Whoops',
         ),
-        'Twig\\' => 
+        'Twig\\' =>
         array (
             0 => __DIR__ . '/..' . '/twig/twig/src',
         ),
-        'Symfony\\Polyfill\\Mbstring\\' => 
+        'Symfony\\Polyfill\\Mbstring\\' =>
         array (
             0 => __DIR__ . '/..' . '/symfony/polyfill-mbstring',
         ),
-        'Symfony\\Polyfill\\Ctype\\' => 
+        'Symfony\\Polyfill\\Ctype\\' =>
         array (
             0 => __DIR__ . '/..' . '/symfony/polyfill-ctype',
         ),
-        'Psr\\Log\\' => 
+        'Psr\\Log\\' =>
         array (
             0 => __DIR__ . '/..' . '/psr/log/Psr/Log',
         ),
-        'App\\' => 
+        'Config\\' =>
+        array (
+            0 => __DIR__ . '/../..' . '/config',
+        ),
+        'App\\' =>
         array (
             0 => __DIR__ . '/../..' . '/src',
         ),
@@ -73,7 +81,7 @@ class ComposerStaticInit12b595aaa9dd088235ea36e92f888508
         'App\\Model\\Repository\\Interfaces\\EntityRepositoryInterface' => __DIR__ . '/../..' . '/src/Model/Repository/Interfaces/EntityRepositoryInterface.php',
         'App\\Model\\Repository\\PostRepository' => __DIR__ . '/../..' . '/src/Model/Repository/PostRepository.php',
         'App\\Model\\Repository\\UserRepository' => __DIR__ . '/../..' . '/src/Model/Repository/UserRepository.php',
-        'App\\Service\\Database' => __DIR__ . '/../..' . '/src/Service/Database.php',
+        'App\\Service\\Database' => __DIR__ . '/../..',
         'App\\Service\\Http\\ParametersBag' => __DIR__ . '/../..' . '/src/Service/Http/ParametersBag.php',
         'App\\Service\\Http\\Request' => __DIR__ . '/../..' . '/src/Service/Http/Request.php',
         'App\\Service\\Http\\Response' => __DIR__ . '/../..' . '/src/Service/Http/Response.php',
@@ -82,6 +90,7 @@ class ComposerStaticInit12b595aaa9dd088235ea36e92f888508
         'App\\Service\\Router' => __DIR__ . '/../..' . '/src/Service/Router.php',
         'App\\View\\View' => __DIR__ . '/../..' . '/src/View/View.php',
         'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
+        'Config\\DotEnv' => __DIR__ . '/../..' . '/config/DotEnv.php',
         'Psr\\Log\\AbstractLogger' => __DIR__ . '/..' . '/psr/log/Psr/Log/AbstractLogger.php',
         'Psr\\Log\\InvalidArgumentException' => __DIR__ . '/..' . '/psr/log/Psr/Log/InvalidArgumentException.php',
         'Psr\\Log\\LogLevel' => __DIR__ . '/..' . '/psr/log/Psr/Log/LogLevel.php',
