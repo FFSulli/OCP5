@@ -11,26 +11,26 @@ services:
 
   oc_blog_db:
     container_name: oc_blog_db
-    image: postgres
+    image: mariadb:10.5.9
     environment:
-      POSTGRES_USER: sulli
-      POSTGRES_PASSWORD: secret
-      POSTGRES_DB: aldeis_toolbox
-      PGDATA: /var/lib/postgresql/data/
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_USER: sulli
+      MYSQL_PASSWORD: secret
+      MYSQL_DATABASE: oc_blog
     ports:
-      - 8020:5432
+      - 8024:3306
 
-  oc_blog_pgadmin:
-    container_name: oc_blog_pgadmin
-    image: dpage/pgadmin4:5.1
-    volumes:
-      - ./docker/pgadmin/servers.json:/pgadmin4/servers.json:ro
+  oc_blog_pma:
+    container_name: oc_blog_pma
+    image: phpmyadmin
     environment:
-      PGADMIN_DEFAULT_EMAIL: sullivan@blog.com
-      PGADMIN_DEFAULT_PASSWORD: azeqsdwxc
-      PGADMIN_LISTEN_PORT: 80
+      PMA_HOST: oc_blog_db
+      PMA_USER: root
+      PMA_PASSWORD: root
     ports:
-      - 8021:80
+      - 8023:80
+    depends_on:
+      - oc_blog_db
 
   oc_blog_nginx:
     container_name: oc_blog_nginx
