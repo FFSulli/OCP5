@@ -9,24 +9,27 @@ use App\Controller\Frontoffice\UserController;
 use App\Model\Repository\PostRepository;
 use App\Model\Repository\CommentRepository;
 use App\Model\Repository\UserRepository;
+use App\Service\Database\MySQLDB;
 use App\Service\Http\Request;
 use App\Service\Http\Response;
 use App\Service\Http\Session\Session;
 use App\View\View;
+use Config\DotEnv;
 
 // TODO cette classe router est un exemple très basic. Cette façon de faire n'est pas optimale
 // TODO Le router ne devrait pas avoir la responsabilité de l'injection des dépendances
 final class Router
 {
-    private Database $database;
+    private MySQLDB $database;
     private View $view;
     private Request $request;
     private Session $session;
 
     public function __construct(Request $request)
     {
-        // dépendance
-        $this->database = new Database();
+        (new DotEnv(__DIR__ . '/../../.env'))->load();
+
+        $this->database = new MySQLDB(getenv('DATABASE_HOST'), getenv('DATABASE_NAME'), getenv('DATABASE_USER'), getenv('DATABASE_PASSWORD'));
         $this->session = new Session();
         $this->view = new View($this->session);
         $this->request = $request;
