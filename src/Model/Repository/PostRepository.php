@@ -17,7 +17,6 @@ final class PostRepository implements EntityRepositoryInterface
     {
         (new DotEnv(__DIR__ . '/../../../.env'))->load();
         $this->database = new MySQLDB(getenv('DATABASE_HOST'), getenv('DATABASE_NAME'), getenv('DATABASE_USER'), getenv('DATABASE_PASSWORD'));
-        ;
     }
 
     public function find(int $id): ?Post
@@ -31,7 +30,11 @@ final class PostRepository implements EntityRepositoryInterface
             return null;
         }
 
-        return new Post();
+        $post = Post::fromArray($data);
+
+        var_dump($post);
+
+        return $post;
     }
 
     public function findOneBy(array $criteria, array $orderBy = null): ?Post

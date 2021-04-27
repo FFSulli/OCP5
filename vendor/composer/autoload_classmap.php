@@ -15,7 +15,7 @@ return array(
     'App\\Model\\Repository\\Interfaces\\EntityRepositoryInterface' => $baseDir . '/src/Model/Repository/Interfaces/EntityRepositoryInterface.php',
     'App\\Model\\Repository\\PostRepository' => $baseDir . '/src/Model/Repository/PostRepository.php',
     'App\\Model\\Repository\\UserRepository' => $baseDir . '/src/Model/Repository/UserRepository.php',
-    'App\\Service\\Database' => $baseDir . '/src/Service/iDatabase.php',
+    'App\\Service\\Database' => $baseDir . '/src/Service/DatabaseInterface.php',
     'App\\Service\\Http\\ParametersBag' => $baseDir . '/src/Service/Http/ParametersBag.php',
     'App\\Service\\Http\\Request' => $baseDir . '/src/Service/Http/Request.php',
     'App\\Service\\Http\\Response' => $baseDir . '/src/Service/Http/Response.php',

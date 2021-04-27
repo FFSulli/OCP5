@@ -160,4 +160,45 @@ final class Post
         $this->user_fk = $user_fk;
         return $this;
     }
+
+    /**
+     * @param $data
+     * @return static
+     */
+    public static function fromArray($data): self
+    {
+        $self = new self();
+
+        if (isset($data["title"]))
+        {
+            $self->setTitle($data["title"]);
+        }
+
+        if (isset($data["excerpt"]))
+        {
+            $self->setExcerpt($data["excerpt"]);
+        }
+
+        if (isset($data["content"]))
+        {
+            $self->setContent($data["content"]);
+        }
+
+        if (isset($data["created_at"]))
+        {
+            $self->setCreatedAt($data["created_at"]);
+        }
+
+        if (isset($data["updated_at"]))
+        {
+            $self->setUpdatedAt($data["updated_at"]);
+        }
+
+        if (isset($data["user_fk"]))
+        {
+            $self->setUserFk($data["user_fk"]);
+        }
+
+        return $self;
+    }
 }

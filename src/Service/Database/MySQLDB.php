@@ -3,8 +3,9 @@
 namespace App\Service\Database;
 
 use PDO;
+use PDOStatement;
 
-class MySQLDB implements iDatabase
+class MySQLDB implements DatabaseInterface
 {
     private PDO $pdo;
 
@@ -14,19 +15,24 @@ class MySQLDB implements iDatabase
         $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     }
 
-    public function prepare(string $statement): \PDOStatement
+    /**
+     * @param string $statement
+     * @return PDOStatement
+     */
+    public function prepare(string $statement): PDOStatement
     {
         return $this->pdo->prepare($statement);
     }
 
     /**
-     * @param \PDOStatement $prepared
+     * @param PDOStatement $prepared
      * @param array $args
+     * @param string $PDOClass
      * @return array
      */
-    public function execute(\PDOStatement $prepared, array $args): array
+    public function execute(PDOStatement $prepared, array $args, string $PDOClass): array
     {
         $prepared->execute($args);
-        return $prepared->fetchAll();
+        return $prepared->fetchAll(PDO::FETCH_CLASS, $PDOClass);
     }
 }
