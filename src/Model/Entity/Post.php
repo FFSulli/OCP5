@@ -8,43 +8,45 @@ use App\Model\Entity\Interfaces\EntityObjectInterface;
 
 final class Post
 {
-    private int $id;
-    private string $title;
+    private int $id = 1;
+    private string $title = "";
     private string $excerpt;
     private string $content;
     private string $slug;
-    private \DateTimeImmutable $createdAt;
-    private \DateTime $updatedAt;
+    private string $created_at;
+    private string $updated_at;
     private int $user_fk;
 
-    public function __construct(int $id, string $title, string $excerpt, string $content, string $slug, \DateTimeImmutable $createdAt, \DateTime $updatedAt, int $user_fk)
-    {
-        $this->id = $id;
-        $this->title = $title;
-        $this->excerpt = $excerpt;
-        $this->content = $content;
-        $this->slug = $slug;
-        $this->createdAt = $createdAt;
-        $this->updatedAt = $updatedAt;
-        $this->user_fk = $user_fk;
-    }
-
+    /**
+     * @return int
+     */
     public function getId(): int
     {
         return $this->id;
     }
 
+    /**
+     * @param int $id
+     * @return $this
+     */
     public function setId(int $id): self
     {
         $this->id = $id;
         return $this;
     }
 
+    /**
+     * @return string
+     */
     public function getTitle(): string
     {
         return $this->title;
     }
 
+    /**
+     * @param string $title
+     * @return $this
+     */
     public function setTitle(string $title): self
     {
         $this->title = $title;
@@ -106,38 +108,38 @@ final class Post
     }
 
     /**
-     * @return \DateTimeImmutable
+     * @return string
      */
-    public function getCreatedAt(): \DateTimeImmutable
+    public function getCreatedAt()
     {
-        return $this->createdAt;
+        return $this->created_at;
     }
 
     /**
-     * @param \DateTimeImmutable $createdAt
+     * @param string $created_at
      * @return Post
      */
-    public function setCreatedAt(\DateTimeImmutable $createdAt): Post
+    public function setCreatedAt(string $created_at): Post
     {
-        $this->createdAt = $createdAt;
+        $this->created_at = $created_at;
         return $this;
     }
 
     /**
-     * @return \DateTime
+     * @return string
      */
-    public function getUpdatedAt(): \DateTime
+    public function getUpdatedAt()
     {
-        return $this->updatedAt;
+        return $this->updated_at;
     }
 
     /**
-     * @param \DateTime $updatedAt
+     * @param string $updated_at
      * @return Post
      */
-    public function setUpdatedAt(\DateTime $updatedAt): Post
+    public function setUpdatedAt(string $updated_at): Post
     {
-        $this->updatedAt = $updatedAt;
+        $this->updated_at = $updated_at;
         return $this;
     }
 

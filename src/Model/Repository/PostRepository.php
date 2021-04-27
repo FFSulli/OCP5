@@ -7,14 +7,17 @@ namespace App\Model\Repository;
 use App\Model\Entity\Post;
 use App\Service\Database\MySQLDB;
 use App\Model\Repository\Interfaces\EntityRepositoryInterface;
+use Config\DotEnv;
 
 final class PostRepository implements EntityRepositoryInterface
 {
     private MySQLDB $database;
 
-    public function __construct(MySQLDB $database)
+    public function __construct()
     {
-        $this->database = $database;
+        (new DotEnv(__DIR__ . '/../../../.env'))->load();
+        $this->database = new MySQLDB(getenv('DATABASE_HOST'), getenv('DATABASE_NAME'), getenv('DATABASE_USER'), getenv('DATABASE_PASSWORD'));
+        ;
     }
 
     public function find(int $id): ?Post
@@ -22,9 +25,13 @@ final class PostRepository implements EntityRepositoryInterface
         $prepared = $this->database->prepare('select * from posts where id=:id');
         $data = $this->database->execute($prepared, [
             ":id" => $id
-        ]);
+        ], Post::class);
 
-        return new Post($data['id'], $data['title'], $data['excerpt'], $data['content'], $data['slug'], $data['createdAt'], $data['updatedAt'], $data['user_fk']);
+        if ($data == null) {
+            return null;
+        }
+
+        return new Post();
     }
 
     public function findOneBy(array $criteria, array $orderBy = null): ?Post
@@ -39,21 +46,14 @@ final class PostRepository implements EntityRepositoryInterface
 
     public function findAll(): ?array
     {
-        // SB ici faire l'hydratation des objets
         $prepared = $this->database->prepare('select * from posts');
-        $data = $this->database->execute($prepared, []);
+        $data = $this->database->execute($prepared, [], Post::class);
 
         if ($data == null) {
             return null;
         }
 
-        // réfléchir à l'hydratation des entités;
-        $posts = [];
-        foreach ($data as $post) {
-            $posts[] = new Post($data['id'], $data['title'], $data['excerpt'], $data['content'], $data['slug'], $data['createdAt'], $data['updatedAt'], $data['user_fk']);
-        }
-
-        return $posts;
+        return $data;
     }
 
     public function create(object $post): bool
