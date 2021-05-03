@@ -1,3 +1,29 @@
 {% block front_navigation %}
-
+    <nav class="container sm:mx-auto py-8">
+        <div class="flex flex-wrap items-center px-4">
+            <div class="mr-auto">
+                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="33.684">
+                    <g>
+                        <path d="M27.789 0c-.1 0-.206 0-.308.011V0H4.211A4.211 4.211 0 000 4.211v25.263a4.211 4.211 0 004.211 4.211c.1 0 .206 0 .308-.011h22.965c.1.007.2.011.308.011a4.21 4.21 0 004.211-4.211V4.21A4.21 4.21 0 0027.789 0z" fill="#4F46E5"/>
+                        <path d="M20.322 19.724v-2.88a1.441 1.441 0 00-1.441-1.441h-4.327v-2.882h4.323a1.441 1.441 0 000-2.882h-5.764a1.441 1.441 0 00-1.441 1.441v5.761a1.441 1.441 0 001.441 1.441h4.323v2.882h-4.323a1.441 1.441 0 000 2.882h5.764a1.441 1.441 0 001.441-1.441v-2.88z" fill="#fff"/>
+                    </g>
+                </svg>
+            </div>
+            <div>
+                <button type="button" class="sm:hidden text-indigo-600 focus:outline-none p-2" aria-controls="mobile-menu" aria-expanded="false">
+                    <svg class="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true" id="menuIcon">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                    </svg>
+                    <svg class="hidden h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true" id="closeMenuIcon">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+            <ul class="hidden space-y-4 sm:space-y-0 sm:space-x-8 sm:flex sm:flex-row" id="navItems">
+                <li><a href="#" class="font-medium text-gray-600 hover:text-indigo-500 transition ease-in-out duration-500">Articles</a></li>
+                <li><a href="#" class="font-medium text-gray-600 hover:text-indigo-500 transition ease-in-out duration-500">Contact</a></li>
+                <li><a href="#" class="font-medium bg-indigo-600 text-white hover:bg-indigo-500 rounded py-2 px-4 transition ease-in-out duration-500">Connexion</a></li>
+            </ul>
+        </div>
+    </nav>
 {% endblock %}
