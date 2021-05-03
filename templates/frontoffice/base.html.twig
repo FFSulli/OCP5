@@ -2,41 +2,30 @@
 <html lang="fr">
     <head>
         <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>Blog {% block title %}{% endblock %}</title>
         <link href="css/style.css" rel="stylesheet">
+        <link rel="preconnect" href="https://fonts.gstatic.com">
+        <link href="https://fonts.googleapis.com/css2?family=Cabin:wght@400;500;700&display=swap" rel="stylesheet">
     </head>
 
-    <body>
+    <body class="font-cabin">
         <!-- Navigation -->
-        <nav>
-            <h2>Menu</h2>
-            <a href="index.php?action=posts">Liste des posts</a><br>
-            <a href="index.php?action=post&id=500">Un post qui n'existe pas</a><br>
-            <a href="index.php?action=unknow">Une route qui n'existe pas</a><br>
-            <h2>Utilisateur</h2>
-            {% if session.user %}
-                <strong>{{ session.user.pseudo }}</strong>
-                {{ session.user.email }}
-                <a href="index.php?action=logout">se déconnecter</a><br>
-            {% else %}
-                <a href="index.php?action=login">se connecter</a><br>
-            {% endif %}
-        </nav>
-
+        {% include "frontoffice/navigation/front_navigation.html.twig" %}
         <!-- Page Header -->
-        <header>            
-            <h1>Blog</h1>
+        <header>
+            <h1 class="">Bonjour, je suis Sullivan Berger</h1>
         </header>
 
-        <main>            
-            {% for message in flashes %} {# TODO Gérer les différents type de message flash #}
-                <h2 class="danger"> {{ message }} </h2>
-            {% endfor %}
+        <main>
+{#            {% for message in flashes %} #}{# TODO Gérer les différents type de message flash #}
+{#                <h2 class="danger"> {{ message }} </h2>#}
+{#            {% endfor %}#}
             {% block content %}{% endblock %}
         </main>
-        
+
         <footer class="footer text-center">
-            <h3>Copyright Toto</h3>
-        </footer>        
+        </footer>
     </body>
+    <script src="js/app.js"></script>
 </html>

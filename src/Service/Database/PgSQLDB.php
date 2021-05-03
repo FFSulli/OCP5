@@ -5,13 +5,13 @@ namespace App\Service\Database;
 use PDO;
 use PDOStatement;
 
-class MySQLDB implements DatabaseInterface
+class PgSQLDB implements DatabaseInterface
 {
     private PDO $pdo;
 
     public function __construct(string $dbHost, string $dbName, string $dbUser, string $dbPassword)
     {
-        $this->pdo = new PDO('mysql:host=' . $dbHost . ';dbname=' . $dbName, $dbUser, $dbPassword);
+        $this->pdo = new PDO('pgsql:host=' . $dbHost . ';dbname=' . $dbName, $dbUser, $dbPassword);
         $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     }
 
@@ -19,7 +19,7 @@ class MySQLDB implements DatabaseInterface
      * @param string $statement
      * @return PDOStatement
      */
-    public function prepare(string $statement): PDOStatement
+    public function prepare(string $statement): \PDOStatement
     {
         return $this->pdo->prepare($statement);
     }
