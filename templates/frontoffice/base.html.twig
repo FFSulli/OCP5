@@ -1,31 +1,66 @@
 <!doctype html>
 <html lang="fr">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>Blog {% block title %}{% endblock %}</title>
-        <link href="css/style.css" rel="stylesheet">
-        <link rel="preconnect" href="https://fonts.gstatic.com">
-        <link href="https://fonts.googleapis.com/css2?family=Cabin:wght@400;500;700&display=swap" rel="stylesheet">
-    </head>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Blog {% block title %}{% endblock %}</title>
+    <link href="css/style.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Cabin:wght@400;500;700&display=swap" rel="stylesheet">
+    <script>
+        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark')
+        } else {
+            document.documentElement.classList.remove('dark')
+        }
+    </script>
+</head>
 
-    <body class="font-cabin">
-        <!-- Navigation -->
-        {% include "frontoffice/navigation/front_navigation.html.twig" %}
-        <!-- Page Header -->
-        <header>
-            <h1 class="">Bonjour, je suis Sullivan Berger</h1>
+<body class="flex flex-col h-screen dark:bg-gray-600 dark:text-white font-cabin text-gray-600 transition ease-in-out duration-500">
+{% include "frontoffice/navigation/front_navigation.html.twig" %}
+<main class="container flex-grow mx-auto">
+    <article class="py-8 sm:py-16 px-8">
+        <header class="flex flex-col lg:flex-row items-center">
+            <div class="flex flex-col lg:w-1/2 items-center lg:items-start mb-8 sm:mb-0">
+                <h1 class="flex flex-col text-4xl sm:text-6xl font-bold"><span class="text-indigo-500 dark:text-green-400 pb-2">Bonjour,</span>Je suis
+                    Sullivan Berger<span class="text-xl pt-4">Développeur <span
+                                class="text-indigo-500 dark:text-green-400">PHP / Symfony</span></span>
+                </h1>
+                <p class="font-medium text-justify py-8">
+                    Passionné depuis l’adolescence par le développement web, j’ai pourtant commencé ma carrière
+                    professionnelle comme technicien informatique. Après une dizaine d’années dans ce métier, j’ai
+                    décidé de
+                    revenir à ce que j’aimais faire : Penser, concevoir et développer des sites web.
+
+                    Pour y parvenir, je prends les devants et quitte l’entreprise dans laquelle je travaillais depuis 6
+                    ans.
+                    Je sais que j’ai besoin de me remettre à niveau, et je me lance donc dans une formation de
+                    Développeur
+                    Web à l’école OpenClassrooms.
+                </p>
+                <a href="#" class="inline-block bg-indigo-500 hover:bg-indigo-600 dark:bg-green-400 dark:hover:bg-green-500 transition ease-in-out text-white rounded py-2 px-4">
+                    <span class="flex items-center">
+                        <span class="pb-1 mr-4">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16">
+                                <path fill="#fff" d="M9 9V0H7v9H4l4 4 4-4z"/>
+                                <path fill="#fff" d="M15 16H1a1 1 0 01-.993-1.124l1-8A1 1 0 012 6h3v2H2.883l-.75 6h11.734l-.75-6H11V6h3a1 1 0 01.992.876l1 8A.998.998 0 0115 16z"/>
+                            </svg>
+                        </span>
+                        <span>
+                            Télécharger mon CV
+                        </span>
+                    </span>
+                </a>
+            </div>
+            <div class="lg:w-1/2">
+                <img src="images/hero.svg" alt="Développeur devant son PC" class=" py-8 lg:py-0 lg:ml-auto">
+            </div>
         </header>
-
-        <main>
-{#            {% for message in flashes %} #}{# TODO Gérer les différents type de message flash #}
-{#                <h2 class="danger"> {{ message }} </h2>#}
-{#            {% endfor %}#}
-            {% block content %}{% endblock %}
-        </main>
-
-        <footer class="footer text-center">
-        </footer>
-    </body>
-    <script src="js/app.js"></script>
+    </article>
+</main>
+<footer>
+    {% include "frontoffice/footer/footer.html.twig" %}
+</footer>
+</body>
+<script src="js/app.js"></script>
 </html>
