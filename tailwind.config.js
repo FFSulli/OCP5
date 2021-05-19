@@ -2,7 +2,7 @@ module.exports = {
   purge: [
       'templates/**/*.html.twig'
   ],
-  darkMode: false, // or 'media' or 'class'
+  darkMode: 'class',
   theme: {
     fontFamily: {
       'cabin': ['Cabin', 'sans-serif']
