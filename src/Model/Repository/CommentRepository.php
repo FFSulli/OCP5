@@ -23,38 +23,53 @@ final class CommentRepository implements EntityRepositoryInterface
 
     public function find(int $id): ?Comment
     {
-        $prepared = $this->database->prepare('select * from comments where id=:id');
-        $data = $this->database->execute($prepared, [
-            ":id" => $id
-        ], Comment::class);
-
-        return new Comment();
+        return $this->findOneBy(['id' => $id]);
     }
 
     public function findOneBy(array $criteria, array $orderBy = null): ?Comment
     {
-        return null;
+        return $this->findBy($criteria, $orderBy, 1, 1)[0] ?? null;
     }
 
     public function findBy(array $criteria, array $orderBy = null, int $limit = null, int $offset = null): ?array
     {
-        $post_fk = $criteria["post_fk"];
+        $limit_field = !is_null($limit) ? ' LIMIT ' . $limit : '';
+        $offset_field = !is_null($offset) ? ' OFFSET ' . $offset : '';
 
-        $prepared = $this->database->prepare('select * from comments where post_fk=:post_fk');
-        $data = $this->database->execute($prepared, [
-            ":post_fk" => $post_fk
-        ], Comment::class);
+        $criteria_fields = [];
+        $orderBy_fields = [];
 
-        if ($data == null) {
-            return null;
+        foreach ($criteria as $key=>$value) {
+            $criteria_fields[] = sprintf("%s = '%s'", $key, $value);
         }
 
-        return $data;
+        foreach ($orderBy as $key=>$value) {
+            $orderBy_fields[] = sprintf("%s %s", $key, $value);
+        }
+
+        $criteria_list = implode(' AND ', $criteria_fields);
+        $orderBy_list = implode(', ', $orderBy_fields);
+
+        $prepared = $this->database->prepare('SELECT * FROM comments limit_field=:limit_field offset_field=:offset_field WHERE criteria_list=:criteria_list ORDER BY orderBy_list=:orderBy_list');
+        $data = $this->database->execute($prepared, [
+            ":limit_field" => $limit_field,
+            ":offset_field" => $offset_field,
+            ":criteria_list" => $criteria_list,
+            ":orderBy_list" => $orderBy_list
+        ], Comment::class);
+
+        $results = [];
+        foreach ($data as $row) {
+            $results[] = Comment::fromArray($row);
+        }
+
+        return $results;
     }
 
     public function findAll(): ?array
     {
-        return null;
+        $prepared = $this->database->prepare('select * from comments');
+        return $this->database->execute($prepared, [], Comment::class);
     }
 
     public function create(object $comment): bool

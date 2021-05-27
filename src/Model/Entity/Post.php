@@ -169,6 +169,11 @@ final class Post
     {
         $self = new self();
 
+        if (isset($data["id"]))
+        {
+            $self->setId($data["id"]);
+        }
+
         if (isset($data["title"]))
         {
             $self->setTitle($data["title"]);

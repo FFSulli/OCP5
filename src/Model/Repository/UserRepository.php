@@ -23,24 +23,47 @@ final class UserRepository implements EntityRepositoryInterface
 
     public function find(int $id): ?User
     {
-        return null;
+        return $this->findOneBy(['id' => $id]);
     }
 
     public function findOneBy(array $criteria, array $orderBy = null): ?User
     {
-        $email = $criteria["email"];
-
-        $prepared = $this->database->prepare('select * from user where email=:email');
-        $data = $this->database->execute($prepared, [
-            ":email" => $email
-        ], User::class);
-
-        return $data == null ? null : new user();
+        return $this->findBy($criteria, $orderBy, 1, 1)[0] ?? null;
     }
 
     public function findBy(array $criteria, array $orderBy = null, int $limit = null, int $offset = null): ?array
     {
-        return null;
+        $limit_field = !is_null($limit) ? ' LIMIT ' . $limit : '';
+        $offset_field = !is_null($offset) ? ' OFFSET ' . $offset : '';
+
+        $criteria_fields = [];
+        $orderBy_fields = [];
+
+        foreach ($criteria as $key=>$value) {
+            $criteria_fields[] = sprintf("%s = '%s'", $key, $value);
+        }
+
+        foreach ($orderBy as $key=>$value) {
+            $orderBy_fields[] = sprintf("%s %s", $key, $value);
+        }
+
+        $criteria_list = implode(' AND ', $criteria_fields);
+        $orderBy_list = implode(', ', $orderBy_fields);
+
+        $prepared = $this->database->prepare('SELECT * FROM users limit_field=:limit_field offset_field=:offset_field WHERE criteria_list=:criteria_list ORDER BY orderBy_list=:orderBy_list');
+        $data = $this->database->execute($prepared, [
+            ":limit_field" => $limit_field,
+            ":offset_field" => $offset_field,
+            ":criteria_list" => $criteria_list,
+            ":orderBy_list" => $orderBy_list
+        ], User::class);
+
+        $results = [];
+        foreach ($data as $row) {
+            $results[] = User::fromArray($row);
+        }
+
+        return $results;
     }
 
     public function findAll(): ?array
