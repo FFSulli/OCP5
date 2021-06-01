@@ -1,1 +1,107 @@
+{% extends "/frontoffice/base.html.twig" %}
 
+{% block content %}
+<article class="py-8 sm:py-16 px-8">
+    <header class="flex flex-col lg:flex-row items-center">
+        <div class="flex flex-col lg:w-1/2 items-center lg:items-start mb-8 sm:mb-0">
+            <h1 class="flex flex-col text-4xl sm:text-6xl font-bold"><span class="text-indigo-500 dark:text-green-400 pb-2">Bonjour,</span>Je suis
+                Sullivan Berger<span class="text-xl pt-4">Développeur <span
+                            class="text-indigo-500 dark:text-green-400">PHP / Symfony</span></span>
+            </h1>
+            <p class="font-medium text-justify py-8">
+                Passionné depuis l’adolescence par le développement web, j’ai pourtant commencé ma carrière
+                professionnelle comme technicien informatique. Après une dizaine d’années dans ce métier, j’ai
+                décidé de
+                revenir à ce que j’aimais faire : Penser, concevoir et développer des sites web.
+
+                Pour y parvenir, je prends les devants et quitte l’entreprise dans laquelle je travaillais depuis 6
+                ans.
+                Je sais que j’ai besoin de me remettre à niveau, et je me lance donc dans une formation de
+                Développeur
+                Web à l’école OpenClassrooms.
+            </p>
+            <a href="#" class="inline-block bg-indigo-500 hover:bg-indigo-600 dark:bg-green-400 dark:hover:bg-green-500 transition ease-in-out text-white rounded py-2 px-4">
+                    <span class="flex items-center">
+                        <span class="pb-1 mr-4">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16">
+                                <path fill="#fff" d="M9 9V0H7v9H4l4 4 4-4z"/>
+                                <path fill="#fff" d="M15 16H1a1 1 0 01-.993-1.124l1-8A1 1 0 012 6h3v2H2.883l-.75 6h11.734l-.75-6H11V6h3a1 1 0 01.992.876l1 8A.998.998 0 0115 16z"/>
+                            </svg>
+                        </span>
+                        <span>
+                            Télécharger mon CV
+                        </span>
+                    </span>
+            </a>
+        </div>
+        <div class="lg:w-1/2">
+            <img src="images/hero.svg" alt="Développeur devant son PC" class=" py-8 lg:py-0 lg:ml-auto">
+        </div>
+    </header>
+</article>
+<article class="my-16 px-8">
+    <h2 class="text-center text-2xl sm:text-4xl font-bold text-indigo-500 dark:text-green-400 py-8">Derniers articles</h2>
+    <section class="grid grid-cols-1 gap-y-4 lg:gap-y-0 lg:gap-x-4 lg:grid-cols-3 my-8">
+        <a href="#">
+            <article class="border rounded border-gray-100 hover:border-indigo-500 dark:border-gray-500 dark:hover:border-green-400 transition ease-in-out duration-500 p-4">
+                <img src="" alt="">
+                <div class="flex flex-col space-y-3">
+                    <h3 class="text-lg font-bold text-indigo-500 dark:text-green-400">Article test</h3>
+                    <p class="text-sm text-gray-400">Publié le 23 mai 2021 à 16h52</p>
+                    <p class="text-justify">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Alias aliquid architecto dolore dolorum ducimus ea expedita fugiat fugit, illum iste libero magni nam natus odio officia porro vel. A, distinctio? Lorem ipsum dolor sit amet, consectetur adipisicing elit. Alias aliquid architecto dolore dolorum ducimus ea expedita fugiat fugit, illum iste libero magni nam natus odio officia porro vel. A, distinctio?</p>
+                </div>
+            </article>
+        </a>
+        <a href="#">
+            <article class="border rounded border-gray-100 hover:border-indigo-500 dark:border-gray-500 dark:hover:border-green-400 transition ease-in-out duration-500 p-4">
+                <img src="" alt="">
+                <div class="flex flex-col space-y-3">
+                    <h3 class="text-lg font-bold text-indigo-500 dark:text-green-400">Article test</h3>
+                    <p class="text-sm text-gray-400">Publié le 23 mai 2021 à 16h52</p>
+                    <p class="text-justify">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Alias aliquid architecto dolore dolorum ducimus ea expedita fugiat fugit, illum iste libero magni nam natus odio officia porro vel. A, distinctio? Lorem ipsum dolor sit amet, consectetur adipisicing elit. Alias aliquid architecto dolore dolorum ducimus ea expedita fugiat fugit, illum iste libero magni nam natus odio officia porro vel. A, distinctio?</p>
+                </div>
+            </article>
+        </a>
+        <a href="#">
+            <article class="border rounded border-gray-100 hover:border-indigo-500 dark:border-gray-500 dark:hover:border-green-400 transition ease-in-out duration-500 p-4">
+                <img src="" alt="">
+                <div class="flex flex-col space-y-3">
+                    <h3 class="text-lg font-bold text-indigo-500 dark:text-green-400">Article test</h3>
+                    <p class="text-sm text-gray-400">Publié le 23 mai 2021 à 16h52</p>
+                    <p class="text-justify">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Alias aliquid architecto dolore dolorum ducimus ea expedita fugiat fugit, illum iste libero magni nam natus odio officia porro vel. A, distinctio? Lorem ipsum dolor sit amet, consectetur adipisicing elit. Alias aliquid architecto dolore dolorum ducimus ea expedita fugiat fugit, illum iste libero magni nam natus odio officia porro vel. A, distinctio?</p>
+                </div>
+            </article>
+        </a>
+    </section>
+</article>
+<section class="my-16">
+    <h2 class="text-center text-2xl sm:text-4xl font-bold text-indigo-500 dark:text-green-400 py-8">Me contacter</h2>
+    <form action="" class="grid grid-cols-1 gap-y-4 lg:gap-x-8 lg:grid-cols-2 my-8 px-16">
+        <label for="" class="w-full">
+            <input type="text" class="lg:w-full bg-gray-50 dark:bg-gray-500 dark:placeholder-gray-200 rounded focus:ring focus:ring-indigo-500 dark:focus:ring-green-400 focus:outline-none transition ease-in-out duration-200 p-4" placeholder="Votre nom">
+        </label>
+        <label for="" class="w-full">
+            <input type="text" class="lg:w-full bg-gray-50 dark:bg-gray-500 dark:placeholder-gray-200 rounded focus:ring focus:ring-indigo-500 dark:focus:ring-green-400 focus:outline-none transition ease-in-out duration-200 p-4" placeholder="Votre prénom">
+        </label>
+        <label for="" class="w-full">
+            <input type="text" class="w-full bg-gray-50 dark:bg-gray-500 dark:placeholder-gray-200 rounded focus:ring focus:ring-indigo-500 dark:focus:ring-green-400 focus:outline-none transition ease-in-out duration-200 p-4" placeholder="Votre adresse e-mail">
+        </label>
+        <label for="" class="w-full">
+            <input type="text" class="w-full bg-gray-50 dark:bg-gray-500 dark:placeholder-gray-200 rounded focus:ring focus:ring-indigo-500 dark:focus:ring-green-400 focus:outline-none transition ease-in-out duration-200 p-4" placeholder="Votre numéro de téléphone">
+        </label>
+        <textarea name="" id="" cols="30" rows="10" class="col-span-2 bg-gray-50 dark:bg-gray-500 dark:placeholder-gray-200 rounded focus:ring focus:ring-indigo-500 dark:focus:ring-green-400 focus:outline-none transition resize-none ease-in-out duration-200 p-4" placeholder="Votre message..."></textarea>
+    </form>
+    <button type="submit" class="block bg-indigo-500 hover:bg-indigo-600 dark:bg-green-400 dark:hover:bg-green-500 transition ease-in-out text-white rounded mx-auto py-2 px-4">
+            <span class="flex items-center">
+                <span class="pb-1 mr-4">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" class="mt-1">
+                        <path fill="currentColor" d="M3.6 9.6v4.9c0 .7.8 1 1.3.5l2.3-2.7 4.7 3.5c.4.3 1 .1 1.1-.4L16 .9c.1-.6-.4-1-1-.8L.5 5.9c-.5.2-.6.9-.2 1.3l1.6 1.2 4.6-2.2c.4-.2.7.3.4.5L3.6 9.6z"/>
+                    </svg>
+                </span>
+                <span>
+                    Envoyer mon message
+                </span>
+            </span>
+    </button>
+</section>
+{% endblock %}
