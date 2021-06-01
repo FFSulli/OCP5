@@ -1,8 +1,6 @@
 <?php
 
-
 namespace App\Controller\Frontoffice;
-
 
 use App\Service\Http\Response;
 use App\View\View;

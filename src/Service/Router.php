@@ -46,13 +46,10 @@ final class Router
 
         // *** @Route http://localhost:8000/?action=home ***
         if ($action === 'home') {
-
             $controller = new HomeController($this->view);
 
             return $controller->displayHomepageAction();
-
         } elseif ($action === 'posts') {
-
             $postRepo = new PostRepository();
             $controller = new PostController($postRepo, $this->view);
 
@@ -81,13 +78,10 @@ final class Router
             $controller = new UserController($userRepo, $this->view, $this->session);
 
             return $controller->logoutAction();
-
         } elseif ($action === 'admin') {
-
             $controller = new AdminController($this->view);
 
             return $controller->displayAdminHomepageAction();
-
         } else {
             return new Response("Error 404 - cette page n'existe pas<br><a href='index.php?action=posts'>Aller Ici</a>", 404);
         }

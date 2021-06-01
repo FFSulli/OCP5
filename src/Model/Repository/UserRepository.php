@@ -1,6 +1,5 @@
 <?php
 
-
 declare(strict_types=1);
 
 namespace App\Model\Repository;
@@ -39,11 +38,11 @@ final class UserRepository implements EntityRepositoryInterface
         $criteria_fields = [];
         $orderBy_fields = [];
 
-        foreach ($criteria as $key=>$value) {
+        foreach ($criteria as $key => $value) {
             $criteria_fields[] = sprintf("%s = '%s'", $key, $value);
         }
 
-        foreach ($orderBy as $key=>$value) {
+        foreach ($orderBy as $key => $value) {
             $orderBy_fields[] = sprintf("%s %s", $key, $value);
         }
 

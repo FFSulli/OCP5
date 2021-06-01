@@ -169,38 +169,31 @@ final class Post
     {
         $self = new self();
 
-        if (isset($data["id"]))
-        {
+        if (isset($data["id"])) {
             $self->setId($data["id"]);
         }
 
-        if (isset($data["title"]))
-        {
+        if (isset($data["title"])) {
             $self->setTitle($data["title"]);
         }
 
-        if (isset($data["excerpt"]))
-        {
+        if (isset($data["excerpt"])) {
             $self->setExcerpt($data["excerpt"]);
         }
 
-        if (isset($data["content"]))
-        {
+        if (isset($data["content"])) {
             $self->setContent($data["content"]);
         }
 
-        if (isset($data["created_at"]))
-        {
+        if (isset($data["created_at"])) {
             $self->setCreatedAt($data["created_at"]);
         }
 
-        if (isset($data["updated_at"]))
-        {
+        if (isset($data["updated_at"])) {
             $self->setUpdatedAt($data["updated_at"]);
         }
 
-        if (isset($data["user_fk"]))
-        {
+        if (isset($data["user_fk"])) {
             $self->setUserFk($data["user_fk"]);
         }
 
