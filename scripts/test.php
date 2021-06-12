@@ -14,3 +14,7 @@ use Config\DotEnv;
 //
 //var_dump($post);
 
+$newRouter = new \App\Service\NewRouter(require __DIR__ . "/../config/routes.php");
+
+var_dump($newRouter);
+
