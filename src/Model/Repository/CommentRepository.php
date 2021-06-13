@@ -23,38 +23,48 @@ final class CommentRepository implements EntityRepositoryInterface
 
     public function find(int $id): ?Comment
     {
-        $prepared = $this->database->prepare('select * from comments where id=:id');
-        $data = $this->database->execute($prepared, [
-            ":id" => $id
-        ], Comment::class);
-
-        return new Comment();
+        return $this->findOneBy(['id' => $id]);
     }
 
     public function findOneBy(array $criteria, array $orderBy = null): ?Comment
     {
-        return null;
+        return $this->findBy($criteria, $orderBy, 1, 1)[0] ?? null;
     }
 
     public function findBy(array $criteria, array $orderBy = null, int $limit = null, int $offset = null): ?array
     {
-        $post_fk = $criteria["post_fk"];
+        $criteriaFields = [];
+        $orderByFields = [];
+        $binds = [];
 
-        $prepared = $this->database->prepare('select * from comments where post_fk=:post_fk');
-        $data = $this->database->execute($prepared, [
-            ":post_fk" => $post_fk
-        ], Comment::class);
-
-        if ($data == null) {
-            return null;
+        foreach ($criteria as $key => $value) {
+            $criteriaFields[] = sprintf("%s = :%s", $key, $key);
+            $binds[sprintf(":%s", $key)] = $value;
         }
 
-        return $data;
+        if (!is_null($orderBy)) {
+            foreach ($orderBy as $key=>$value) {
+                $orderByFields[] = sprintf("%s %s", $key, $value);
+            }
+        }
+
+        $criteriaList = implode(' AND ', $criteriaFields);
+        $orderByList = implode(', ', $orderByFields);
+
+        $whereClause = 0 !== count($criteriaFields) ? sprintf('WHERE %s', $criteriaList) : '';
+        $orderByClause = 0 !== count($orderByFields) ? sprintf(' ORDER BY %s', $orderByList) : '';
+        $limitClause = !is_null($limit) ? ' LIMIT ' . $limit : '';
+        $offsetClause = !is_null($offset) ? ' OFFSET ' . $offset : '';
+
+        $prepared = $this->database->prepare('SELECT * FROM comments ' . $whereClause . $orderByClause . $limitClause . $offsetClause);
+
+        return $this->database->execute($prepared, $binds, Comment::class);
     }
 
     public function findAll(): ?array
     {
-        return null;
+        $prepared = $this->database->prepare('select * from comments');
+        return $this->database->execute($prepared, [], Comment::class);
     }
 
     public function create(object $comment): bool

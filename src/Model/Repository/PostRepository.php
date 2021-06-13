@@ -21,46 +21,55 @@ final class PostRepository implements EntityRepositoryInterface
 
     public function find(int $id): ?Post
     {
-        $prepared = $this->database->prepare('select * from posts where id=:id');
-        $data = $this->database->execute($prepared, [
-            ":id" => $id
-        ], Post::class);
-
-        if ($data == null) {
-            return null;
-        }
-
-        $post = Post::fromArray($data);
-
-        var_dump($post);
-
-        return $post;
+        return $this->findOneBy(['id' => $id]);
     }
 
     public function findOneBy(array $criteria, array $orderBy = null): ?Post
     {
-        return null;
+        return $this->findBy($criteria, $orderBy, 1, 1)[0] ?? null;
     }
 
-    public function findBy(array $criteria, array $orderBy = null, int $limit = null, int $offset = null): ?array
+    public function findBy(array $criteria, ?array $orderBy = null, ?int $limit = null, ?int $offset = null): array
     {
-        return null;
+
+        $criteriaFields = [];
+        $orderByFields = [];
+        $binds = [];
+
+        foreach ($criteria as $key => $value) {
+            $criteriaFields[] = sprintf("%s = :%s", $key, $key);
+            $binds[sprintf(":%s", $key)] = $value;
+        }
+
+        if (!is_null($orderBy)) {
+            foreach ($orderBy as $key=>$value) {
+                $orderByFields[] = sprintf("%s %s", $key, $value);
+            }
+        }
+
+        $criteriaList = implode(' AND ', $criteriaFields);
+        $orderByList = implode(', ', $orderByFields);
+
+        $whereClause = 0 !== count($criteriaFields) ? sprintf('WHERE %s', $criteriaList) : '';
+        $orderByClause = 0 !== count($orderByFields) ? sprintf(' ORDER BY %s', $orderByList) : '';
+        $limitClause = !is_null($limit) ? ' LIMIT ' . $limit : '';
+        $offsetClause = !is_null($offset) ? ' OFFSET ' . $offset : '';
+
+        $prepared = $this->database->prepare('SELECT * FROM posts ' . $whereClause . $orderByClause . $limitClause . $offsetClause);
+
+        return $this->database->execute($prepared, $binds, Post::class);
+
     }
 
     public function findAll(): ?array
     {
         $prepared = $this->database->prepare('select * from posts');
-        $data = $this->database->execute($prepared, [], Post::class);
-
-        if ($data == null) {
-            return null;
-        }
-
-        return $data;
+        return $this->database->execute($prepared, [], Post::class);
     }
 
     public function create(object $post): bool
     {
+        /** @var Post $post */
         return false;
     }
 

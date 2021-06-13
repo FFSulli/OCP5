@@ -23,29 +23,48 @@ final class UserRepository implements EntityRepositoryInterface
 
     public function find(int $id): ?User
     {
-        return null;
+        return $this->findOneBy(['id' => $id]);
     }
 
     public function findOneBy(array $criteria, array $orderBy = null): ?User
     {
-        $email = $criteria["email"];
-
-        $prepared = $this->database->prepare('select * from user where email=:email');
-        $data = $this->database->execute($prepared, [
-            ":email" => $email
-        ], User::class);
-
-        return $data == null ? null : new user();
+        return $this->findBy($criteria, $orderBy, 1, 1)[0] ?? null;
     }
 
     public function findBy(array $criteria, array $orderBy = null, int $limit = null, int $offset = null): ?array
     {
-        return null;
+        $criteriaFields = [];
+        $orderByFields = [];
+        $binds = [];
+
+        foreach ($criteria as $key => $value) {
+            $criteriaFields[] = sprintf("%s = :%s", $key, $key);
+            $binds[sprintf(":%s", $key)] = $value;
+        }
+
+        if (!is_null($orderBy)) {
+            foreach ($orderBy as $key=>$value) {
+                $orderByFields[] = sprintf("%s %s", $key, $value);
+            }
+        }
+
+        $criteriaList = implode(' AND ', $criteriaFields);
+        $orderByList = implode(', ', $orderByFields);
+
+        $whereClause = 0 !== count($criteriaFields) ? sprintf('WHERE %s', $criteriaList) : '';
+        $orderByClause = 0 !== count($orderByFields) ? sprintf(' ORDER BY %s', $orderByList) : '';
+        $limitClause = !is_null($limit) ? ' LIMIT ' . $limit : '';
+        $offsetClause = !is_null($offset) ? ' OFFSET ' . $offset : '';
+
+        $prepared = $this->database->prepare('SELECT * FROM users ' . $whereClause . $orderByClause . $limitClause . $offsetClause);
+
+        return $this->database->execute($prepared, $binds, User::class);
     }
 
     public function findAll(): ?array
     {
-        return null;
+        $prepared = $this->database->prepare('select * from users');
+        return $this->database->execute($prepared, [], User::class);
     }
 
     public function create(object $user): bool

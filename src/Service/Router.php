@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace  App\Service;
 
+use App\Controller\Frontoffice\HomeController;
 use App\Controller\Frontoffice\PostController;
 use App\Controller\Frontoffice\UserController;
 use App\Model\Repository\PostRepository;
@@ -40,8 +41,6 @@ final class Router
         //On test si une action a été défini ? si oui alors on récupére l'action : sinon on mets une action par défaut (ici l'action posts)
         $action = $this->request->query()->has('action') ? $this->request->query()->get('action') : 'posts';
 
-        //Déterminer sur quelle route nous sommes // Attention algorithme naïf
-
         // *** @Route http://localhost:8000/?action=posts ***
         if ($action === 'posts') {
             //injection des dépendances et instanciation du controller
@@ -60,14 +59,20 @@ final class Router
 
             return $controller->displayOneAction((int) $this->request->query()->get('id'), $commentRepo);
 
-        // *** @Route http://localhost:8000/?action=login ***
-        } elseif ($action === 'login') {
+        // *** @Route http://localhost:8000/?action=home ***
+        } elseif ($action === 'home') {
+            $postRepo = new PostRepository($this->database);
+            $controller = new HomeController($postRepo, $this->view);
+
+            return $controller->index();
+
+        // *** @Route http://localhost:8000/?action=logout ***
+        } elseif ($action === 'home') {
             $userRepo = new UserRepository($this->database);
             $controller = new UserController($userRepo, $this->view, $this->session);
 
             return $controller->loginAction($this->request);
 
-        // *** @Route http://localhost:8000/?action=logout ***
         } elseif ($action === 'logout') {
             $userRepo = new UserRepository($this->database);
             $controller = new UserController($userRepo, $this->view, $this->session);
