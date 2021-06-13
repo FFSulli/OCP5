@@ -29,45 +29,36 @@ final class PostRepository implements EntityRepositoryInterface
         return $this->findBy($criteria, $orderBy, 1, 1)[0] ?? null;
     }
 
-    public function findBy(array $criteria, array $orderBy = null, ?int $limit = null, ?int $offset = null): array
+    public function findBy(array $criteria, ?array $orderBy = null, ?int $limit = null, ?int $offset = null): array
     {
-        $limitField = !is_null($limit) ? ' LIMIT ' . $limit : '';
-        $offsetField = !is_null($offset) ? ' OFFSET ' . $offset : '';
 
         $criteriaFields = [];
         $orderByFields = [];
+        $binds = [];
 
-        // Utiliser array_keys
-        foreach ($criteria as $key=>$value) {
+        foreach ($criteria as $key => $value) {
             $criteriaFields[] = sprintf("%s = :%s", $key, $key);
+            $binds[sprintf(":%s", $key)] = $value;
         }
 
-        foreach ($orderBy as $key=>$value) {
-            $orderByFields[] = sprintf("%s %s", $key, $value);
+        if (!is_null($orderBy)) {
+            foreach ($orderBy as $key=>$value) {
+                $orderByFields[] = sprintf("%s %s", $key, $value);
+            }
         }
 
         $criteriaList = implode(' AND ', $criteriaFields);
         $orderByList = implode(', ', $orderByFields);
 
         $whereClause = 0 !== count($criteriaFields) ? sprintf('WHERE %s', $criteriaList) : '';
-        $orderByClause = 0 !== count($orderByFields) ? sprintf('ORDER BY %s', $orderByList) : '';
+        $orderByClause = 0 !== count($orderByFields) ? sprintf(' ORDER BY %s', $orderByList) : '';
+        $limitClause = !is_null($limit) ? ' LIMIT ' . $limit : '';
+        $offsetClause = !is_null($offset) ? ' OFFSET ' . $offset : '';
 
-        // SELECT * FROM post WHERE id = :id AND name = :name ORDER BY id DESC LIMIT 1 OFFSET 1
-        // SELECT * FROM $tableName $whereClause $orderByClause $limitClause $offsetClause
-        $prepared = $this->database->prepare('SELECT * FROM posts $whereClause limitField=:limitField offsetField=:offsetField WHERE criteria_list=:criteria_list ORDER BY orderBy_list=:orderBy_list');
-        $data = $this->database->execute($prepared, [
-            ":limitField" => $limitField,
-            ":offsetField" => $offsetField,
-            ":criteria_list" => $criteriaList,
-            ":orderBy_list" => $orderByList
-        ], Post::class);
+        $prepared = $this->database->prepare('SELECT * FROM posts ' . $whereClause . $orderByClause . $limitClause . $offsetClause);
 
-        $results = [];
-        foreach ($data as $row) {
-            $results[] = Post::fromArray($row);
-        }
+        return $this->database->execute($prepared, $binds, Post::class);
 
-        return $results;
     }
 
     public function findAll(): ?array
