@@ -33,42 +33,38 @@ final class UserRepository implements EntityRepositoryInterface
 
     public function findBy(array $criteria, array $orderBy = null, int $limit = null, int $offset = null): ?array
     {
-        $limit_field = !is_null($limit) ? ' LIMIT ' . $limit : '';
-        $offset_field = !is_null($offset) ? ' OFFSET ' . $offset : '';
+        $criteriaFields = [];
+        $orderByFields = [];
+        $binds = [];
 
-        $criteria_fields = [];
-        $orderBy_fields = [];
-
-        foreach ($criteria as $key=>$value) {
-            $criteria_fields[] = sprintf("%s = '%s'", $key, $value);
+        foreach ($criteria as $key => $value) {
+            $criteriaFields[] = sprintf("%s = :%s", $key, $key);
+            $binds[sprintf(":%s", $key)] = $value;
         }
 
-        foreach ($orderBy as $key=>$value) {
-            $orderBy_fields[] = sprintf("%s %s", $key, $value);
+        if (!is_null($orderBy)) {
+            foreach ($orderBy as $key=>$value) {
+                $orderByFields[] = sprintf("%s %s", $key, $value);
+            }
         }
 
-        $criteria_list = implode(' AND ', $criteria_fields);
-        $orderBy_list = implode(', ', $orderBy_fields);
+        $criteriaList = implode(' AND ', $criteriaFields);
+        $orderByList = implode(', ', $orderByFields);
 
-        $prepared = $this->database->prepare('SELECT * FROM users limit_field=:limit_field offset_field=:offset_field WHERE criteria_list=:criteria_list ORDER BY orderBy_list=:orderBy_list');
-        $data = $this->database->execute($prepared, [
-            ":limit_field" => $limit_field,
-            ":offset_field" => $offset_field,
-            ":criteria_list" => $criteria_list,
-            ":orderBy_list" => $orderBy_list
-        ], User::class);
+        $whereClause = 0 !== count($criteriaFields) ? sprintf('WHERE %s', $criteriaList) : '';
+        $orderByClause = 0 !== count($orderByFields) ? sprintf(' ORDER BY %s', $orderByList) : '';
+        $limitClause = !is_null($limit) ? ' LIMIT ' . $limit : '';
+        $offsetClause = !is_null($offset) ? ' OFFSET ' . $offset : '';
 
-        $results = [];
-        foreach ($data as $row) {
-            $results[] = User::fromArray($row);
-        }
+        $prepared = $this->database->prepare('SELECT * FROM users ' . $whereClause . $orderByClause . $limitClause . $offsetClause);
 
-        return $results;
+        return $this->database->execute($prepared, $binds, User::class);
     }
 
     public function findAll(): ?array
     {
-        return null;
+        $prepared = $this->database->prepare('select * from users');
+        return $this->database->execute($prepared, [], User::class);
     }
 
     public function create(object $user): bool
