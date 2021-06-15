@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace  App\Service;
 
-use App\Controller\Frontoffice\HomeController;
 use App\Controller\Frontoffice\PostController;
 use App\Controller\Frontoffice\UserController;
 use App\Model\Repository\PostRepository;
@@ -44,7 +43,7 @@ final class Router
         // *** @Route http://localhost:8000/?action=posts ***
         if ($action === 'posts') {
             //injection des dépendances et instanciation du controller
-            $postRepo = new PostRepository();
+            $postRepo = new PostRepository($this->database);
             $controller = new PostController($postRepo, $this->view);
 
             return $controller->displayAllAction();

@@ -41,7 +41,7 @@ final class PostController
         return $response;
     }
 
-    public function displayAllAction(): Response
+    public function displayAllPostsAction(): Response
     {
         $posts = $this->postRepository->findAll();
 

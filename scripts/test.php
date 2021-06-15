@@ -16,3 +16,7 @@ $post = $db->execute($prepared, [
 
 var_dump($prepared);
 
+$newRouter = new \App\Service\NewRouter(require __DIR__ . "/../config/routes.php");
+
+var_dump($newRouter);
+

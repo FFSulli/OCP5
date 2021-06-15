@@ -37,15 +37,15 @@ final class UserRepository implements EntityRepositoryInterface
         $orderByFields = [];
         $binds = [];
 
-        foreach ($criteria as $key => $value) {
-            $criteriaFields[] = sprintf("%s = :%s", $key, $key);
-            $binds[sprintf(":%s", $key)] = $value;
+        $criteria_fields = [];
+        $orderBy_fields = [];
+
+        foreach ($criteria as $key=>$value) {
+            $criteria_fields[] = sprintf("%s = '%s'", $key, $value);
         }
 
-        if (!is_null($orderBy)) {
-            foreach ($orderBy as $key=>$value) {
-                $orderByFields[] = sprintf("%s %s", $key, $value);
-            }
+        foreach ($orderBy as $key=>$value) {
+            $orderBy_fields[] = sprintf("%s %s", $key, $value);
         }
 
         $criteriaList = implode(' AND ', $criteriaFields);

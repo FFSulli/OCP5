@@ -36,15 +36,14 @@ final class PostRepository implements EntityRepositoryInterface
         $orderByFields = [];
         $binds = [];
 
-        foreach ($criteria as $key => $value) {
+        // Utiliser array_keys
+        foreach ($criteria as $key=>$value) {
             $criteriaFields[] = sprintf("%s = :%s", $key, $key);
             $binds[sprintf(":%s", $key)] = $value;
         }
 
-        if (!is_null($orderBy)) {
-            foreach ($orderBy as $key=>$value) {
-                $orderByFields[] = sprintf("%s %s", $key, $value);
-            }
+        foreach ($orderBy as $key=>$value) {
+            $orderByFields[] = sprintf("%s %s", $key, $value);
         }
 
         $criteriaList = implode(' AND ', $criteriaFields);
