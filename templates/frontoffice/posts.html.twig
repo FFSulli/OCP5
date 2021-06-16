@@ -5,6 +5,11 @@
 {% block content %}
     <h2 class="text-center text-2xl sm:text-4xl font-bold text-indigo-500 dark:text-green-400 py-8">Tous les articles</h2>
     <section class="flex flex-col space-y-3 mt-8 mb-16 px-8">
+        <div class="text-center text-xl">
+            {% if posts|length == 0 %}
+                Aucun article en ligne pour le moment
+            {% endif %}
+        </div>
         {% for post in posts %}
             <a href="#">
                 <article class="border rounded border-gray-100 hover:border-indigo-500 dark:border-gray-500 dark:hover:border-green-400 transition ease-in-out duration-500 p-4">
