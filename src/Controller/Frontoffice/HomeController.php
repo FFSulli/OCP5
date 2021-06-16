@@ -26,6 +26,8 @@ class HomeController
             "post_status_fk" => 2
         ], null, 3, 0);
 
+        var_dump($posts[0]);
+
         return new Response($this->view->render([
             'template' => 'home',
             'data' => ['posts' => $posts],
