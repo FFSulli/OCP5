@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace  App\Service;
 
+use App\Controller\Frontoffice\HomeController;
 use App\Controller\Frontoffice\PostController;
 use App\Controller\Frontoffice\UserController;
 use App\Model\Repository\PostRepository;
@@ -37,20 +38,17 @@ final class Router
 
     public function run(): Response
     {
-        //On test si une action a été défini ? si oui alors on récupére l'action : sinon on mets une action par défaut (ici l'action posts)
         $action = $this->request->query()->has('action') ? $this->request->query()->get('action') : 'posts';
 
         // *** @Route http://localhost:8000/?action=posts ***
         if ($action === 'posts') {
-            //injection des dépendances et instanciation du controller
-            $postRepo = new PostRepository($this->database);
+            $postRepo = new PostRepository();
             $controller = new PostController($postRepo, $this->view);
 
-            return $controller->displayAllAction();
+            return $controller->displayAllPostsAction();
 
         // *** @Route http://localhost:8000/?action=post&id=5 ***
         } elseif ($action === 'post' && $this->request->query()->has('id')) {
-            //injection des dépendances et instanciation du controller
             $postRepo = new PostRepository();
             $controller = new PostController($postRepo, $this->view);
 
