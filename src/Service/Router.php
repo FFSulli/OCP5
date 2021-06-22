@@ -38,21 +38,18 @@ final class Router
 
     public function run(): Response
     {
-        //On test si une action a été défini ? si oui alors on récupére l'action : sinon on mets une action par défaut (ici l'action posts)
         $action = $this->request->query()->has('action') ? $this->request->query()->get('action') : 'posts';
 
         // *** @Route http://localhost:8000/?action=posts ***
         if ($action === 'posts') {
-            //injection des dépendances et instanciation du controller
-            $postRepo = new PostRepository($this->database);
+            $postRepo = new PostRepository();
             $controller = new PostController($postRepo, $this->view);
 
-            return $controller->displayAllAction();
+            return $controller->displayAllPostsAction();
 
         // *** @Route http://localhost:8000/?action=post&id=5 ***
         } elseif ($action === 'post' && $this->request->query()->has('id')) {
-            //injection des dépendances et instanciation du controller
-            $postRepo = new PostRepository($this->database);
+            $postRepo = new PostRepository();
             $controller = new PostController($postRepo, $this->view);
 
             $commentRepo = new CommentRepository($this->database);
@@ -61,20 +58,20 @@ final class Router
 
         // *** @Route http://localhost:8000/?action=home ***
         } elseif ($action === 'home') {
-            $postRepo = new PostRepository($this->database);
+            $postRepo = new PostRepository();
             $controller = new HomeController($postRepo, $this->view);
 
             return $controller->index();
 
         // *** @Route http://localhost:8000/?action=logout ***
         } elseif ($action === 'home') {
-            $userRepo = new UserRepository($this->database);
+            $userRepo = new UserRepository();
             $controller = new UserController($userRepo, $this->view, $this->session);
 
             return $controller->loginAction($this->request);
 
         } elseif ($action === 'logout') {
-            $userRepo = new UserRepository($this->database);
+            $userRepo = new UserRepository();
             $controller = new UserController($userRepo, $this->view, $this->session);
 
             return $controller->logoutAction();

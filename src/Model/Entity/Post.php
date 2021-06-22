@@ -8,7 +8,7 @@ use App\Model\Entity\Interfaces\EntityObjectInterface;
 
 final class Post
 {
-    private int $id = 1;
+    private int $postId = 1;
     private string $title = "";
     private string $excerpt;
     private string $content;
@@ -20,18 +20,18 @@ final class Post
     /**
      * @return int
      */
-    public function getId(): int
+    public function getPostId(): int
     {
-        return $this->id;
+        return $this->postId;
     }
 
     /**
-     * @param int $id
+     * @param int $postId
      * @return $this
      */
-    public function setId(int $id): self
+    public function setPostId(int $postId): self
     {
-        $this->id = $id;
+        $this->postId = $postId;
         return $this;
     }
 
@@ -161,49 +161,4 @@ final class Post
         return $this;
     }
 
-    /**
-     * @param $data
-     * @return static
-     */
-    public static function fromArray($data): self
-    {
-        $self = new self();
-
-        if (isset($data["id"]))
-        {
-            $self->setId($data["id"]);
-        }
-
-        if (isset($data["title"]))
-        {
-            $self->setTitle($data["title"]);
-        }
-
-        if (isset($data["excerpt"]))
-        {
-            $self->setExcerpt($data["excerpt"]);
-        }
-
-        if (isset($data["content"]))
-        {
-            $self->setContent($data["content"]);
-        }
-
-        if (isset($data["created_at"]))
-        {
-            $self->setCreatedAt($data["created_at"]);
-        }
-
-        if (isset($data["updated_at"]))
-        {
-            $self->setUpdatedAt($data["updated_at"]);
-        }
-
-        if (isset($data["user_fk"]))
-        {
-            $self->setUserFk($data["user_fk"]);
-        }
-
-        return $self;
-    }
 }

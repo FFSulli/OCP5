@@ -15,15 +15,15 @@ final class CommentRepository implements EntityRepositoryInterface
 {
     private MySQLDB $database;
 
-    public function __construct(MySQLDB $database)
+    public function __construct()
     {
         (new DotEnv(__DIR__ . '/../../../.env'))->load();
         $this->database = new MySQLDB(getenv('DATABASE_HOST'), getenv('DATABASE_NAME'), getenv('DATABASE_USER'), getenv('DATABASE_PASSWORD'));
     }
 
-    public function find(int $id): ?Comment
+    public function find(int $commentId): ?Comment
     {
-        return $this->findOneBy(['id' => $id]);
+        return $this->findOneBy(['id' => $commentId]);
     }
 
     public function findOneBy(array $criteria, array $orderBy = null): ?Comment

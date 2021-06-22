@@ -20,10 +20,10 @@ final class PostController
         $this->view = $view;
     }
 
-    public function displayOneAction(int $id, CommentRepository $commentRepository): Response
+    public function displayOneAction(int $postId, CommentRepository $commentRepository): Response
     {
-        $post = $this->postRepository->findOneBy(['id' => $id]);
-        $comments = $commentRepository->findBy(['idPost' => $id]);
+        $post = $this->postRepository->findOneBy(['id' => $postId]);
+        $comments = $commentRepository->findBy(['post_fk' => $postId]);
         $response = new Response('<h1>faire une redirection vers la page d\'erreur, ce post n\'existe pas</h1><a href="index.php?action=posts">Liste des posts</a><br>', 404);
 
         if ($post !== null) {
@@ -41,7 +41,7 @@ final class PostController
         return $response;
     }
 
-    public function displayAllAction(): Response
+    public function displayAllPostsAction(): Response
     {
         $posts = $this->postRepository->findAll();
 

@@ -8,7 +8,7 @@ use App\Model\Entity\Interfaces\EntityObjectInterface;
 
 final class User
 {
-    private int $id = 1;
+    private int $userId = 1;
     private string $first_name;
     private string $last_name;
     private string $email;
@@ -18,18 +18,18 @@ final class User
     /**
      * @return int
      */
-    public function getId(): int
+    public function getUserId(): int
     {
-        return $this->id;
+        return $this->userId;
     }
 
     /**
-     * @param int $id
+     * @param int $userId
      * @return User
      */
-    public function setId(int $id): User
+    public function setUserId(int $userId): User
     {
-        $this->id = $id;
+        $this->userId = $userId;
         return $this;
     }
 

@@ -19,14 +19,14 @@ final class PostRepository implements EntityRepositoryInterface
         $this->database = new MySQLDB(getenv('DATABASE_HOST'), getenv('DATABASE_NAME'), getenv('DATABASE_USER'), getenv('DATABASE_PASSWORD'));
     }
 
-    public function find(int $id): ?Post
+    public function find(int $postId): ?Post
     {
-        return $this->findOneBy(['id' => $id]);
+        return $this->findOneBy(['id' => $postId]);
     }
 
     public function findOneBy(array $criteria, array $orderBy = null): ?Post
     {
-        return $this->findBy($criteria, $orderBy, 1, 1)[0] ?? null;
+        return $this->findBy($criteria, $orderBy, 1, 0)[0] ?? null;
     }
 
     public function findBy(array $criteria, ?array $orderBy = null, ?int $limit = null, ?int $offset = null): array

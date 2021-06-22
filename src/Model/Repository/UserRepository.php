@@ -15,15 +15,15 @@ final class UserRepository implements EntityRepositoryInterface
     private MySQLDB $database;
 
 
-    public function __construct(MySQLDB $database)
+    public function __construct()
     {
         (new DotEnv(__DIR__ . '/../../../.env'))->load();
         $this->database = new MySQLDB(getenv('DATABASE_HOST'), getenv('DATABASE_NAME'), getenv('DATABASE_USER'), getenv('DATABASE_PASSWORD'));
     }
 
-    public function find(int $id): ?User
+    public function find(int $userId): ?User
     {
-        return $this->findOneBy(['id' => $id]);
+        return $this->findOneBy(['id' => $userId]);
     }
 
     public function findOneBy(array $criteria, array $orderBy = null): ?User
@@ -37,15 +37,15 @@ final class UserRepository implements EntityRepositoryInterface
         $orderByFields = [];
         $binds = [];
 
-        foreach ($criteria as $key => $value) {
-            $criteriaFields[] = sprintf("%s = :%s", $key, $key);
-            $binds[sprintf(":%s", $key)] = $value;
+        $criteria_fields = [];
+        $orderBy_fields = [];
+
+        foreach ($criteria as $key=>$value) {
+            $criteria_fields[] = sprintf("%s = '%s'", $key, $value);
         }
 
-        if (!is_null($orderBy)) {
-            foreach ($orderBy as $key=>$value) {
-                $orderByFields[] = sprintf("%s %s", $key, $value);
-            }
+        foreach ($orderBy as $key=>$value) {
+            $orderBy_fields[] = sprintf("%s %s", $key, $value);
         }
 
         $criteriaList = implode(' AND ', $criteriaFields);

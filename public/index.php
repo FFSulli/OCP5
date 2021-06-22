@@ -21,3 +21,6 @@ $request = new Request($_GET, $_POST, $_FILES, $_SERVER);
 $router = new Router($request);
 $response = $router->run();
 $response->send();
+
+$newRouter = new \App\Service\NewRouter(require __DIR__ . "/../config/routes.php");
+
