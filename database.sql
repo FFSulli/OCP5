@@ -27,7 +27,7 @@ SET time_zone = "+00:00";
 -- Structure de la table `comments`
 --
 
-CREATE TABLE `comments` (
+CREATE TABLE comments (
   `id` int(11) NOT NULL,
   `content` text NOT NULL,
   `verified` tinyint(1) NOT NULL,
@@ -42,7 +42,7 @@ CREATE TABLE `comments` (
 -- Structure de la table `posts`
 --
 
-CREATE TABLE `posts` (
+CREATE TABLE posts (
   `id` int(11) NOT NULL,
   `title` varchar(255) NOT NULL,
   `excerpt` text NOT NULL,
@@ -57,7 +57,7 @@ CREATE TABLE `posts` (
 -- Déchargement des données de la table `posts`
 --
 
-INSERT INTO `posts` (`id`, `title`, `excerpt`, `content`, `slug`, `created_at`, `updated_at`, `user_fk`) VALUES
+INSERT INTO posts (`id`, `title`, `excerpt`, `content`, `slug`, `created_at`, `updated_at`, `user_fk`) VALUES
 (2, 'Post test 2', 'This is an excerpt - Post test 2', 'This is the content - Post test 2', 'post-test-2', '2021-02-17 08:53:34', '2021-02-17 08:53:34', 3),
 (4, 'Post test 4', 'This is an excerpt - Post test 4', 'This is the content - Post test 4', 'post-test-4', '2021-02-17 08:53:34', '2021-02-17 08:53:34', 4),
 (5, 'Post test 5', 'This is an excerpt - Post test 5', 'This is the content - Post test 5', 'post-test-5', '2021-02-17 08:53:34', '2021-02-17 08:53:34', 5),
@@ -69,7 +69,7 @@ INSERT INTO `posts` (`id`, `title`, `excerpt`, `content`, `slug`, `created_at`, 
 -- Structure de la table `posts_tags`
 --
 
-CREATE TABLE `posts_tags` (
+CREATE TABLE posts_tags (
   `id` int(11) NOT NULL,
   `post_fk` int(11) NOT NULL,
   `tag_fk` int(11) NOT NULL
@@ -79,7 +79,7 @@ CREATE TABLE `posts_tags` (
 -- Déchargement des données de la table `posts_tags`
 --
 
-INSERT INTO `posts_tags` (`id`, `post_fk`, `tag_fk`) VALUES
+INSERT INTO posts_tags (`id`, `post_fk`, `tag_fk`) VALUES
 (4, 2, 5),
 (5, 2, 7),
 (8, 4, 6),
@@ -95,7 +95,7 @@ INSERT INTO `posts_tags` (`id`, `post_fk`, `tag_fk`) VALUES
 -- Structure de la table `roles`
 --
 
-CREATE TABLE `roles` (
+CREATE TABLE roles (
   `id` int(11) NOT NULL,
   `role` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -104,7 +104,7 @@ CREATE TABLE `roles` (
 -- Déchargement des données de la table `roles`
 --
 
-INSERT INTO `roles` (`id`, `role`) VALUES
+INSERT INTO roles (`id`, `role`) VALUES
 (3, 'ADMIN'),
 (2, 'EDITOR'),
 (1, 'READER');
@@ -115,7 +115,7 @@ INSERT INTO `roles` (`id`, `role`) VALUES
 -- Structure de la table `tags`
 --
 
-CREATE TABLE `tags` (
+CREATE TABLE tags (
   `id` int(11) NOT NULL,
   `name` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -124,7 +124,7 @@ CREATE TABLE `tags` (
 -- Déchargement des données de la table `tags`
 --
 
-INSERT INTO `tags` (`id`, `name`) VALUES
+INSERT INTO tags (`id`, `name`) VALUES
 (1, 'tag-1'),
 (2, 'tag-2'),
 (3, 'tag-3'),
@@ -140,7 +140,7 @@ INSERT INTO `tags` (`id`, `name`) VALUES
 -- Structure de la table `users`
 --
 
-CREATE TABLE `users` (
+CREATE TABLE users (
   `id` int(11) NOT NULL,
   `first_name` varchar(100) NOT NULL,
   `last_name` varchar(100) NOT NULL,
@@ -153,7 +153,7 @@ CREATE TABLE `users` (
 -- Déchargement des données de la table `users`
 --
 
-INSERT INTO `users` (`id`, `first_name`, `last_name`, `email`, `password`, `role_fk`) VALUES
+INSERT INTO users (`id`, `first_name`, `last_name`, `email`, `password`, `role_fk`) VALUES
 (3, 'Jane', 'Doe', 'jane.doe@gmail.com', '$2y$12$0lJaWwoFf2n3NtGLLz4pdupBp3A6aM8ctrbtJUx34HAKR6AQ3nTT2', 2),
 (4, 'John', 'Dude', 'john.dude@gmail.com', '$2y$12$0lJaWwoFf2n3NtGLLz4pdupBp3A6aM8ctrbtJUx34HAKR6AQ3nTT2', 2),
 (5, 'Sullivan', 'Berger', 'sullivan.berger@gmail.com', '$2y$12$0lJaWwoFf2n3NtGLLz4pdupBp3A6aM8ctrbtJUx34HAKR6AQ3nTT2', 3);
@@ -165,7 +165,7 @@ INSERT INTO `users` (`id`, `first_name`, `last_name`, `email`, `password`, `role
 --
 -- Index pour la table `comments`
 --
-ALTER TABLE `comments`
+ALTER TABLE comments
   ADD PRIMARY KEY (`id`),
   ADD KEY `user_fk` (`user_fk`),
   ADD KEY `post_fk` (`post_fk`);
@@ -173,14 +173,14 @@ ALTER TABLE `comments`
 --
 -- Index pour la table `posts`
 --
-ALTER TABLE `posts`
+ALTER TABLE posts
   ADD PRIMARY KEY (`id`),
   ADD KEY `user_fk` (`user_fk`);
 
 --
 -- Index pour la table `posts_tags`
 --
-ALTER TABLE `posts_tags`
+ALTER TABLE posts_tags
   ADD PRIMARY KEY (`id`),
   ADD KEY `post_fk` (`post_fk`),
   ADD KEY `tag_fk` (`tag_fk`);
@@ -188,21 +188,21 @@ ALTER TABLE `posts_tags`
 --
 -- Index pour la table `roles`
 --
-ALTER TABLE `roles`
+ALTER TABLE roles
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `role` (`role`);
 
 --
 -- Index pour la table `tags`
 --
-ALTER TABLE `tags`
+ALTER TABLE tags
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `name` (`name`);
 
 --
 -- Index pour la table `users`
 --
-ALTER TABLE `users`
+ALTER TABLE users
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `email` (`email`),
   ADD KEY `role_fk` (`role_fk`);
@@ -214,31 +214,31 @@ ALTER TABLE `users`
 --
 -- AUTO_INCREMENT pour la table `comments`
 --
-ALTER TABLE `comments`
+ALTER TABLE comments
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT pour la table `posts`
 --
-ALTER TABLE `posts`
+ALTER TABLE posts
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT pour la table `posts_tags`
 --
-ALTER TABLE `posts_tags`
+ALTER TABLE posts_tags
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT pour la table `tags`
 --
-ALTER TABLE `tags`
+ALTER TABLE tags
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT pour la table `users`
 --
-ALTER TABLE `users`
+ALTER TABLE users
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
@@ -248,27 +248,27 @@ ALTER TABLE `users`
 --
 -- Contraintes pour la table `comments`
 --
-ALTER TABLE `comments`
+ALTER TABLE comments
   ADD CONSTRAINT `comments_ibfk_1` FOREIGN KEY (`user_fk`) REFERENCES `users` (`id`) ON DELETE CASCADE,
   ADD CONSTRAINT `comments_ibfk_2` FOREIGN KEY (`post_fk`) REFERENCES `posts` (`id`) ON DELETE CASCADE;
 
 --
 -- Contraintes pour la table `posts`
 --
-ALTER TABLE `posts`
+ALTER TABLE posts
   ADD CONSTRAINT `posts_ibfk_1` FOREIGN KEY (`user_fk`) REFERENCES `users` (`id`) ON DELETE CASCADE;
 
 --
 -- Contraintes pour la table `posts_tags`
 --
-ALTER TABLE `posts_tags`
+ALTER TABLE posts_tags
   ADD CONSTRAINT `posts_tags_ibfk_1` FOREIGN KEY (`post_fk`) REFERENCES `posts` (`id`) ON DELETE CASCADE,
   ADD CONSTRAINT `posts_tags_ibfk_2` FOREIGN KEY (`tag_fk`) REFERENCES `tags` (`id`) ON DELETE CASCADE;
 
 --
 -- Contraintes pour la table `users`
 --
-ALTER TABLE `users`
+ALTER TABLE users
   ADD CONSTRAINT `users_ibfk_1` FOREIGN KEY (`role_fk`) REFERENCES `roles` (`id`) ON DELETE CASCADE;
 COMMIT;
 
