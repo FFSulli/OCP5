@@ -49,7 +49,7 @@ class Route
      */
     public function setMethods(?array $methods): Route
     {
-        if (is_null($methods)) {
+        if (null === $methods) {
             $methods = self::HTTP_METHODS;
         }
 
