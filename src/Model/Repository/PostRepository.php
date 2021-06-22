@@ -41,7 +41,7 @@ final class PostRepository implements EntityRepositoryInterface
             $binds[sprintf(":%s", $key)] = $value;
         }
 
-        if (!is_null($orderBy)) {
+        if (null !== $orderBy) {
             foreach ($orderBy as $key=>$value) {
                 $orderByFields[] = sprintf("%s %s", $key, $value);
             }
@@ -52,8 +52,8 @@ final class PostRepository implements EntityRepositoryInterface
 
         $whereClause = 0 !== count($criteriaFields) ? sprintf('WHERE %s', $criteriaList) : '';
         $orderByClause = 0 !== count($orderByFields) ? sprintf(' ORDER BY %s', $orderByList) : '';
-        $limitClause = !is_null($limit) ? ' LIMIT ' . $limit : '';
-        $offsetClause = !is_null($offset) ? ' OFFSET ' . $offset : '';
+        $limitClause = null !== $limit ? ' LIMIT ' . $limit : '';
+        $offsetClause = null !== $offset ? ' OFFSET ' . $offset : '';
 
         $prepared = $this->database->prepare('SELECT * FROM posts ' . $whereClause . $orderByClause . $limitClause . $offsetClause);
 
