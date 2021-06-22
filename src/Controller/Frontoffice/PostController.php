@@ -22,8 +22,11 @@ final class PostController
 
     public function displayOneAction(int $postId, CommentRepository $commentRepository): Response
     {
-        $post = $this->postRepository->findOneBy(['id' => $postId]);
-        $comments = $commentRepository->findBy(['post_fk' => $postId]);
+        $post = $this->postRepository->findOneBy(["id" => $postId]);
+        $comments = $commentRepository->findBy([
+            "post_fk" => $postId,
+            "verified" => 1
+        ]);
         $response = new Response('<h1>faire une redirection vers la page d\'erreur, ce post n\'existe pas</h1><a href="index.php?action=posts">Liste des posts</a><br>', 404);
 
         if ($post !== null) {

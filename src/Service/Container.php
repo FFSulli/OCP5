@@ -14,7 +14,7 @@ class Container
         return $this;
     }
 
-    public function get(string $serviceName)
+    public function get(string $serviceName): ?string
     {
         if (array_key_exists($serviceName, $this->instances)) {
             return $this->instances[$serviceName];

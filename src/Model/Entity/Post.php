@@ -14,7 +14,7 @@ final class Post
     private string $content;
     private string $slug;
     private string $created_at;
-    private string $updated_at;
+    private ?string $updated_at = null;
     private int $user_fk;
 
     /**
@@ -160,5 +160,4 @@ final class Post
         $this->user_fk = $user_fk;
         return $this;
     }
-
 }

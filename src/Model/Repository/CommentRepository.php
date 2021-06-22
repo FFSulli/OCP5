@@ -1,6 +1,5 @@
 <?php
 
-
 declare(strict_types=1);
 
 namespace App\Model\Repository;
@@ -43,7 +42,7 @@ final class CommentRepository implements EntityRepositoryInterface
         }
 
         if (null !== $orderBy) {
-            foreach ($orderBy as $key=>$value) {
+            foreach ($orderBy as $key => $value) {
                 $orderByFields[] = sprintf("%s %s", $key, $value);
             }
         }
@@ -67,18 +66,18 @@ final class CommentRepository implements EntityRepositoryInterface
         return $this->database->execute($prepared, [], Comment::class);
     }
 
-//    public function create(object $comment): bool
-//    {
-//        return false ;
-//    }
-//
-//    public function update(object $comment): bool
-//    {
-//        return false;
-//    }
-//
-//    public function delete(object $comment): bool
-//    {
-//        return false;
-//    }
+    public function create(object $comment): bool
+    {
+        return false ;
+    }
+
+    public function update(object $comment): bool
+    {
+        return false;
+    }
+
+    public function delete(object $comment): bool
+    {
+        return false;
+    }
 }

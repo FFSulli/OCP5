@@ -52,7 +52,7 @@ final class Router
             $postRepo = new PostRepository();
             $controller = new PostController($postRepo, $this->view);
 
-            $commentRepo = new CommentRepository($this->database);
+            $commentRepo = new CommentRepository();
 
             return $controller->displayOneAction((int) $this->request->query()->get('id'), $commentRepo);
 
@@ -64,12 +64,11 @@ final class Router
             return $controller->index();
 
         // *** @Route http://localhost:8000/?action=logout ***
-        } elseif ($action === 'home') {
-            $userRepo = new UserRepository();
-            $controller = new UserController($userRepo, $this->view, $this->session);
-
-            return $controller->loginAction($this->request);
-
+//        } elseif ($action === 'home') {
+//            $userRepo = new UserRepository();
+//            $controller = new UserController($userRepo, $this->view, $this->session);
+//
+//            return $controller->loginAction($this->request);
         } elseif ($action === 'logout') {
             $userRepo = new UserRepository();
             $controller = new UserController($userRepo, $this->view, $this->session);
