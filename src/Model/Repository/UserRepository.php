@@ -67,18 +67,18 @@ final class UserRepository implements EntityRepositoryInterface
         return $this->database->execute($prepared, [], User::class);
     }
 
-    public function create(object $user): bool
-    {
-        return false;
-    }
-
-    public function update(object $user): bool
-    {
-        return false;
-    }
-
-    public function delete(object $user): bool
-    {
-        return false;
-    }
+//    public function create(object $user): bool
+//    {
+//        return false;
+//    }
+//
+//    public function update(object $user): bool
+//    {
+//        return false;
+//    }
+//
+//    public function delete(object $user): bool
+//    {
+//        return false;
+//    }
 }

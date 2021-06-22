@@ -67,18 +67,18 @@ final class CommentRepository implements EntityRepositoryInterface
         return $this->database->execute($prepared, [], Comment::class);
     }
 
-    public function create(object $comment): bool
-    {
-        return false ;
-    }
-
-    public function update(object $comment): bool
-    {
-        return false;
-    }
-
-    public function delete(object $comment): bool
-    {
-        return false;
-    }
+//    public function create(object $comment): bool
+//    {
+//        return false ;
+//    }
+//
+//    public function update(object $comment): bool
+//    {
+//        return false;
+//    }
+//
+//    public function delete(object $comment): bool
+//    {
+//        return false;
+//    }
 }

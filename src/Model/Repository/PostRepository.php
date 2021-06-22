@@ -67,19 +67,19 @@ final class PostRepository implements EntityRepositoryInterface
         return $this->database->execute($prepared, [], Post::class);
     }
 
-    public function create(object $post): bool
-    {
-        /** @var Post $post */
-        return false;
-    }
-
-    public function update(object $post): bool
-    {
-        return false;
-    }
-
-    public function delete(object $post): bool
-    {
-        return false;
-    }
+//    public function create(object $post): bool
+//    {
+//        /** @var Post $post */
+//        return false;
+//    }
+//
+//    public function update(object $post): bool
+//    {
+//        return false;
+//    }
+//
+//    public function delete(object $post): bool
+//    {
+//        return false;
+//    }
 }
