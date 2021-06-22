@@ -6,7 +6,7 @@ namespace App\Model\Repository\Interfaces;
 
 interface EntityRepositoryInterface
 {
-    public function find(int $id): ?object;
+    public function find(int $entityId): ?object;
 
     public function findOneBy(array $criteria, array $orderBy = null): ?object;
 

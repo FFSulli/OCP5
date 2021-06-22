@@ -8,7 +8,7 @@ use App\Model\Entity\Interfaces\EntityObjectInterface;
 
 final class Post
 {
-    private int $id = 1;
+    private int $postId = 1;
     private string $title = "";
     private string $excerpt;
     private string $content;
@@ -20,18 +20,18 @@ final class Post
     /**
      * @return int
      */
-    public function getId(): int
+    public function getPostId(): int
     {
-        return $this->id;
+        return $this->postId;
     }
 
     /**
-     * @param int $id
+     * @param int $postId
      * @return $this
      */
-    public function setId(int $id): self
+    public function setPostId(int $postId): self
     {
-        $this->id = $id;
+        $this->postId = $postId;
         return $this;
     }
 

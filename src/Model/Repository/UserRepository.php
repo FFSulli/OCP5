@@ -21,9 +21,9 @@ final class UserRepository implements EntityRepositoryInterface
         $this->database = new MySQLDB(getenv('DATABASE_HOST'), getenv('DATABASE_NAME'), getenv('DATABASE_USER'), getenv('DATABASE_PASSWORD'));
     }
 
-    public function find(int $id): ?User
+    public function find(int $userId): ?User
     {
-        return $this->findOneBy(['id' => $id]);
+        return $this->findOneBy(['id' => $userId]);
     }
 
     public function findOneBy(array $criteria, array $orderBy = null): ?User
