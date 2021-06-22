@@ -26,7 +26,7 @@ final class PostRepository implements EntityRepositoryInterface
 
     public function findOneBy(array $criteria, array $orderBy = null): ?Post
     {
-        return $this->findBy($criteria, $orderBy, 1, 1)[0] ?? null;
+        return $this->findBy($criteria, $orderBy, 1, 0)[0] ?? null;
     }
 
     public function findBy(array $criteria, ?array $orderBy = null, ?int $limit = null, ?int $offset = null): array
