@@ -30,9 +30,16 @@ class MySQLDB implements DatabaseInterface
      * @param string $PDOClass
      * @return array
      */
-    public function execute(PDOStatement $prepared, array $args, string $PDOClass): array
+    public function execute(PDOStatement $prepared, array $args, string $PDOClass): ?array
     {
         $prepared->execute($args);
-        return $prepared->fetchAll(PDO::FETCH_CLASS, $PDOClass);
+
+        $execute = $prepared->fetchAll(PDO::FETCH_CLASS, $PDOClass);
+
+        if ($execute === false) {
+            return null;
+        }
+
+        return $execute;
     }
 }

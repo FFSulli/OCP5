@@ -17,7 +17,7 @@ class AdminController
         $this->view = $view;
     }
 
-    public function displayAdminHomepageAction()
+    public function displayAdminHomepageAction(): Response
     {
         return new Response($this->view->render([
             'template' => '../backoffice/admin_homepage',

@@ -1,6 +1,5 @@
 <?php
 
-
 declare(strict_types=1);
 
 namespace App\Model\Repository;
@@ -42,8 +41,8 @@ final class CommentRepository implements EntityRepositoryInterface
             $binds[sprintf(":%s", $key)] = $value;
         }
 
-        if (!is_null($orderBy)) {
-            foreach ($orderBy as $key=>$value) {
+        if (null !== $orderBy) {
+            foreach ($orderBy as $key => $value) {
                 $orderByFields[] = sprintf("%s %s", $key, $value);
             }
         }
@@ -53,8 +52,8 @@ final class CommentRepository implements EntityRepositoryInterface
 
         $whereClause = 0 !== count($criteriaFields) ? sprintf('WHERE %s', $criteriaList) : '';
         $orderByClause = 0 !== count($orderByFields) ? sprintf(' ORDER BY %s', $orderByList) : '';
-        $limitClause = !is_null($limit) ? ' LIMIT ' . $limit : '';
-        $offsetClause = !is_null($offset) ? ' OFFSET ' . $offset : '';
+        $limitClause = null !== $limit ? ' LIMIT ' . $limit : '';
+        $offsetClause = null !== $offset ? ' OFFSET ' . $offset : '';
 
         $prepared = $this->database->prepare('SELECT * FROM comments ' . $whereClause . $orderByClause . $limitClause . $offsetClause);
 

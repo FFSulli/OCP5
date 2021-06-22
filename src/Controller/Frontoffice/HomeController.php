@@ -1,8 +1,6 @@
 <?php
 
-
 namespace App\Controller\Frontoffice;
-
 
 use App\Model\Repository\PostRepository;
 use App\Service\Http\Response;

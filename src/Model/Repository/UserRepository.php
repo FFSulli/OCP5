@@ -1,6 +1,5 @@
 <?php
 
-
 declare(strict_types=1);
 
 namespace App\Model\Repository;
@@ -37,15 +36,15 @@ final class UserRepository implements EntityRepositoryInterface
         $orderByFields = [];
         $binds = [];
 
-        $criteria_fields = [];
-        $orderBy_fields = [];
-
-        foreach ($criteria as $key=>$value) {
-            $criteria_fields[] = sprintf("%s = '%s'", $key, $value);
+        foreach ($criteria as $key => $value) {
+            $criteriaFields[] = sprintf("%s = :%s", $key, $key);
+            $binds[sprintf(":%s", $key)] = $value;
         }
 
-        foreach ($orderBy as $key=>$value) {
-            $orderBy_fields[] = sprintf("%s %s", $key, $value);
+        if (null !== $orderBy) {
+            foreach ($orderBy as $key => $value) {
+                $orderByFields[] = sprintf("%s %s", $key, $value);
+            }
         }
 
         $criteriaList = implode(' AND ', $criteriaFields);
@@ -53,8 +52,8 @@ final class UserRepository implements EntityRepositoryInterface
 
         $whereClause = 0 !== count($criteriaFields) ? sprintf('WHERE %s', $criteriaList) : '';
         $orderByClause = 0 !== count($orderByFields) ? sprintf(' ORDER BY %s', $orderByList) : '';
-        $limitClause = !is_null($limit) ? ' LIMIT ' . $limit : '';
-        $offsetClause = !is_null($offset) ? ' OFFSET ' . $offset : '';
+        $limitClause = null !== $limit ? ' LIMIT ' . $limit : '';
+        $offsetClause = null !== $offset ? ' OFFSET ' . $offset : '';
 
         $prepared = $this->database->prepare('SELECT * FROM users ' . $whereClause . $orderByClause . $limitClause . $offsetClause);
 
