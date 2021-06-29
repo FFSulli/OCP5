@@ -14,6 +14,10 @@ class AbstractFormField
 
     private string $value;
 
+    private string $labelClasses;
+
+    private string $fieldClasses;
+
     /**
      * @return string
      */
@@ -101,6 +105,42 @@ class AbstractFormField
     public function setValue(string $value): AbstractFormField
     {
         $this->value = $value;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getLabelClasses(): string
+    {
+        return $this->labelClasses;
+    }
+
+    /**
+     * @param string $labelClasses
+     * @return AbstractFormField
+     */
+    public function setLabelClasses(string $labelClasses): AbstractFormField
+    {
+        $this->labelClasses = $labelClasses;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getFieldClasses(): string
+    {
+        return $this->fieldClasses;
+    }
+
+    /**
+     * @param string $fieldClasses
+     * @return AbstractFormField
+     */
+    public function setFieldClasses(string $fieldClasses): AbstractFormField
+    {
+        $this->fieldClasses = $fieldClasses;
         return $this;
     }
 }

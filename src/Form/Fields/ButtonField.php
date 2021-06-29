@@ -28,6 +28,6 @@ class ButtonField extends AbstractFormField
 
     public function generateHtml(): string
     {
-        return "<button type=\"{$this->getType()}\" class=\"\">" . $this->getLabel() ?? $this->getName() . "</button>";
+        return "<button type=\"{$this->getType()}\" class=\"{$this->getFieldClasses()}\">" . $this->getLabel() ?? $this->getName() . "</button>";
     }
 }
