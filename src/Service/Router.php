@@ -61,19 +61,28 @@ final class Router
             $postRepo = new PostRepository();
             $controller = new HomeController($postRepo, $this->view);
 
-            return $controller->index();
+            return $controller->displayHomepageAction();
+
+        // *** @Route http://localhost:8000/?action=login ***
+        } elseif ($action === 'login') {
+            $userRepo = new UserRepository();
+            $controller = new UserController($userRepo, $this->view, $this->session);
+
+            return $controller->loginAction($this->request);
 
         // *** @Route http://localhost:8000/?action=logout ***
-//        } elseif ($action === 'home') {
-//            $userRepo = new UserRepository();
-//            $controller = new UserController($userRepo, $this->view, $this->session);
-//
-//            return $controller->loginAction($this->request);
         } elseif ($action === 'logout') {
             $userRepo = new UserRepository();
             $controller = new UserController($userRepo, $this->view, $this->session);
 
             return $controller->logoutAction();
+
+            // *** @Route http://localhost:8000/?action=register ***
+        } elseif ($action === 'register') {
+            $userRepo = new UserRepository();
+            $controller = new UserController($userRepo, $this->view, $this->session);
+
+            return $controller->registerAction();
         } else {
             return new Response("Error 404 - cette page n'existe pas<br><a href='index.php?action=posts'>Aller Ici</a>", 404);
         }

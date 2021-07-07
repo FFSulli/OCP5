@@ -9,4 +9,6 @@ interface DatabaseInterface
     public function prepare(string $statement): \PDOStatement;
 
     public function execute(\PDOStatement $prepared, array $args, string $PDOClass): ?array;
+
+    public function query(string $query): ?array;
 }

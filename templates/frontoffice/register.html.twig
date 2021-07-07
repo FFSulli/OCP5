@@ -1,0 +1,36 @@
+{% extends "/frontoffice/base.html.twig" %}
+
+{% block title %}Inscription{% endblock %}
+
+{% block content %}
+    <section class="my-16">
+        <h2 class="text-center text-2xl sm:text-4xl font-bold text-indigo-500 dark:text-green-400 py-8">Créer un nouveau compte</h2>
+        <form action="/?action=register" class="flex flex-col space-y-3 w-1/2 my-8 mx-auto px-16" name="registerForm">
+            <label for="" class="w-full">
+                <input type="text" name="firstName" class="lg:w-full bg-gray-50 dark:bg-gray-400 dark:placeholder-gray-200 rounded focus:ring focus:ring-indigo-500 dark:focus:ring-green-400 focus:outline-none transition ease-in-out duration-200 p-4" placeholder="Prénom">
+            </label>
+            <label for="" class="w-full">
+                <input type="text" name="lastName" class="lg:w-full bg-gray-50 dark:bg-gray-400 dark:placeholder-gray-200 rounded focus:ring focus:ring-indigo-500 dark:focus:ring-green-400 focus:outline-none transition ease-in-out duration-200 p-4" placeholder="Nom">
+            </label>
+            <label for="" class="w-full">
+                <input type="text" name="email" class="lg:w-full bg-gray-50 dark:bg-gray-400 dark:placeholder-gray-200 rounded focus:ring focus:ring-indigo-500 dark:focus:ring-green-400 focus:outline-none transition ease-in-out duration-200 p-4" placeholder="E-mail">
+            </label>
+            <label for="" class="w-full">
+                <input type="text" name="password" class="lg:w-full bg-gray-50 dark:bg-gray-400 dark:placeholder-gray-200 rounded focus:ring focus:ring-indigo-500 dark:focus:ring-green-400 focus:outline-none transition ease-in-out duration-200 p-4" placeholder="Mot de passe">
+            </label>
+            <label for="" class="w-full">
+                <input type="text" name="confirmPassword" class="lg:w-full bg-gray-50 dark:bg-gray-400 dark:placeholder-gray-200 rounded focus:ring focus:ring-indigo-500 dark:focus:ring-green-400 focus:outline-none transition ease-in-out duration-200 p-4" placeholder="Confirmation du mot de passe">
+            </label>
+        </form>
+        <button type="submit" form="contactForm" name="contactFormSubmit" class="block bg-indigo-500 hover:bg-indigo-600 dark:bg-green-400 dark:hover:bg-green-500 transition ease-in-out text-white rounded mx-auto py-2 px-4">
+            <span class="flex items-center">
+                <span>
+                    Créer mon compte
+                </span>
+            </span>
+        </button>
+        <div class="flex justify-center py-4">
+            <a href="?action=register" class="hover:text-indigo-500 dark:hover:text-green-400 transition ease-in-out duration-500">Vous avez déjà un compte ? Cliquez ici pour vous connecter</a>
+        </div>
+    </section>
+{% endblock %}

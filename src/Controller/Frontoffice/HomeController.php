@@ -2,9 +2,12 @@
 
 namespace App\Controller\Frontoffice;
 
+use App\Model\Entity\ContactMessageModel;
+use App\Model\Entity\Post;
 use App\Model\Repository\PostRepository;
 use App\Service\Http\Response;
 use App\View\View;
+use http\Client\Request;
 
 class HomeController
 {
@@ -18,7 +21,7 @@ class HomeController
         $this->view = $view;
     }
 
-    public function index(): Response
+    public function displayHomepageAction(): Response
     {
         $posts = $this->postRepository->findBy([
             "post_status_fk" => 2
@@ -28,5 +31,23 @@ class HomeController
             'template' => 'home',
             'data' => ['posts' => $posts],
         ]));
+    }
+
+    public function handleContactFormAction(Request $request)
+    {
+        if ($request->getRequestMethod() === 'POST') {
+            $contactMessageModel = new ContactMessageModel();
+
+            $firstName = $request->getBody()['firstName'];
+
+            var_dump($firstName);
+            return 'Handled submitted data';
+        }
+
+
+        return new Response($this->view->render([
+            'template' => 'home'
+        ]));
+
     }
 }
