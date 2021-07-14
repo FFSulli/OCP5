@@ -1,11 +1,12 @@
 <?php
 
+
 namespace App\Controller\Backoffice;
 
 use App\Service\Http\Response;
 use App\View\View;
 
-class AdminHomeController
+class AdminPostController
 {
     /**
      * @var View
@@ -17,10 +18,11 @@ class AdminHomeController
         $this->view = $view;
     }
 
-    public function displayAdminHomepageAction(): Response
+    public function displayAdminPostAction(): Response
     {
         return new Response($this->view->render([
-            'template' => '../backoffice/home',
+            'template' => '../backoffice/posts',
         ]));
     }
+
 }

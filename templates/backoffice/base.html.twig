@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="fr">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Blog {% block title %}{% endblock %}</title>
+    <link href="css/style.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Cabin:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+
+<body class="flex flex-col h-screen font-cabin text-gray-600 transition ease-in-out duration-500">
+{% include "backoffice/navigation/back_navigation.html.twig" %}
+<main class="container flex-grow mx-auto">
+    {% block content %}
+    {% endblock %}
+</main>
+<footer>
+</footer>
+</body>
+<script src="js/app.js"></script>
+</html>
