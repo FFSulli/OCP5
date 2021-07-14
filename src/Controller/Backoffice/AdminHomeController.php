@@ -20,7 +20,7 @@ class AdminController
     public function displayAdminHomepageAction(): Response
     {
         return new Response($this->view->render([
-            'template' => '../backoffice/admin_homepage',
+            'template' => '../backoffice/home',
         ]));
     }
 }
