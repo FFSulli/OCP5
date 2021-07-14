@@ -81,4 +81,27 @@ final class PostRepository implements EntityRepositoryInterface
     {
         return false;
     }
+
+//    public function findPaginatedPosts(int $postsPerPage)
+//    {
+//        if (!isset ($_GET['page']) ) {
+//            $page = 1;
+//        } else {
+//            $page = $_GET['page'];
+//        }
+//
+//        $numberOfPostsPerPage = $postsPerPage;
+//
+//        $offset = ($page-1) * $numberOfPostsPerPage;
+//
+//        $count = $this->database->query("SELECT COUNT(*) FROM posts");
+//        $rowsCount = $count[0];
+//        $totalPages = ceil($rowsCount / $numberOfPostsPerPage);
+//
+//        $prepared = $this->database->prepare('SELECT * FROM posts LIMIT ' . $offset .', ' . $numberOfPostsPerPage);
+//        return $this->database->execute($prepared, [
+//            ":offset" => $offset,
+//            ":numberOfPostsPerPage" => $numberOfPostsPerPage
+//        ]);
+//    }
 }

@@ -22,5 +22,5 @@ $router = new Router($request);
 $response = $router->run();
 $response->send();
 
-$newRouter = new \App\Service\NewRouter(require __DIR__ . "/../config/routes.php");
+//$newRouter = new \App\Service\NewRouter(require __DIR__ . "/../config/routes.php");
 
