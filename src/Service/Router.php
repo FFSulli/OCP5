@@ -16,6 +16,7 @@ use App\Model\Repository\CommentRepository;
 use App\Model\Repository\UserRepository;
 use App\Service\Database\MySQLDB;
 use App\Service\Form\ContactFormValidator;
+use App\Service\Form\RegisterFormValidator;
 use App\Service\Http\Request;
 use App\Service\Http\Response;
 use App\Service\Http\Session\Session;
@@ -86,9 +87,10 @@ final class Router
             // *** @Route http://localhost:8000/?action=register ***
         } elseif ($action === 'register') {
             $userRepo = new UserRepository();
-            $controller = new UserController($userRepo, $this->view, $this->session);
+            $registerFormValidator = new RegisterFormValidator();
+            $controller = new UserController($userRepo, $registerFormValidator, $this->view, $this->session);
 
-            return $controller->registerAction();
+            return $controller->registerAction($this->request);
 
         // *** @Route http://localhost:8000/?action=admin ***
         } elseif ($action === 'admin') {
