@@ -68,40 +68,54 @@ final class PostRepository implements EntityRepositoryInterface
 
     public function create(object $post): bool
     {
-        /** @var Post $post */
-        return false;
+        $title = $post->getTitle();
+        $excerpt = $post->getExcerpt();
+        $content = $post->getContent();
+        $slug = $post->getSlug();
+        $user_fk = $post->getUserFk();
+
+        $prepared = $this->database->prepare('INSERT INTO users (title, excerpt, content, slug, user_fk) VALUES (:title, :excerpt, :content, :slug, :user_fk)');
+        $prepared->bindParam(':title', $title);
+        $prepared->bindParam(':excerpt', $excerpt);
+        $prepared->bindParam(':content', $content);
+        $prepared->bindParam(':slug', $slug);
+        $prepared->bindParam(':user_fk', $user_fk);
+        $prepared->execute();
+
+        return true;
     }
 
     public function update(object $post): bool
     {
-        return false;
+        $id = $post->getId();
+        $title = $post->getTitle();
+        $excerpt = $post->getExcerpt();
+        $content = $post->getContent();
+        $slug = $post->getSlug();
+        $user_fk = $post->getUserFk();
+        $post_status_fk = $post->getStatusFk();
+
+        $prepared = $this->database->prepare('UPDATE posts SET title = :title, excerpt = :excerpt, content = :content, slug = :slug, user_fk = :user_fk, post_status_fk = :post_status_fk WHERE id = :id');
+        $prepared->bindParam(':id', $id);
+        $prepared->bindParam(':title', $title);
+        $prepared->bindParam(':excerpt', $excerpt);
+        $prepared->bindParam(':content', $content);
+        $prepared->bindParam(':slug', $slug);
+        $prepared->bindParam(':user_fk', $user_fk);
+        $prepared->bindParam(':post_status_fk', $post_status_fk);
+        $prepared->execute();
+
+        return true;
     }
 
     public function delete(object $post): bool
     {
-        return false;
-    }
+        $id = $post->getId();
 
-//    public function findPaginatedPosts(int $postsPerPage)
-//    {
-//        if (!isset ($_GET['page']) ) {
-//            $page = 1;
-//        } else {
-//            $page = $_GET['page'];
-//        }
-//
-//        $numberOfPostsPerPage = $postsPerPage;
-//
-//        $offset = ($page-1) * $numberOfPostsPerPage;
-//
-//        $count = $this->database->query("SELECT COUNT(*) FROM posts");
-//        $rowsCount = $count[0];
-//        $totalPages = ceil($rowsCount / $numberOfPostsPerPage);
-//
-//        $prepared = $this->database->prepare('SELECT * FROM posts LIMIT ' . $offset .', ' . $numberOfPostsPerPage);
-//        return $this->database->execute($prepared, [
-//            ":offset" => $offset,
-//            ":numberOfPostsPerPage" => $numberOfPostsPerPage
-//        ]);
-//    }
+        $prepared = $this->database->prepare('DELETE FROM posts WHERE id = :id');
+        $prepared->bindParam(':id', $id);
+        $prepared->execute();
+
+        return true;
+    }
 }

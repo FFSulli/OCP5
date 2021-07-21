@@ -27,7 +27,7 @@ final class UserRepository implements EntityRepositoryInterface
 
     public function findOneBy(array $criteria, array $orderBy = null): ?User
     {
-        return $this->findBy($criteria, $orderBy, 1, 1)[0] ?? null;
+        return $this->findBy($criteria, $orderBy, 1, 0)[0] ?? null;
     }
 
     public function findBy(array $criteria, array $orderBy = null, int $limit = null, int $offset = null): ?array
@@ -68,16 +68,48 @@ final class UserRepository implements EntityRepositoryInterface
 
     public function create(object $user): bool
     {
-        return false;
+        $firstName = $user->getFirstName();
+        $lastName = $user->getLastName();
+        $email = $user->getEmail();
+        $password = $user->getPassword();
+
+        $prepared = $this->database->prepare('INSERT INTO users (first_name, last_name, email, password) VALUES (:firstName, :lastName, :email, :password)');
+        $prepared->bindParam(':firstName', $firstName);
+        $prepared->bindParam(':lastName', $lastName);
+        $prepared->bindParam(':email', $email);
+        $prepared->bindParam(':password', $password);
+        $prepared->execute();
+
+        return true;
     }
 
     public function update(object $user): bool
     {
-        return false;
+        $id = $user->getId();
+        $firstName = $user->getFirstName();
+        $lastName = $user->getLastName();
+        $email = $user->getEmail();
+        $password = $user->getPassword();
+
+        $prepared = $this->database->prepare('UPDATE users SET first_name = :firstName, last_name = :lastName, email = :email, password = :password WHERE id = :id');
+        $prepared->bindParam(':id', $id);
+        $prepared->bindParam(':firstName', $firstName);
+        $prepared->bindParam(':lastName', $lastName);
+        $prepared->bindParam(':email', $email);
+        $prepared->bindParam(':password', $password);
+        $prepared->execute();
+
+        return true;
     }
 
     public function delete(object $user): bool
     {
-        return false;
+        $id = $user->getId();
+
+        $prepared = $this->database->prepare('DELETE FROM users WHERE id = :id');
+        $prepared->bindParam(':id', $id);
+        $prepared->execute();
+
+        return true;
     }
 }
