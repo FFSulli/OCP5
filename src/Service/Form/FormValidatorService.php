@@ -37,4 +37,12 @@ class FormValidatorService
         }
         return false;
     }
+
+    public function isMatching(string $criteria, string $match): bool
+    {
+        if (! $criteria === $match ) {
+            return false;
+        }
+        return true;
+    }
 }
