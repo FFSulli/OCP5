@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Service\Form;
 
-
 class ContactFormValidator extends FormValidatorService implements FormInterface
 {
     public function isValid(?array $form): bool

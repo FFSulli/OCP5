@@ -21,7 +21,7 @@ use App\Service\Http\Request;
 use App\Service\Http\Response;
 use App\Service\Http\Session\Session;
 use App\View\View;
-use Config\DotEnv;
+use App\Service\DotEnv\DotEnv;
 
 // TODO cette classe router est un exemple très basic. Cette façon de faire n'est pas optimale
 // TODO Le router ne devrait pas avoir la responsabilité de l'injection des dépendances
@@ -66,21 +66,23 @@ final class Router
         } elseif ($action === 'home') {
             $postRepo = new PostRepository();
             $contactFormValidator = new ContactFormValidator();
-            $controller = new HomeController($postRepo, $contactFormValidator,  $this->view, $this->session);
+            $controller = new HomeController($postRepo, $contactFormValidator, $this->view, $this->session);
 
             return $controller->displayHomepageAction($this->request);
 
         // *** @Route http://localhost:8000/?action=login ***
         } elseif ($action === 'login') {
             $userRepo = new UserRepository();
-            $controller = new UserController($userRepo, $this->view, $this->session);
+            $registerFormValidator = new RegisterFormValidator();
+            $controller = new UserController($userRepo, $registerFormValidator, $this->view, $this->session);
 
             return $controller->loginAction($this->request);
 
         // *** @Route http://localhost:8000/?action=logout ***
         } elseif ($action === 'logout') {
             $userRepo = new UserRepository();
-            $controller = new UserController($userRepo, $this->view, $this->session);
+            $registerFormValidator = new RegisterFormValidator();
+            $controller = new UserController($userRepo, $registerFormValidator, $this->view, $this->session);
 
             return $controller->logoutAction();
 
@@ -100,7 +102,8 @@ final class Router
 
         // *** @Route http://localhost:8000/?action=admin_posts ***
         } elseif ($action === 'admin_posts') {
-            $controller = new AdminPostController($this->view);
+            $postRepo = new PostRepository();
+            $controller = new AdminPostController($this->view, $postRepo);
 
             return $controller->displayAdminPostAction();
 
@@ -115,7 +118,6 @@ final class Router
             $controller = new AdminUserController($this->view);
 
             return $controller->displayAdminUserAction();
-
         } else {
             return new Response("Error 404 - cette page n'existe pas<br><a href='index.php?action=posts'>Aller Ici</a>", 404);
         }

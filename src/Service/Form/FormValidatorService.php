@@ -40,9 +40,9 @@ class FormValidatorService
 
     public function isMatching(string $criteria, string $match): bool
     {
-        if (! $criteria === $match ) {
-            return false;
+        if ($criteria === $match) {
+            return true;
         }
-        return true;
+        return false;
     }
 }

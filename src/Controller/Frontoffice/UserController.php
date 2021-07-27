@@ -67,7 +67,6 @@ final class UserController
 
         if ($request->getMethod() === 'POST') {
             if ($this->registerFormValidator->isValid($data)) {
-
                 $user = new User();
                 $user
                     ->setFirstName($data['firstName'])
