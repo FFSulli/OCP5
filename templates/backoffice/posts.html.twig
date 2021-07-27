@@ -1,5 +1,34 @@
 {% extends "/backoffice/base.html.twig" %}
 
 {% block content %}
-    Posts
+    <section class="mt-8 p-4">
+        <h1 class="md:text-4xl sm:text-6xl font-bold mb-8">Gestion des articles</h1>
+        <table class="w-full text-center">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th class="w-2/6">Titre</th>
+                    <th class="w-1/6">Date de création</th>
+                    <th class="w-1/6">Date de mise à jour</th>
+                    <th class="w-1/6">Auteur</th>
+                    <th class="w-1/6">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for post in posts %}
+                    <tr class="hover:bg-gray-50 rounded-xl transition ease-in-out duration-500">
+                        <td class="py-8 px-4">{{ post.id }}</td>
+                        <td class="text-left px-4"><a href="" class="hover:text-indigo-500 transition ease-in-out duration-500">{{ post.title }}</a></td>
+                        <td class="px-4">{{ post.createdAt | date("d/m/Y \\à H:i") }}</td>
+                        <td class="px-4">{{ post.updatedAt | date("d/m/Y \\à H:i") }}</td>
+                        <td class="px-4">Sullivan Berger</td>
+                        <td class="flex flex-col content-center px-4">
+                            <a href="">Publier</a>
+                            <a href="">Supprimer</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </section>
 {% endblock %}

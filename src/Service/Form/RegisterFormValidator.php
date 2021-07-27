@@ -4,13 +4,11 @@ declare(strict_types=1);
 
 namespace App\Service\Form;
 
-
 class RegisterFormValidator extends FormValidatorService implements FormInterface
 {
     public function isValid(?array $form): bool
     {
         if ($this->isNull($form)) {
-            var_dump($form);
             return false;
         }
 

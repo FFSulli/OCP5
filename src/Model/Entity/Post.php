@@ -8,30 +8,31 @@ use App\Model\Entity\Interfaces\EntityObjectInterface;
 
 final class Post
 {
-    private int $postId = 1;
-    private string $title = "";
+    private int $id;
+    private string $title;
     private string $excerpt;
     private string $content;
     private string $slug;
     private string $created_at;
     private ?string $updated_at = null;
     private int $user_fk;
+    private string $status_fk;
 
     /**
      * @return int
      */
-    public function getPostId(): int
+    public function getId(): int
     {
-        return $this->postId;
+        return $this->id;
     }
 
     /**
-     * @param int $postId
+     * @param int $id
      * @return $this
      */
-    public function setPostId(int $postId): self
+    public function setId(int $id): self
     {
-        $this->postId = $postId;
+        $this->id = $id;
         return $this;
     }
 
@@ -158,6 +159,24 @@ final class Post
     public function setUserFk(int $user_fk): Post
     {
         $this->user_fk = $user_fk;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getStatusFk(): string
+    {
+        return $this->status_fk;
+    }
+
+    /**
+     * @param string $status_fk
+     * @return Post
+     */
+    public function setStatusFk(string $status_fk): Post
+    {
+        $this->status_fk = $status_fk;
         return $this;
     }
 }

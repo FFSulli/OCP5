@@ -42,9 +42,4 @@ class MySQLDB implements DatabaseInterface
 
         return $execute;
     }
-
-    public function query(string $query): ?array
-    {
-        return $this->pdo->query($query)->fetch();
-    }
 }

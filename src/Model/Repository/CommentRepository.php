@@ -8,7 +8,7 @@ use App\Service\Database\MySQLDB;
 use App\Model\Entity\Comment;
 use App\Model\Entity\Interfaces\EntityObjectInterface;
 use App\Model\Repository\Interfaces\EntityRepositoryInterface;
-use Config\DotEnv;
+use App\Service\DotEnv\DotEnv;
 
 final class CommentRepository implements EntityRepositoryInterface
 {
@@ -68,6 +68,8 @@ final class CommentRepository implements EntityRepositoryInterface
 
     public function create(object $comment): bool
     {
+
+        /** @var Comment $comment */
         $content = $comment->getContent();
         $user_fk = $comment->getUserFk();
         $post_fk = $comment->getPostFk();
@@ -83,9 +85,11 @@ final class CommentRepository implements EntityRepositoryInterface
 
     public function update(object $comment): bool
     {
+
+        /** @var Comment $comment */
         $id = $comment->getId();
         $content = $comment->getContent();
-        $verified = $comment->getVerified();
+        $verified = $comment->isVerified();
         $user_fk = $comment->getUserFk();
         $post_fk = $comment->getPostFk();
 
@@ -102,6 +106,8 @@ final class CommentRepository implements EntityRepositoryInterface
 
     public function delete(object $comment): bool
     {
+
+        /** @var Comment $comment */
         $id = $comment->getId();
 
         $prepared = $this->database->prepare('DELETE FROM comments WHERE id = :id');

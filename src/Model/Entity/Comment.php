@@ -8,7 +8,7 @@ use App\Model\Entity\Interfaces\EntityObjectInterface;
 
 final class Comment
 {
-    private int $commentId = 1;
+    private int $id;
     private string $content;
     private bool $verified;
     private string $created_at;
@@ -18,18 +18,18 @@ final class Comment
     /**
      * @return int
      */
-    public function getCommentId(): int
+    public function getId(): int
     {
-        return $this->commentId;
+        return $this->id;
     }
 
     /**
-     * @param int $commentId
+     * @param int $id
      * @return Comment
      */
-    public function setCommentId(int $commentId): Comment
+    public function setId(int $id): Comment
     {
-        $this->commentId = $commentId;
+        $this->id = $id;
         return $this;
     }
 
