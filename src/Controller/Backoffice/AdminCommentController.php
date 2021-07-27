@@ -1,6 +1,5 @@
 <?php
 
-
 namespace App\Controller\Backoffice;
 
 use App\Service\Http\Response;
@@ -24,5 +23,4 @@ class AdminCommentController
             'template' => '../backoffice/comments',
         ]));
     }
-
 }
