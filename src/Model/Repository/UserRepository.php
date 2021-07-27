@@ -7,7 +7,7 @@ namespace App\Model\Repository;
 use App\Service\Database\MySQLDB;
 use App\Model\Entity\User;
 use App\Model\Repository\Interfaces\EntityRepositoryInterface;
-use Config\DotEnv;
+use App\Service\DotEnv\DotEnv;
 
 final class UserRepository implements EntityRepositoryInterface
 {
@@ -68,6 +68,7 @@ final class UserRepository implements EntityRepositoryInterface
 
     public function create(object $user): bool
     {
+        /** @var User $user */
         $firstName = $user->getFirstName();
         $lastName = $user->getLastName();
         $email = $user->getEmail();
@@ -85,6 +86,7 @@ final class UserRepository implements EntityRepositoryInterface
 
     public function update(object $user): bool
     {
+        /** @var User $user */
         $id = $user->getId();
         $firstName = $user->getFirstName();
         $lastName = $user->getLastName();
@@ -104,6 +106,7 @@ final class UserRepository implements EntityRepositoryInterface
 
     public function delete(object $user): bool
     {
+        /** @var User $user */
         $id = $user->getId();
 
         $prepared = $this->database->prepare('DELETE FROM users WHERE id = :id');

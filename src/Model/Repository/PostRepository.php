@@ -7,7 +7,7 @@ namespace App\Model\Repository;
 use App\Model\Entity\Post;
 use App\Service\Database\MySQLDB;
 use App\Model\Repository\Interfaces\EntityRepositoryInterface;
-use Config\DotEnv;
+use App\Service\DotEnv\DotEnv;
 
 final class PostRepository implements EntityRepositoryInterface
 {
@@ -68,6 +68,7 @@ final class PostRepository implements EntityRepositoryInterface
 
     public function create(object $post): bool
     {
+        /** @var Post $post */
         $title = $post->getTitle();
         $excerpt = $post->getExcerpt();
         $content = $post->getContent();
@@ -87,6 +88,7 @@ final class PostRepository implements EntityRepositoryInterface
 
     public function update(object $post): bool
     {
+        /** @var Post $post */
         $id = $post->getId();
         $title = $post->getTitle();
         $excerpt = $post->getExcerpt();
@@ -110,6 +112,7 @@ final class PostRepository implements EntityRepositoryInterface
 
     public function delete(object $post): bool
     {
+        /** @var Post $post */
         $id = $post->getId();
 
         $prepared = $this->database->prepare('DELETE FROM posts WHERE id = :id');
