@@ -69,56 +69,40 @@ final class PostRepository implements EntityRepositoryInterface
     public function create(object $post): bool
     {
         /** @var Post $post */
-        $title = $post->getTitle();
-        $excerpt = $post->getExcerpt();
-        $content = $post->getContent();
-        $slug = $post->getSlug();
-        $user_fk = $post->getUserFk();
 
         $prepared = $this->database->prepare('INSERT INTO users (title, excerpt, content, slug, user_fk) VALUES (:title, :excerpt, :content, :slug, :user_fk)');
-        $prepared->bindParam(':title', $title);
-        $prepared->bindParam(':excerpt', $excerpt);
-        $prepared->bindParam(':content', $content);
-        $prepared->bindParam(':slug', $slug);
-        $prepared->bindParam(':user_fk', $user_fk);
-        $prepared->execute();
+        $prepared->bindValue(':title', $post->getTitle());
+        $prepared->bindValue(':excerpt', $post->getExcerpt());
+        $prepared->bindValue(':content', $post->getContent());
+        $prepared->bindValue(':slug', $post->getSlug());
+        $prepared->bindValue(':user_fk', $post->getUserFk());
 
-        return true;
+        return $prepared->execute();
     }
 
     public function update(object $post): bool
     {
         /** @var Post $post */
-        $id = $post->getId();
-        $title = $post->getTitle();
-        $excerpt = $post->getExcerpt();
-        $content = $post->getContent();
-        $slug = $post->getSlug();
-        $user_fk = $post->getUserFk();
-        $post_status_fk = $post->getStatusFk();
 
         $prepared = $this->database->prepare('UPDATE posts SET title = :title, excerpt = :excerpt, content = :content, slug = :slug, user_fk = :user_fk, post_status_fk = :post_status_fk WHERE id = :id');
-        $prepared->bindParam(':id', $id);
-        $prepared->bindParam(':title', $title);
-        $prepared->bindParam(':excerpt', $excerpt);
-        $prepared->bindParam(':content', $content);
-        $prepared->bindParam(':slug', $slug);
-        $prepared->bindParam(':user_fk', $user_fk);
-        $prepared->bindParam(':post_status_fk', $post_status_fk);
-        $prepared->execute();
+        $prepared->bindValue(':id', $post->getId());
+        $prepared->bindValue(':title', $post->getTitle());
+        $prepared->bindValue(':excerpt', $post->getExcerpt());
+        $prepared->bindValue(':content', $post->getContent());
+        $prepared->bindValue(':slug', $post->getSlug());
+        $prepared->bindValue(':user_fk', $post->getUserFk());
+        $prepared->bindValue(':post_status_fk', $post->getStatusFk());
 
-        return true;
+        return $prepared->execute();
     }
 
     public function delete(object $post): bool
     {
         /** @var Post $post */
-        $id = $post->getId();
 
         $prepared = $this->database->prepare('DELETE FROM posts WHERE id = :id');
-        $prepared->bindParam(':id', $id);
-        $prepared->execute();
+        $prepared->bindValue(':id', $post->getId());
 
-        return true;
+        return $prepared->execute();
     }
 }

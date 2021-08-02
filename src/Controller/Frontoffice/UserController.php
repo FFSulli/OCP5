@@ -63,16 +63,21 @@ final class UserController
 
     public function registerAction(Request $request): Response
     {
+
         $data = $request->request()->all();
 
         if ($request->getMethod() === 'POST') {
             if ($this->registerFormValidator->isValid($data)) {
+                $password = password_hash($data['password'], PASSWORD_BCRYPT);
+//                if ($password === false) {
+//                    Renvoyer erreur
+//                }
                 $user = new User();
                 $user
                     ->setFirstName($data['firstName'])
                     ->setLastName($data['lastName'])
                     ->setEmail($data['email'])
-                    ->setPassword(password_hash($data['password'], PASSWORD_BCRYPT));
+                    ->setPassword((string) $password);
 
                 var_dump($user);
 

@@ -69,50 +69,37 @@ final class UserRepository implements EntityRepositoryInterface
     public function create(object $user): bool
     {
         /** @var User $user */
-        $firstName = $user->getFirstName();
-        $lastName = $user->getLastName();
-        $email = $user->getEmail();
-        $password = $user->getPassword();
 
         $prepared = $this->database->prepare('INSERT INTO users (first_name, last_name, email, password) VALUES (:firstName, :lastName, :email, :password)');
-        $prepared->bindParam(':firstName', $firstName);
-        $prepared->bindParam(':lastName', $lastName);
-        $prepared->bindParam(':email', $email);
-        $prepared->bindParam(':password', $password);
-        $prepared->execute();
+        $prepared->bindValue(':firstName', $user->getFirstName());
+        $prepared->bindValue(':lastName', $user->getLastName());
+        $prepared->bindValue(':email', $user->getEmail());
+        $prepared->bindValue(':password', $user->getPassword());
 
-        return true;
+        return $prepared->execute();
     }
 
     public function update(object $user): bool
     {
         /** @var User $user */
-        $id = $user->getId();
-        $firstName = $user->getFirstName();
-        $lastName = $user->getLastName();
-        $email = $user->getEmail();
-        $password = $user->getPassword();
 
         $prepared = $this->database->prepare('UPDATE users SET first_name = :firstName, last_name = :lastName, email = :email, password = :password WHERE id = :id');
-        $prepared->bindParam(':id', $id);
-        $prepared->bindParam(':firstName', $firstName);
-        $prepared->bindParam(':lastName', $lastName);
-        $prepared->bindParam(':email', $email);
-        $prepared->bindParam(':password', $password);
-        $prepared->execute();
+        $prepared->bindValue(':id', $user->getId());
+        $prepared->bindValue(':firstName', $user->getFirstName());
+        $prepared->bindValue(':lastName', $user->getLastName());
+        $prepared->bindValue(':email', $user->getEmail());
+        $prepared->bindValue(':password', $user->getPassword());
 
-        return true;
+        return $prepared->execute();
     }
 
     public function delete(object $user): bool
     {
         /** @var User $user */
-        $id = $user->getId();
 
         $prepared = $this->database->prepare('DELETE FROM users WHERE id = :id');
-        $prepared->bindParam(':id', $id);
-        $prepared->execute();
+        $prepared->bindValue(':id', $user->getId());
 
-        return true;
+        return $prepared->execute();
     }
 }
