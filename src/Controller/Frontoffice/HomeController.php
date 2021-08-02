@@ -33,10 +33,10 @@ class HomeController
 
         if ($request->getMethod() === 'POST') {
             if ($this->contactFormValidator->isValid($request->request()->all())) {
-                return new Response('<h1>Formulaire envoyé</h1><h2>faire une redirection vers la page d\'accueil</h2><a href="index.php?action=posts">Page d\'accueil</a><br>', 200);
+                $this->session->addFlashes('success', 'Merci pour votre message, je vous répondrai dans les meilleurs délais.');
             }
 
-            $this->session->addFlashes('error', 'Formulaire mal renseigné');
+            $this->session->addFlashes('error', "Formulaire non valide");
         }
 
         return new Response($this->view->render([

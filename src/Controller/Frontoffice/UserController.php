@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace  App\Controller\Frontoffice;
 
 use App\Model\Entity\User;
+use App\Service\Form\LoginFormValidator;
 use App\Service\Form\RegisterFormValidator;
 use App\View\View;
 use App\Service\Http\Request;
@@ -18,36 +19,22 @@ final class UserController
     private RegisterFormValidator $registerFormValidator;
     private View $view;
     private Session $session;
-
-    private function isValidLoginForm(?array $infoUser): bool
-    {
-        if ($infoUser === null) {
-            return false;
-        }
-
-        $user = $this->userRepository->findOneBy(['email' => $infoUser['email']]);
-        if ($user === null || $infoUser['password'] !== $user->getPassword()) {
-             return false;
-        }
-
-        $this->session->set('user', $user);
-
-        return true;
-    }
+    private LoginFormValidator $loginFormValidator;
 
 
-    public function __construct(UserRepository $userRepository, RegisterFormValidator $registerFormValidator, View $view, Session $session)
+    public function __construct(UserRepository $userRepository, RegisterFormValidator $registerFormValidator, LoginFormValidator $loginFormValidator, View $view, Session $session)
     {
         $this->userRepository = $userRepository;
         $this->view = $view;
         $this->session = $session;
         $this->registerFormValidator = $registerFormValidator;
+        $this->loginFormValidator = $loginFormValidator;
     }
 
     public function loginAction(Request $request): Response
     {
         if ($request->getMethod() === 'POST') {
-            if ($this->isValidLoginForm($request->request()->all())) {
+            if ($this->loginFormValidator->isValid($request->request()->all())) {
                 return new Response('<h1>Utilisateur connecté</h1><h2>faire une redirection vers la page d\'accueil</h2><a href="index.php?action=posts">Liste des posts</a><br>', 200);
             }
             $this->session->addFlashes('error', 'Mauvais identifiants');

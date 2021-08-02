@@ -17,6 +17,7 @@ use App\Model\Repository\UserRepository;
 use App\Service\Database\MySQLDB;
 use App\Service\DotEnv\DotEnvService;
 use App\Service\Form\ContactFormValidator;
+use App\Service\Form\LoginFormValidator;
 use App\Service\Form\RegisterFormValidator;
 use App\Service\Http\Request;
 use App\Service\Http\Response;
@@ -78,7 +79,8 @@ final class Router
             $dotEnvService = new DotEnvService();
             $userRepo = new UserRepository($dotEnvService);
             $registerFormValidator = new RegisterFormValidator();
-            $controller = new UserController($userRepo, $registerFormValidator, $this->view, $this->session);
+            $loginFormValidator = new LoginFormValidator($userRepo);
+            $controller = new UserController($userRepo, $registerFormValidator, $loginFormValidator, $this->view, $this->session);
 
             return $controller->loginAction($this->request);
 
