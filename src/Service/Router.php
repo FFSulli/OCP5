@@ -33,11 +33,10 @@ final class Router
     private Request $request;
     private Session $session;
 
-    public function __construct(Request $request)
+    public function __construct(Request $request, DotEnvService $dotEnvService)
     {
-        (new DotEnv(__DIR__ . '/../../.env'))->load();
+        $this->database = new MySQLDB($dotEnvService->get('DATABASE_HOST'), $dotEnvService->get('DATABASE_NAME'), $dotEnvService->get('DATABASE_USER'), $dotEnvService->get('DATABASE_PASSWORD'));
 
-        $this->database = new MySQLDB(getenv('DATABASE_HOST'), getenv('DATABASE_NAME'), getenv('DATABASE_USER'), getenv('DATABASE_PASSWORD'));
         $this->session = new Session();
         $this->view = new View($this->session);
         $this->request = $request;
@@ -61,7 +60,7 @@ final class Router
             $postRepo = new PostRepository($dotEnvService);
             $controller = new PostController($postRepo, $this->view);
 
-            $commentRepo = new CommentRepository();
+            $commentRepo = new CommentRepository($dotEnvService);
 
             return $controller->displayOneAction((int) $this->request->query()->get('id'), $commentRepo);
 
@@ -76,7 +75,8 @@ final class Router
 
         // *** @Route http://localhost:8000/?action=login ***
         } elseif ($action === 'login') {
-            $userRepo = new UserRepository();
+            $dotEnvService = new DotEnvService();
+            $userRepo = new UserRepository($dotEnvService);
             $registerFormValidator = new RegisterFormValidator();
             $controller = new UserController($userRepo, $registerFormValidator, $this->view, $this->session);
 
@@ -84,7 +84,8 @@ final class Router
 
         // *** @Route http://localhost:8000/?action=logout ***
         } elseif ($action === 'logout') {
-            $userRepo = new UserRepository();
+            $dotEnvService = new DotEnvService();
+            $userRepo = new UserRepository($dotEnvService);
             $registerFormValidator = new RegisterFormValidator();
             $controller = new UserController($userRepo, $registerFormValidator, $this->view, $this->session);
 
@@ -92,7 +93,8 @@ final class Router
 
             // *** @Route http://localhost:8000/?action=register ***
         } elseif ($action === 'register') {
-            $userRepo = new UserRepository();
+            $dotEnvService = new DotEnvService();
+            $userRepo = new UserRepository($dotEnvService);
             $registerFormValidator = new RegisterFormValidator();
             $controller = new UserController($userRepo, $registerFormValidator, $this->view, $this->session);
 

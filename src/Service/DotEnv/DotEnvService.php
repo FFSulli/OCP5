@@ -14,10 +14,15 @@ class DotEnvService
 
     }
 
-    public function get(string $key)
+    public function get(string $key): string
     {
 
-        return getenv($key);
+        $envKey = getenv($key);
+        if ($envKey === false) {
+            var_dump('Test');
+        }
+
+        return $envKey;
 
     }
 }

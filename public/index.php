@@ -19,7 +19,7 @@ if ($environment === 'dev')
 }
 
 $request = new Request($_GET, $_POST, $_FILES, $_SERVER);
-$router = new Router($request);
+$router = new Router($request, $dotEnvService);
 $response = $router->run();
 $response->send();
 
