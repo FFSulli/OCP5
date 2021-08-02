@@ -7,16 +7,16 @@ namespace App\Model\Repository;
 use App\Model\Entity\Post;
 use App\Service\Database\MySQLDB;
 use App\Model\Repository\Interfaces\EntityRepositoryInterface;
-use App\Service\DotEnv\DotEnv;
+use App\Service\DotEnv\DotEnvService;
+
 
 final class PostRepository implements EntityRepositoryInterface
 {
     private MySQLDB $database;
 
-    public function __construct()
+    public function __construct(DotEnvService $dotEnvService)
     {
-        (new DotEnv(__DIR__ . '/../../../.env'))->load();
-        $this->database = new MySQLDB(getenv('DATABASE_HOST'), getenv('DATABASE_NAME'), getenv('DATABASE_USER'), getenv('DATABASE_PASSWORD'));
+        $this->database = new MySQLDB($dotEnvService->get('DATABASE_HOST'), $dotEnvService->get('DATABASE_NAME'), $dotEnvService->get('DATABASE_USER'), $dotEnvService->get('DATABASE_PASSWORD'));
     }
 
     public function find(int $postId): ?Post

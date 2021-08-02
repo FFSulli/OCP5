@@ -15,6 +15,7 @@ use App\Model\Repository\PostRepository;
 use App\Model\Repository\CommentRepository;
 use App\Model\Repository\UserRepository;
 use App\Service\Database\MySQLDB;
+use App\Service\DotEnv\DotEnvService;
 use App\Service\Form\ContactFormValidator;
 use App\Service\Form\RegisterFormValidator;
 use App\Service\Http\Request;
@@ -48,14 +49,16 @@ final class Router
 
         // *** @Route http://localhost:8000/?action=posts ***
         if ($action === 'posts') {
-            $postRepo = new PostRepository();
+            $dotEnvService = new DotEnvService();
+            $postRepo = new PostRepository($dotEnvService);
             $controller = new PostController($postRepo, $this->view);
 
             return $controller->displayAllPostsAction();
 
         // *** @Route http://localhost:8000/?action=post&id=5 ***
         } elseif ($action === 'post' && $this->request->query()->has('id')) {
-            $postRepo = new PostRepository();
+            $dotEnvService = new DotEnvService();
+            $postRepo = new PostRepository($dotEnvService);
             $controller = new PostController($postRepo, $this->view);
 
             $commentRepo = new CommentRepository();
@@ -64,7 +67,8 @@ final class Router
 
         // *** @Route http://localhost:8000/?action=home ***
         } elseif ($action === 'home') {
-            $postRepo = new PostRepository();
+            $dotEnvService = new DotEnvService();
+            $postRepo = new PostRepository($dotEnvService);
             $contactFormValidator = new ContactFormValidator();
             $controller = new HomeController($postRepo, $contactFormValidator, $this->view, $this->session);
 
@@ -102,7 +106,8 @@ final class Router
 
         // *** @Route http://localhost:8000/?action=admin_posts ***
         } elseif ($action === 'admin_posts') {
-            $postRepo = new PostRepository();
+            $dotEnvService = new DotEnvService();
+            $postRepo = new PostRepository($dotEnvService);
             $controller = new AdminPostController($this->view, $postRepo);
 
             return $controller->displayAdminPostAction();
