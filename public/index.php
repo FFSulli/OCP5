@@ -6,11 +6,12 @@ require_once '../vendor/autoload.php';
 
 use App\Service\Router;
 use App\Service\Http\Request;
+use App\Service\DotEnv\DotEnvService;
 
-// TODO => créer un fichier .env pour mettre la configuration dedans.
-const APP_ENV='dev';
+$dotEnvService = new DotEnvService();
+$environment = $dotEnvService->get('APP_ENVIRONMENT');
 
-if (APP_ENV === 'dev')
+if ($environment === 'dev')
 {
     $whoops = new \Whoops\Run();
     $whoops->pushHandler(new \Whoops\Handler\PrettyPageHandler());
