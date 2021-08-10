@@ -6,7 +6,7 @@ namespace App\Service\Form;
 
 class RegisterFormValidator extends FormValidatorService implements FormInterface
 {
-    public function isValid(?array $form): bool
+    public function isValid(array $form): bool
     {
         if ($this->isNull($form)) {
             return false;

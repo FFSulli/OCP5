@@ -18,7 +18,7 @@ class LoginFormValidator extends FormValidatorService implements FormInterface
         $this->userRepository = $userRepository;
     }
 
-    public function isValid(?array $form): bool
+    public function isValid(array $form): bool
     {
         $user = $this->userRepository->findOneBy(['email' => $form['email']]);
 

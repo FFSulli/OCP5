@@ -6,5 +6,5 @@ namespace App\Service\Form;
 
 interface FormInterface
 {
-    public function isValid(?array $form): bool;
+    public function isValid(array $form): bool;
 }

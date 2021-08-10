@@ -6,10 +6,10 @@ require_once '../vendor/autoload.php';
 
 use App\Service\Router;
 use App\Service\Http\Request;
-use App\Service\DotEnv\DotEnvService;
+use App\Service\DotEnv\DotEnv;
 
-$dotEnvService = new DotEnvService();
-$environment = $dotEnvService->get('APP_ENVIRONMENT');
+$dotEnv = new DotEnv();
+$environment = $dotEnv->get('APP_ENVIRONMENT');
 
 if ($environment === 'dev')
 {
@@ -19,7 +19,7 @@ if ($environment === 'dev')
 }
 
 $request = new Request($_GET, $_POST, $_FILES, $_SERVER);
-$router = new Router($request, $dotEnvService);
+$router = new Router($request, $dotEnv);
 $response = $router->run();
 $response->send();
 

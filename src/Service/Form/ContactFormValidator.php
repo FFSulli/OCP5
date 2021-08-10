@@ -6,7 +6,7 @@ namespace App\Service\Form;
 
 class ContactFormValidator extends FormValidatorService implements FormInterface
 {
-    public function isValid(?array $form): bool
+    public function isValid(array $form): bool
     {
         if ($this->isNull($form)) {
             var_dump($form);

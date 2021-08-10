@@ -5,14 +5,17 @@ namespace App\Service\DotEnv;
 class DotEnv
 {
 
-    protected string $path;
 
-    public function __construct(string $path)
+    private string $path;
+
+    public function __construct()
     {
-        if (!file_exists($path)) {
-            throw new \InvalidArgumentException(sprintf('%s does not exist', $path));
+        $this->path = __DIR__ . '/../../../.env';
+
+        if (!file_exists($this->path)) {
+            throw new \InvalidArgumentException(sprintf('%s does not exist', $this->path));
         }
-        $this->path = $path;
+
     }
 
     public function load(): void
@@ -22,20 +25,35 @@ class DotEnv
         }
 
         $lines = file($this->path, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
-        foreach ($lines as $line) {
-            if (strpos(trim($line), '#') === 0) {
-                continue;
-            }
+        if ($lines !== false) {
+            foreach ($lines as $line) {
+                if (strpos(trim($line), '#') === 0) {
+                    continue;
+                }
 
-            list($name, $value) = explode('=', $line, 2);
-            $name = trim($name);
-            $value = trim($value);
+                list($name, $value) = explode('=', $line, 2);
+                $name = trim($name);
+                $value = trim($value);
 
-            if (!array_key_exists($name, $_SERVER) && !array_key_exists($name, $_ENV)) {
-                putenv(sprintf('%s=%s', $name, $value));
-                $_ENV[$name] = $value;
-                $_SERVER[$name] = $value;
+                if (!array_key_exists($name, $_SERVER) && !array_key_exists($name, $_ENV)) {
+                    putenv(sprintf('%s=%s', $name, $value));
+                    $_ENV[$name] = $value;
+                    $_SERVER[$name] = $value;
+                }
             }
         }
+    }
+
+    public function get(string $key): string
+    {
+        $this->load();
+
+        $envKey = getenv($key);
+        if ($envKey === false) {
+            var_dump('Test');
+        }
+
+        return $envKey;
+
     }
 }

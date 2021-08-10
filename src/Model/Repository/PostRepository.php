@@ -14,9 +14,9 @@ final class PostRepository implements EntityRepositoryInterface
 {
     private MySQLDB $database;
 
-    public function __construct(DotEnvService $dotEnvService)
+    public function __construct(MySQLDB $database)
     {
-        $this->database = new MySQLDB($dotEnvService->get('DATABASE_HOST'), $dotEnvService->get('DATABASE_NAME'), $dotEnvService->get('DATABASE_USER'), $dotEnvService->get('DATABASE_PASSWORD'));
+        $this->database = $database;
     }
 
     public function find(int $postId): ?Post

@@ -16,25 +16,21 @@ use App\Model\Repository\UserRepository;
 final class UserController
 {
     private UserRepository $userRepository;
-    private RegisterFormValidator $registerFormValidator;
     private View $view;
     private Session $session;
-    private LoginFormValidator $loginFormValidator;
 
 
-    public function __construct(UserRepository $userRepository, RegisterFormValidator $registerFormValidator, LoginFormValidator $loginFormValidator, View $view, Session $session)
+    public function __construct(UserRepository $userRepository, View $view, Session $session)
     {
         $this->userRepository = $userRepository;
         $this->view = $view;
         $this->session = $session;
-        $this->registerFormValidator = $registerFormValidator;
-        $this->loginFormValidator = $loginFormValidator;
     }
 
-    public function loginAction(Request $request): Response
+    public function loginAction(Request $request, LoginFormValidator $loginFormValidator): Response
     {
         if ($request->getMethod() === 'POST') {
-            if ($this->loginFormValidator->isValid($request->request()->all())) {
+            if ($loginFormValidator->isValid($request->request()->all())) {
                 return new Response('<h1>Utilisateur connecté</h1><h2>faire une redirection vers la page d\'accueil</h2><a href="index.php?action=posts">Liste des posts</a><br>', 200);
             }
             $this->session->addFlashes('error', 'Mauvais identifiants');
@@ -48,13 +44,13 @@ final class UserController
         return new Response('<h1>Utilisateur déconnecté</h1><h2>faire une redirection vers la page d\'accueil</h2><a href="index.php?action=posts">Liste des posts</a><br>', 200);
     }
 
-    public function registerAction(Request $request): Response
+    public function registerAction(Request $request, RegisterFormValidator $registerFormValidator): Response
     {
 
         $data = $request->request()->all();
 
         if ($request->getMethod() === 'POST') {
-            if ($this->registerFormValidator->isValid($data)) {
+            if ($registerFormValidator->isValid($data)) {
                 $password = password_hash($data['password'], PASSWORD_BCRYPT);
 //                if ($password === false) {
 //                    Renvoyer erreur
