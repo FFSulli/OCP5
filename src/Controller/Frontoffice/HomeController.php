@@ -34,10 +34,12 @@ class HomeController
         if ($request->getMethod() === 'POST') {
             if ($this->contactFormValidator->isValid($request->request()->all())) {
                 $this->session->addFlashes('success', 'Merci pour votre message, je vous répondrai dans les meilleurs délais.');
+            } else {
+                $this->session->addFlashes('error', "Le formulaire n'est pas valide, merci de vérifier les informations renseignées.");
             }
-
-            $this->session->addFlashes('error', "Formulaire non valide");
         }
+
+
 
         return new Response($this->view->render([
             'template' => 'home',

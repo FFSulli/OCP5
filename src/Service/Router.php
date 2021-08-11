@@ -67,7 +67,7 @@ final class Router
         // *** @Route http://localhost:8000/?action=home ***
         } elseif ($action === 'home') {
             $postRepo = new PostRepository($this->database);
-            $contactFormValidator = new ContactFormValidator();
+            $contactFormValidator = new ContactFormValidator($this->session);
             $controller = new HomeController($postRepo, $contactFormValidator, $this->view, $this->session);
 
             return $controller->displayHomepageAction($this->request);
