@@ -32,8 +32,9 @@ final class UserController
         if ($request->getMethod() === 'POST') {
             if ($loginFormValidator->isValid($request->request()->all())) {
                 return new Response('<h1>Utilisateur connecté</h1><h2>faire une redirection vers la page d\'accueil</h2><a href="index.php?action=posts">Liste des posts</a><br>', 200);
+            } else {
+                $this->session->addFlashes('error', "Le formulaire n'est pas valide, merci de vérifier les informations renseignées.");
             }
-            $this->session->addFlashes('error', 'Mauvais identifiants');
         }
         return new Response($this->view->render(['template' => 'login', 'data' => []]));
     }
@@ -52,9 +53,6 @@ final class UserController
         if ($request->getMethod() === 'POST') {
             if ($registerFormValidator->isValid($data)) {
                 $password = password_hash($data['password'], PASSWORD_BCRYPT);
-//                if ($password === false) {
-//                    Renvoyer erreur
-//                }
                 $user = new User();
                 $user
                     ->setFirstName($data['firstName'])
@@ -62,14 +60,13 @@ final class UserController
                     ->setEmail($data['email'])
                     ->setPassword((string) $password);
 
-                var_dump($user);
-
                 $this->userRepository->create($user);
+                $this->session->addFlashes('success', 'Vous êtes désormais inscrit, bienvenue !');
 
                 return new Response('<h1>Formulaire envoyé</h1><h2>faire une redirection vers la page d\'accueil</h2><a href="index.php?action=posts">Page d\'accueil</a><br>', 200);
             }
 
-            $this->session->addFlashes('error', 'Formulaire mal renseigné');
+            $this->session->addFlashes('error', "Le formulaire n'est pas valide, merci de vérifier les informations renseignées.");
         }
 
         return new Response($this->view->render(['template' => 'register']));

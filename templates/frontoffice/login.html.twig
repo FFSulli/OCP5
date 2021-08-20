@@ -8,9 +8,28 @@
         <form action="/?action=login" method="post" class="flex flex-col space-y-3 w-1/2 my-8 mx-auto px-16" id="loginForm" name="loginForm">
             <label for="" class="w-full">
                 <input type="text" name="email" class="lg:w-full bg-gray-50 dark:bg-gray-400 dark:placeholder-gray-200 rounded focus:ring focus:ring-indigo-500 dark:focus:ring-green-400 focus:outline-none transition ease-in-out duration-200 p-4" placeholder="E-mail">
+                {% for key, message in flashes %}
+                    {% if key == 'errorEmailIsNull' %}
+                        <span class="text-red-400">{{ message }}</span>
+                    {% endif %}
+                    {% if key == 'errorEmailIsNotValid' %}
+                        <span class="text-red-400">{{ message }}</span>
+                    {% endif %}
+                    {% if key == 'errorEmailDoesntExist' %}
+                        <span class="text-red-400">{{ message }}</span>
+                    {% endif %}
+                {% endfor %}
             </label>
             <label for="" class="w-full">
                 <input type="password" name="password" class="lg:w-full bg-gray-50 dark:bg-gray-400 dark:placeholder-gray-200 rounded focus:ring focus:ring-indigo-500 dark:focus:ring-green-400 focus:outline-none transition ease-in-out duration-200 p-4" placeholder="Mot de passe">
+                {% for key, message in flashes %}
+                    {% if key == 'errorPasswordIsNull' %}
+                        <span class="text-red-400">{{ message }}</span>
+                    {% endif %}
+                    {% if key == 'errorPasswordIsNotIdentical' %}
+                        <span class="text-red-400">{{ message }}</span>
+                    {% endif %}
+                {% endfor %}
             </label>
         </form>
         <button type="submit" form="loginForm" name="contactFormSubmit" class="block bg-indigo-500 hover:bg-indigo-600 dark:bg-green-400 dark:hover:bg-green-500 transition ease-in-out text-white rounded mx-auto py-2 px-4">

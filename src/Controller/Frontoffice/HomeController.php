@@ -39,8 +39,6 @@ class HomeController
             }
         }
 
-
-
         return new Response($this->view->render([
             'template' => 'home',
             'data' => ['posts' => $posts],

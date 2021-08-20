@@ -16,6 +16,7 @@ use App\Model\Repository\CommentRepository;
 use App\Model\Repository\UserRepository;
 use App\Service\Database\MySQLDB;
 use App\Service\DotEnv\DotEnvService;
+use App\Service\Form\CommentFormValidator;
 use App\Service\Form\ContactFormValidator;
 use App\Service\Form\LoginFormValidator;
 use App\Service\Form\RegisterFormValidator;
@@ -59,10 +60,11 @@ final class Router
         } elseif ($action === 'post' && $this->request->query()->has('id')) {
             $postRepo = new PostRepository($this->database);
             $controller = new PostController($postRepo, $this->view);
+            $commentFormValidator = new CommentFormValidator($this->session);
 
             $commentRepo = new CommentRepository($this->database);
 
-            return $controller->displayOneAction((int) $this->request->query()->get('id'), $commentRepo);
+            return $controller->displayOneAction($this->request, $this->session, (int) $this->request->query()->get('id'), $commentRepo, $commentFormValidator);
 
         // *** @Route http://localhost:8000/?action=home ***
         } elseif ($action === 'home') {
@@ -76,7 +78,7 @@ final class Router
         } elseif ($action === 'login') {
             $userRepo = new UserRepository($this->database);
             $registerFormValidator = new RegisterFormValidator();
-            $loginFormValidator = new LoginFormValidator($userRepo);
+            $loginFormValidator = new LoginFormValidator($userRepo, $this->session);
             $controller = new UserController($userRepo, $this->view, $this->session);
 
             return $controller->loginAction($this->request, $loginFormValidator);
