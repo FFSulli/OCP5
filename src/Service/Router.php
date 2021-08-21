@@ -23,6 +23,7 @@ use App\Service\Form\RegisterFormValidator;
 use App\Service\Http\Request;
 use App\Service\Http\Response;
 use App\Service\Http\Session\Session;
+use App\Service\Pagination\PaginationService;
 use App\View\View;
 use App\Service\DotEnv\DotEnv;
 
@@ -52,9 +53,10 @@ final class Router
         // *** @Route http://localhost:8000/?action=posts ***
         if ($action === 'posts') {
             $postRepo = new PostRepository($this->database);
+            $paginationService = new PaginationService($this->database, 2);
             $controller = new PostController($postRepo, $this->view);
 
-            return $controller->displayAllPostsAction();
+            return $controller->displayAllPostsAction($paginationService);
 
         // *** @Route http://localhost:8000/?action=post&id=5 ***
         } elseif ($action === 'post' && $this->request->query()->has('id')) {
@@ -77,7 +79,7 @@ final class Router
         // *** @Route http://localhost:8000/?action=login ***
         } elseif ($action === 'login') {
             $userRepo = new UserRepository($this->database);
-            $registerFormValidator = new RegisterFormValidator();
+            $registerFormValidator = new RegisterFormValidator($this->session);
             $loginFormValidator = new LoginFormValidator($userRepo, $this->session);
             $controller = new UserController($userRepo, $this->view, $this->session);
 

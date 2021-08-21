@@ -27,6 +27,7 @@ class HomeController
 
     public function displayHomepageAction(Request $request): Response
     {
+
         $posts = $this->postRepository->findBy([
             "post_status_fk" => 2
         ], null, 3, 0);

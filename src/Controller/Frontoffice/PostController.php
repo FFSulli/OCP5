@@ -8,6 +8,7 @@ use App\Model\Entity\Comment;
 use App\Service\Form\CommentFormValidator;
 use App\Service\Http\Request;
 use App\Service\Http\Session\Session;
+use App\Service\Pagination\PaginationService;
 use App\View\View;
 use App\Service\Http\Response;
 use App\Model\Repository\PostRepository;
@@ -61,13 +62,17 @@ final class PostController
         return $response;
     }
 
-    public function displayAllPostsAction(): Response
+    public function displayAllPostsAction(PaginationService $paginationService): Response
     {
-        $posts = $this->postRepository->findAll();
+        $posts = $paginationService->paginatePosts();
+        $pages = $paginationService->displayPages();
 
         return new Response($this->view->render([
             'template' => 'posts',
-            'data' => ['posts' => $posts],
+            'data' => [
+                'posts' => $posts,
+                'pages' => $pages
+            ],
         ]));
     }
 }
