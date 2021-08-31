@@ -42,4 +42,17 @@ class MySQLDB implements DatabaseInterface
 
         return $execute;
     }
+
+    public function executeAggregat(PDOStatement $prepared, array $args)
+    {
+        $prepared->execute($args);
+
+        $execute = $prepared->fetch();
+
+        if ($execute === false) {
+            return null;
+        }
+
+        return $execute;
+    }
 }

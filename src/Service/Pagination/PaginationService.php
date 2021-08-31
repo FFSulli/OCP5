@@ -12,13 +12,15 @@ class PaginationService
 {
     private MySQLDB $database;
     private int $postsPerPage;
+    private PostRepository $postRepository;
 
-    public function __construct(MySQLDB $database, int $postsPerPage)
+    public function __construct(MySQLDB $database, PostRepository $postRepository, int $postsPerPage)
     {
 
         $this->database = $database;
-
         $this->postsPerPage = $postsPerPage;
+        $this->postRepository = $postRepository;
+
     }
 
     /**
@@ -39,20 +41,21 @@ class PaginationService
         return $this;
     }
 
-    public function countPosts(): int
-    {
-        $prepared = $this->database->prepare("SELECT COUNT(id) AS postsCount FROM posts");
-        $prepared->execute();
-        $result = $prepared->fetch();
-        return (int) $result['postsCount'];
-    }
 
     public function countPages(): int
     {
-        $postsCount = $this->countPosts();
-        $postsPerPage = $this->getPostsPerPage();
+        $postsCount = $this->postRepository->countPosts([
+            "post_status_fk" => 2
+        ]);
 
-        return (int) ceil($postsCount / $postsPerPage);
+        if ($this->postsPerPage <= 0) {
+            return 0;
+        }
+
+        var_dump($postsCount);
+
+        return (int) ceil($postsCount / $this->postsPerPage);
+
     }
 
     public function displayPages(): array
@@ -64,6 +67,8 @@ class PaginationService
             $pages[$i] = $i;
         }
 
+//        var_dump($pages);
+
         return $pages;
     }
 
@@ -71,21 +76,21 @@ class PaginationService
     public function paginatePosts(): array
     {
 
-        $postsPerPage = $this->getPostsPerPage();
-
         if (isset($_GET['page'])) {
             $currentPage = $_GET['page'];
         } else {
             $currentPage = 1;
         }
 
-        $start = ($currentPage - 1) * $postsPerPage;
+        $start = ($currentPage - 1) * $this->postsPerPage;
 
-        $prepared = $this->database->prepare('SELECT * FROM posts ORDER BY created_at DESC LIMIT :start, :postsPerPage');
-        $prepared->bindValue(':start', $start, PDO::PARAM_INT);
-        $prepared->bindValue(':postsPerPage', $postsPerPage, PDO::PARAM_INT);
-        $prepared->execute();
-        return $prepared->fetchAll();
+        return $this->postRepository->findBy(["post_status_fk" => 2], ["created_at" => "DESC"], $this->postsPerPage, $start);
+
+//        $prepared = $this->database->prepare('SELECT * FROM posts ORDER BY created_at DESC LIMIT :start, :postsPerPage');
+//        $prepared->bindValue(':start', $start, PDO::PARAM_INT);
+//        $prepared->bindValue(':postsPerPage', $postsPerPage, PDO::PARAM_INT);
+//        $prepared->execute();
+//        return $prepared->fetchAll();
     }
 
 }

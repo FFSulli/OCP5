@@ -105,4 +105,29 @@ final class PostRepository implements EntityRepositoryInterface
 
         return $prepared->execute();
     }
+
+    public function countPosts(?array $criteria): int
+    {
+        $criteriaFields = [];
+        $binds = [];
+
+        foreach ($criteria as $key => $value) {
+            $criteriaFields[] = sprintf("%s = :%s", $key, $key);
+            $binds[sprintf(":%s", $key)] = $value;
+        }
+
+        $criteriaList = implode(' AND ', $criteriaFields);
+
+        $whereClause = 0 !== count($criteriaFields) ? sprintf('WHERE %s', $criteriaList) : '';
+
+//        var_dump("SELECT COUNT(id) AS postsCount FROM posts $whereClause");
+//        die();
+
+        $prepared = $this->database->prepare("SELECT COUNT(id) AS postsCount FROM posts $whereClause");
+        $result = $this->database->executeAggregat($prepared, $binds);
+//        var_dump($result['postsCount']);
+//        die();
+        return (int) $result['postsCount'];
+//        return (int) $result;
+    }
 }

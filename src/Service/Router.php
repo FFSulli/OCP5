@@ -53,7 +53,7 @@ final class Router
         // *** @Route http://localhost:8000/?action=posts ***
         if ($action === 'posts') {
             $postRepo = new PostRepository($this->database);
-            $paginationService = new PaginationService($this->database, 2);
+            $paginationService = new PaginationService($this->database, $postRepo, 3);
             $controller = new PostController($postRepo, $this->view);
 
             return $controller->displayAllPostsAction($paginationService);
