@@ -44,8 +44,23 @@ class RegisterFormValidator extends FormValidatorService implements FormInterfac
             return false;
         }
 
+        if ($this->isEmpty($form['email'])) {
+            $this->session->addFlashes('errorEmailIsNull', 'Le champ email ne peut pas être vide');
+            return false;
+        }
+
         if (! $this->isEmail($form['email'])) {
             $this->session->addFlashes('errorEmailIsNotValid', "Le champ email n'est pas valide");
+            return false;
+        }
+
+        if ($this->isEmpty($form['password'])) {
+            $this->session->addFlashes('errorPasswordIsNull', 'Le champ mot de passe ne peut pas être vide');
+            return false;
+        }
+
+        if ($this->isEmpty($form['confirmPassword'])) {
+            $this->session->addFlashes('errorConfirmPasswordIsNull', 'Le champ confirmation du mot de passe ne peut pas être vide');
             return false;
         }
 
