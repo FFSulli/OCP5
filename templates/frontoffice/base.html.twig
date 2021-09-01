@@ -19,11 +19,16 @@
 <body class="flex flex-col h-screen dark:bg-gray-600 dark:text-white font-cabin text-gray-600 transition ease-in-out duration-500">
     {% include "frontoffice/navigation/front_navigation.html.twig" %}
 <main class="container flex-grow mx-auto">
-    {% for key, message in flashes %}
-        {% if key == 'error' %}
-            <h2 class="{{ key }}"> {{ message }} </h2>
-        {% endif %}
-    {% endfor %}
+    <div class="mb-4">
+        {% for key, message in flashes %}
+            {% if key == 'error' %}
+                <p class="{{ key }}"> {{ message }} </p>
+            {% endif %}
+            {% if key == 'success' %}
+                <p class="{{ key }}"> {{ message }} </p>
+            {% endif %}
+        {% endfor %}
+    </div>
     {% block content %}
     {% endblock %}
 
