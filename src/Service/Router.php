@@ -61,7 +61,8 @@ final class Router
         // *** @Route http://localhost:8000/?action=post&id=5 ***
         } elseif ($action === 'post' && $this->request->query()->has('id')) {
             $postRepo = new PostRepository($this->database);
-            $controller = new PostController($postRepo, $this->view);
+            $userRepo = new UserRepository($this->database);
+            $controller = new PostController($postRepo, $userRepo, $this->view);
             $commentFormValidator = new CommentFormValidator($this->session);
 
             $commentRepo = new CommentRepository($this->database);
@@ -88,7 +89,7 @@ final class Router
         // *** @Route http://localhost:8000/?action=logout ***
         } elseif ($action === 'logout') {
             $userRepo = new UserRepository($this->database);
-            $registerFormValidator = new RegisterFormValidator();
+            $registerFormValidator = new RegisterFormValidator($this->session);
             $controller = new UserController($userRepo, $this->view, $this->session);
 
             return $controller->logoutAction();
@@ -96,7 +97,7 @@ final class Router
             // *** @Route http://localhost:8000/?action=register ***
         } elseif ($action === 'register') {
             $userRepo = new UserRepository($this->database);
-            $registerFormValidator = new RegisterFormValidator();
+            $registerFormValidator = new RegisterFormValidator($this->session);
             $controller = new UserController($userRepo, $this->view, $this->session);
 
             return $controller->registerAction($this->request, $registerFormValidator);
