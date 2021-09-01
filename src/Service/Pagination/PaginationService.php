@@ -52,8 +52,6 @@ class PaginationService
             return 0;
         }
 
-        var_dump($postsCount);
-
         return (int) ceil($postsCount / $this->postsPerPage);
 
     }
@@ -66,8 +64,6 @@ class PaginationService
         for ($i = 1; $i <= $pagesCount; $i++) {
             $pages[$i] = $i;
         }
-
-//        var_dump($pages);
 
         return $pages;
     }
@@ -86,11 +82,6 @@ class PaginationService
 
         return $this->postRepository->findBy(["post_status_fk" => 2], ["created_at" => "DESC"], $this->postsPerPage, $start);
 
-//        $prepared = $this->database->prepare('SELECT * FROM posts ORDER BY created_at DESC LIMIT :start, :postsPerPage');
-//        $prepared->bindValue(':start', $start, PDO::PARAM_INT);
-//        $prepared->bindValue(':postsPerPage', $postsPerPage, PDO::PARAM_INT);
-//        $prepared->execute();
-//        return $prepared->fetchAll();
     }
 
 }
