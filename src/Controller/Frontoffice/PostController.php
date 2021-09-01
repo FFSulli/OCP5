@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace  App\Controller\Frontoffice;
 
 use App\Model\Entity\Comment;
+use App\Model\Repository\UserRepository;
 use App\Service\Form\CommentFormValidator;
 use App\Service\Http\Request;
 use App\Service\Http\Session\Session;
@@ -17,11 +18,13 @@ use App\Model\Repository\CommentRepository;
 final class PostController
 {
     private PostRepository $postRepository;
+    private UserRepository $userRepository;
     private View $view;
 
-    public function __construct(PostRepository $postRepository, View $view)
+    public function __construct(PostRepository $postRepository, UserRepository $userRepository, View $view)
     {
         $this->postRepository = $postRepository;
+        $this->userRepository = $userRepository;
         $this->view = $view;
     }
 
@@ -32,6 +35,7 @@ final class PostController
             "post_fk" => $postId,
             "verified" => 1
         ]);
+        $user = $this->userRepository->findOneBy(['email' => $session->get('user')]);
 
         $data = $request->request()->all();
 
@@ -39,9 +43,19 @@ final class PostController
             if ($commentFormValidator->isValid($data)) {
                 $comment = new Comment();
                 $comment->setContent($data['content']);
+                $comment->setUserFk($user->getId());
+                $comment->setPostFk($postId);
 
                 $commentRepository->create($comment);
                 $session->addFlashes('success', 'Votre commentaire a bien été ajouté');
+
+                return new Response($this->view->render([
+                    'template' => 'post',
+                    'data' => [
+                        'post' => $post,
+                        'comments' => $comments,
+                    ],
+                ]));
             }
         }
 

@@ -29,9 +29,13 @@ final class UserController
 
     public function loginAction(Request $request, LoginFormValidator $loginFormValidator): Response
     {
+        $data = $request->request()->all();
+
         if ($request->getMethod() === 'POST') {
-            if ($loginFormValidator->isValid($request->request()->all())) {
-                return new Response('<h1>Utilisateur connecté</h1><h2>faire une redirection vers la page d\'accueil</h2><a href="index.php?action=posts">Liste des posts</a><br>', 200);
+            if ($loginFormValidator->isValid($data)) {
+                $this->session->addFlashes('success', 'Vous êtes désormais connecté.');
+                $this->session->set('user', $data['email']);
+                return new Response($this->view->render(['template' => 'home']));
             } else {
                 $this->session->addFlashes('error', "Le formulaire n'est pas valide, merci de vérifier les informations renseignées.");
             }
@@ -42,7 +46,7 @@ final class UserController
     public function logoutAction(): Response
     {
         $this->session->remove('user');
-        return new Response('<h1>Utilisateur déconnecté</h1><h2>faire une redirection vers la page d\'accueil</h2><a href="index.php?action=posts">Liste des posts</a><br>', 200);
+        return new Response($this->view->render(['template' => 'home']));
     }
 
     public function registerAction(Request $request, RegisterFormValidator $registerFormValidator): Response
@@ -63,7 +67,7 @@ final class UserController
                 $this->userRepository->create($user);
                 $this->session->addFlashes('success', 'Vous êtes désormais inscrit, bienvenue !');
 
-                return new Response('<h1>Formulaire envoyé</h1><h2>faire une redirection vers la page d\'accueil</h2><a href="index.php?action=posts">Page d\'accueil</a><br>', 200);
+                return new Response($this->view->render(['template' => 'home']));
             }
 
             $this->session->addFlashes('error', "Le formulaire n'est pas valide, merci de vérifier les informations renseignées.");
