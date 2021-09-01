@@ -15,11 +15,15 @@ use App\Model\Repository\PostRepository;
 use App\Model\Repository\CommentRepository;
 use App\Model\Repository\UserRepository;
 use App\Service\Database\MySQLDB;
+use App\Service\DotEnv\DotEnvService;
+use App\Service\Form\CommentFormValidator;
 use App\Service\Form\ContactFormValidator;
+use App\Service\Form\LoginFormValidator;
 use App\Service\Form\RegisterFormValidator;
 use App\Service\Http\Request;
 use App\Service\Http\Response;
 use App\Service\Http\Session\Session;
+use App\Service\Pagination\PaginationService;
 use App\View\View;
 use App\Service\DotEnv\DotEnv;
 
@@ -31,12 +35,12 @@ final class Router
     private View $view;
     private Request $request;
     private Session $session;
+    private DotEnv $dotEnv;
 
-    public function __construct(Request $request)
+    public function __construct(Request $request, DotEnv $dotEnv)
     {
-        (new DotEnv(__DIR__ . '/../../.env'))->load();
-
-        $this->database = new MySQLDB(getenv('DATABASE_HOST'), getenv('DATABASE_NAME'), getenv('DATABASE_USER'), getenv('DATABASE_PASSWORD'));
+        $this->dotEnv = $dotEnv;
+        $this->database = new MySQLDB($this->dotEnv->get('DATABASE_HOST'), $this->dotEnv->get('DATABASE_NAME'), $this->dotEnv->get('DATABASE_USER'), $this->dotEnv->get('DATABASE_PASSWORD'));
         $this->session = new Session();
         $this->view = new View($this->session);
         $this->request = $request;
@@ -48,51 +52,55 @@ final class Router
 
         // *** @Route http://localhost:8000/?action=posts ***
         if ($action === 'posts') {
-            $postRepo = new PostRepository();
+            $postRepo = new PostRepository($this->database);
+            $paginationService = new PaginationService($this->database, $postRepo, 3);
             $controller = new PostController($postRepo, $this->view);
 
-            return $controller->displayAllPostsAction();
+            return $controller->displayAllPostsAction($paginationService);
 
         // *** @Route http://localhost:8000/?action=post&id=5 ***
         } elseif ($action === 'post' && $this->request->query()->has('id')) {
-            $postRepo = new PostRepository();
-            $controller = new PostController($postRepo, $this->view);
+            $postRepo = new PostRepository($this->database);
+            $userRepo = new UserRepository($this->database);
+            $controller = new PostController($postRepo, $userRepo, $this->view);
+            $commentFormValidator = new CommentFormValidator($this->session);
 
-            $commentRepo = new CommentRepository();
+            $commentRepo = new CommentRepository($this->database);
 
-            return $controller->displayOneAction((int) $this->request->query()->get('id'), $commentRepo);
+            return $controller->displayOneAction($this->request, $this->session, (int) $this->request->query()->get('id'), $commentRepo, $commentFormValidator);
 
         // *** @Route http://localhost:8000/?action=home ***
         } elseif ($action === 'home') {
-            $postRepo = new PostRepository();
-            $contactFormValidator = new ContactFormValidator();
+            $postRepo = new PostRepository($this->database);
+            $contactFormValidator = new ContactFormValidator($this->session);
             $controller = new HomeController($postRepo, $contactFormValidator, $this->view, $this->session);
 
             return $controller->displayHomepageAction($this->request);
 
         // *** @Route http://localhost:8000/?action=login ***
         } elseif ($action === 'login') {
-            $userRepo = new UserRepository();
-            $registerFormValidator = new RegisterFormValidator();
-            $controller = new UserController($userRepo, $registerFormValidator, $this->view, $this->session);
+            $userRepo = new UserRepository($this->database);
+            $registerFormValidator = new RegisterFormValidator($this->session);
+            $loginFormValidator = new LoginFormValidator($userRepo, $this->session);
+            $controller = new UserController($userRepo, $this->view, $this->session);
 
-            return $controller->loginAction($this->request);
+            return $controller->loginAction($this->request, $loginFormValidator);
 
         // *** @Route http://localhost:8000/?action=logout ***
         } elseif ($action === 'logout') {
-            $userRepo = new UserRepository();
-            $registerFormValidator = new RegisterFormValidator();
-            $controller = new UserController($userRepo, $registerFormValidator, $this->view, $this->session);
+            $userRepo = new UserRepository($this->database);
+            $registerFormValidator = new RegisterFormValidator($this->session);
+            $controller = new UserController($userRepo, $this->view, $this->session);
 
             return $controller->logoutAction();
 
             // *** @Route http://localhost:8000/?action=register ***
         } elseif ($action === 'register') {
-            $userRepo = new UserRepository();
-            $registerFormValidator = new RegisterFormValidator();
-            $controller = new UserController($userRepo, $registerFormValidator, $this->view, $this->session);
+            $userRepo = new UserRepository($this->database);
+            $registerFormValidator = new RegisterFormValidator($this->session);
+            $controller = new UserController($userRepo, $this->view, $this->session);
 
-            return $controller->registerAction($this->request);
+            return $controller->registerAction($this->request, $registerFormValidator);
 
         // *** @Route http://localhost:8000/?action=admin ***
         } elseif ($action === 'admin') {
@@ -102,7 +110,7 @@ final class Router
 
         // *** @Route http://localhost:8000/?action=admin_posts ***
         } elseif ($action === 'admin_posts') {
-            $postRepo = new PostRepository();
+            $postRepo = new PostRepository($this->database);
             $controller = new AdminPostController($this->view, $postRepo);
 
             return $controller->displayAdminPostAction();

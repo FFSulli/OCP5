@@ -7,16 +7,16 @@ namespace App\Model\Repository;
 use App\Model\Entity\Post;
 use App\Service\Database\MySQLDB;
 use App\Model\Repository\Interfaces\EntityRepositoryInterface;
-use App\Service\DotEnv\DotEnv;
+use App\Service\DotEnv\DotEnvService;
+
 
 final class PostRepository implements EntityRepositoryInterface
 {
     private MySQLDB $database;
 
-    public function __construct()
+    public function __construct(MySQLDB $database)
     {
-        (new DotEnv(__DIR__ . '/../../../.env'))->load();
-        $this->database = new MySQLDB(getenv('DATABASE_HOST'), getenv('DATABASE_NAME'), getenv('DATABASE_USER'), getenv('DATABASE_PASSWORD'));
+        $this->database = $database;
     }
 
     public function find(int $postId): ?Post
@@ -69,56 +69,65 @@ final class PostRepository implements EntityRepositoryInterface
     public function create(object $post): bool
     {
         /** @var Post $post */
-        $title = $post->getTitle();
-        $excerpt = $post->getExcerpt();
-        $content = $post->getContent();
-        $slug = $post->getSlug();
-        $user_fk = $post->getUserFk();
 
         $prepared = $this->database->prepare('INSERT INTO users (title, excerpt, content, slug, user_fk) VALUES (:title, :excerpt, :content, :slug, :user_fk)');
-        $prepared->bindParam(':title', $title);
-        $prepared->bindParam(':excerpt', $excerpt);
-        $prepared->bindParam(':content', $content);
-        $prepared->bindParam(':slug', $slug);
-        $prepared->bindParam(':user_fk', $user_fk);
-        $prepared->execute();
+        $prepared->bindValue(':title', $post->getTitle());
+        $prepared->bindValue(':excerpt', $post->getExcerpt());
+        $prepared->bindValue(':content', $post->getContent());
+        $prepared->bindValue(':slug', $post->getSlug());
+        $prepared->bindValue(':user_fk', $post->getUserFk());
 
-        return true;
+        return $prepared->execute();
     }
 
     public function update(object $post): bool
     {
         /** @var Post $post */
-        $id = $post->getId();
-        $title = $post->getTitle();
-        $excerpt = $post->getExcerpt();
-        $content = $post->getContent();
-        $slug = $post->getSlug();
-        $user_fk = $post->getUserFk();
-        $post_status_fk = $post->getStatusFk();
 
         $prepared = $this->database->prepare('UPDATE posts SET title = :title, excerpt = :excerpt, content = :content, slug = :slug, user_fk = :user_fk, post_status_fk = :post_status_fk WHERE id = :id');
-        $prepared->bindParam(':id', $id);
-        $prepared->bindParam(':title', $title);
-        $prepared->bindParam(':excerpt', $excerpt);
-        $prepared->bindParam(':content', $content);
-        $prepared->bindParam(':slug', $slug);
-        $prepared->bindParam(':user_fk', $user_fk);
-        $prepared->bindParam(':post_status_fk', $post_status_fk);
-        $prepared->execute();
+        $prepared->bindValue(':id', $post->getId());
+        $prepared->bindValue(':title', $post->getTitle());
+        $prepared->bindValue(':excerpt', $post->getExcerpt());
+        $prepared->bindValue(':content', $post->getContent());
+        $prepared->bindValue(':slug', $post->getSlug());
+        $prepared->bindValue(':user_fk', $post->getUserFk());
+        $prepared->bindValue(':post_status_fk', $post->getStatusFk());
 
-        return true;
+        return $prepared->execute();
     }
 
     public function delete(object $post): bool
     {
         /** @var Post $post */
-        $id = $post->getId();
 
         $prepared = $this->database->prepare('DELETE FROM posts WHERE id = :id');
-        $prepared->bindParam(':id', $id);
-        $prepared->execute();
+        $prepared->bindValue(':id', $post->getId());
 
-        return true;
+        return $prepared->execute();
+    }
+
+    public function countPosts(?array $criteria): int
+    {
+        $criteriaFields = [];
+        $binds = [];
+
+        foreach ($criteria as $key => $value) {
+            $criteriaFields[] = sprintf("%s = :%s", $key, $key);
+            $binds[sprintf(":%s", $key)] = $value;
+        }
+
+        $criteriaList = implode(' AND ', $criteriaFields);
+
+        $whereClause = 0 !== count($criteriaFields) ? sprintf('WHERE %s', $criteriaList) : '';
+
+//        var_dump("SELECT COUNT(id) AS postsCount FROM posts $whereClause");
+//        die();
+
+        $prepared = $this->database->prepare("SELECT COUNT(id) AS postsCount FROM posts $whereClause");
+        $result = $this->database->executeAggregat($prepared, $binds);
+//        var_dump($result['postsCount']);
+//        die();
+        return (int) $result['postsCount'];
+//        return (int) $result;
     }
 }

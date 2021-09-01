@@ -9,15 +9,15 @@ use App\Model\Entity\Comment;
 use App\Model\Entity\Interfaces\EntityObjectInterface;
 use App\Model\Repository\Interfaces\EntityRepositoryInterface;
 use App\Service\DotEnv\DotEnv;
+use App\Service\DotEnv\DotEnvService;
 
 final class CommentRepository implements EntityRepositoryInterface
 {
     private MySQLDB $database;
 
-    public function __construct()
+    public function __construct(MySQLDB $database)
     {
-        (new DotEnv(__DIR__ . '/../../../.env'))->load();
-        $this->database = new MySQLDB(getenv('DATABASE_HOST'), getenv('DATABASE_NAME'), getenv('DATABASE_USER'), getenv('DATABASE_PASSWORD'));
+        $this->database = $database;
     }
 
     public function find(int $commentId): ?Comment
@@ -70,50 +70,38 @@ final class CommentRepository implements EntityRepositoryInterface
     {
 
         /** @var Comment $comment */
-        $content = $comment->getContent();
-        $user_fk = $comment->getUserFk();
-        $post_fk = $comment->getPostFk();
 
         $prepared = $this->database->prepare('INSERT INTO comments (content, user_fk, post_fk) VALUES (:content, :user_fk, :post_fk)');
-        $prepared->bindParam(':content', $content);
-        $prepared->bindParam(':user_fk', $user_fk);
-        $prepared->bindParam(':post_fk', $post_fk);
-        $prepared->execute();
+        $prepared->bindValue(':content', $comment->getContent());
+        $prepared->bindValue(':user_fk', $comment->getUserFk());
+        $prepared->bindValue(':post_fk', $comment->getPostFk());
 
-        return true;
+        return $prepared->execute();
     }
 
     public function update(object $comment): bool
     {
 
         /** @var Comment $comment */
-        $id = $comment->getId();
-        $content = $comment->getContent();
-        $verified = $comment->isVerified();
-        $user_fk = $comment->getUserFk();
-        $post_fk = $comment->getPostFk();
 
         $prepared = $this->database->prepare('UPDATE comments SET content = :content, verified = :verified, user_fk = :user_fk, post_fk = :post_fk WHERE id = :id');
-        $prepared->bindParam(':id', $id);
-        $prepared->bindParam(':content', $content);
-        $prepared->bindParam(':verified', $verified);
-        $prepared->bindParam(':user_fk', $user_fk);
-        $prepared->bindParam(':post_fk', $post_fk);
-        $prepared->execute();
+        $prepared->bindValue(':id', $comment->getId());
+        $prepared->bindValue(':content', $comment->getContent());
+        $prepared->bindValue(':verified', $comment->isVerified());
+        $prepared->bindValue(':user_fk', $comment->getUserFk());
+        $prepared->bindValue(':post_fk', $comment->getPostFk());
 
-        return true;
+        return $prepared->execute();
     }
 
     public function delete(object $comment): bool
     {
 
         /** @var Comment $comment */
-        $id = $comment->getId();
 
         $prepared = $this->database->prepare('DELETE FROM comments WHERE id = :id');
-        $prepared->bindParam(':id', $id);
-        $prepared->execute();
+        $prepared->bindValue(':id', $comment->getId());
 
-        return true;
+        return $prepared->execute();
     }
 }

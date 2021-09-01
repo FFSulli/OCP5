@@ -10,6 +10,11 @@
                 Aucun article en ligne pour le moment
             {% endif %}
         </div>
+        <div class="inline-flex ml-auto space-x-3">
+            {% for page in pages %}
+                <a href="?action=posts&page={{ loop.index }}" class="{% if app.request.query.get('page') == loop.index %} text-red-500 {% endif %} font-medium hover:text-indigo-500 dark:hover:text-green-400 transition ease-in-out duration-500">{{ loop.index }}</a>
+            {% endfor %}
+        </div>
         {% for post in posts %}
             <a href="/?action=post&id={{ post.id }}">
                 <article class="border rounded border-gray-100 hover:border-indigo-500 dark:border-gray-500 dark:hover:border-green-400 transition ease-in-out duration-500 p-4">

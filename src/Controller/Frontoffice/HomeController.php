@@ -27,16 +27,17 @@ class HomeController
 
     public function displayHomepageAction(Request $request): Response
     {
+
         $posts = $this->postRepository->findBy([
             "post_status_fk" => 2
         ], null, 3, 0);
 
         if ($request->getMethod() === 'POST') {
             if ($this->contactFormValidator->isValid($request->request()->all())) {
-                return new Response('<h1>Formulaire envoyé</h1><h2>faire une redirection vers la page d\'accueil</h2><a href="index.php?action=posts">Page d\'accueil</a><br>', 200);
+                $this->session->addFlashes('success', 'Merci pour votre message, je vous répondrai dans les meilleurs délais.');
+            } else {
+                $this->session->addFlashes('error', "Le formulaire n'est pas valide, merci de vérifier les informations renseignées.");
             }
-
-            $this->session->addFlashes('error', 'Formulaire mal renseigné');
         }
 
         return new Response($this->view->render([
