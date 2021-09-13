@@ -11,11 +11,11 @@ use App\Controller\Backoffice\AdminUserController;
 use App\Controller\Frontoffice\HomeController;
 use App\Controller\Frontoffice\PostController;
 use App\Controller\Frontoffice\UserController;
+use App\Model\Entity\User;
 use App\Model\Repository\PostRepository;
 use App\Model\Repository\CommentRepository;
 use App\Model\Repository\UserRepository;
 use App\Service\Database\MySQLDB;
-use App\Service\DotEnv\DotEnvService;
 use App\Service\Form\CommentFormValidator;
 use App\Service\Form\ContactFormValidator;
 use App\Service\Form\LoginFormValidator;
@@ -54,7 +54,8 @@ final class Router
         if ($action === 'posts') {
             $postRepo = new PostRepository($this->database);
             $paginationService = new PaginationService($this->database, $postRepo, 3);
-            $controller = new PostController($postRepo, $this->view);
+            $userRepo = new UserRepository($this->database);
+            $controller = new PostController($postRepo, $userRepo, $this->view);
 
             return $controller->displayAllPostsAction($paginationService);
 
