@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace  App\Controller\Frontoffice;
 
 use App\Model\Entity\User;
+use App\Model\Repository\PostRepository;
 use App\Service\Form\LoginFormValidator;
 use App\Service\Form\RegisterFormValidator;
 use App\View\View;
@@ -12,30 +13,52 @@ use App\Service\Http\Request;
 use App\Service\Http\Response;
 use App\Service\Http\Session\Session;
 use App\Model\Repository\UserRepository;
+use Twig\Environment;
 
 final class UserController
 {
     private UserRepository $userRepository;
+    private PostRepository $postRepository;
     private View $view;
     private Session $session;
 
 
-    public function __construct(UserRepository $userRepository, View $view, Session $session)
+    public function __construct(UserRepository $userRepository, PostRepository $postRepository, View $view, Session $session)
     {
         $this->userRepository = $userRepository;
+        $this->postRepository = $postRepository;
         $this->view = $view;
         $this->session = $session;
     }
 
     public function loginAction(Request $request, LoginFormValidator $loginFormValidator): Response
     {
+        $posts = $this->postRepository->findBy([
+            "post_status_fk" => 2
+        ], null, 3, 0);
+
         $data = $request->request()->all();
+
+        if ($this->session->get('user')) {
+            return new Response($this->view->render([
+                'template' => 'home',
+                'data' => [
+                    'posts' => $posts
+                ]
+            ]));
+        }
 
         if ($request->getMethod() === 'POST') {
             if ($loginFormValidator->isValid($data)) {
                 $this->session->addFlashes('success', 'Vous êtes désormais connecté.');
                 $this->session->set('user', $data['email']);
-                return new Response($this->view->render(['template' => 'home']));
+                return new Response($this->view->render([
+                    'template' => 'home',
+                    'data' => [
+                        'posts' => $posts,
+                        'connected' => $this->session->get('user')
+                    ]
+                ]));
             } else {
                 $this->session->addFlashes('error', "Le formulaire n'est pas valide, merci de vérifier les informations renseignées.");
             }
@@ -45,12 +68,26 @@ final class UserController
 
     public function logoutAction(): Response
     {
+        $posts = $this->postRepository->findBy([
+            "post_status_fk" => 2
+        ], null, 3, 0);
+
+        $this->session->addFlashes('success', 'Vous avez été correctement déconnecté.');
         $this->session->remove('user');
-        return new Response($this->view->render(['template' => 'home']));
+        return new Response($this->view->render([
+            'template' => 'home',
+            'data' => [
+                'posts' => $posts,
+                'connected' => $this->session->get('user')
+            ]
+        ]));
     }
 
     public function registerAction(Request $request, RegisterFormValidator $registerFormValidator): Response
     {
+        $posts = $this->postRepository->findBy([
+            "post_status_fk" => 2
+        ], null, 3, 0);
 
         $data = $request->request()->all();
 
@@ -67,12 +104,25 @@ final class UserController
                 $this->userRepository->create($user);
                 $this->session->addFlashes('success', 'Vous êtes désormais inscrit, bienvenue !');
 
-                return new Response($this->view->render(['template' => 'home']));
+                return new Response($this->view->render([
+                    'template' => 'home',
+                    'data' => [
+                        'posts' => $posts,
+                        'connected' => $this->session->get('user')
+                    ]
+                ]));
+            } else {
+                $oldRequest = $request->request()->all();
+                $this->session->addFlashes('error', "Le formulaire n'est pas valide, merci de vérifier les informations renseignées.");
             }
 
-            $this->session->addFlashes('error', "Le formulaire n'est pas valide, merci de vérifier les informations renseignées.");
         }
 
-        return new Response($this->view->render(['template' => 'register']));
+        return new Response($this->view->render([
+            'template' => 'register',
+            'data' => [
+                'request' => $oldRequest
+            ]
+        ]));
     }
 }
