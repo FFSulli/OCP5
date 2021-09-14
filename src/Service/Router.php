@@ -108,7 +108,7 @@ final class Router
         } elseif ($action === 'register') {
             $userRepo = new UserRepository($this->database);
             $postRepo = new PostRepository($this->database);
-            $registerFormValidator = new RegisterFormValidator($this->session);
+            $registerFormValidator = new RegisterFormValidator($this->session, $userRepo);
             $controller = new UserController($userRepo, $postRepo, $this->view, $this->session);
 
 

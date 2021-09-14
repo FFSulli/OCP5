@@ -37,6 +37,9 @@
                     {% if key == 'errorEmailIsNotValid' %}
                         <span class="text-red-400">{{ message }}</span>
                     {% endif %}
+                    {% if key == 'emailAlreadyExists' %}
+                        <span class="text-red-400">{{ message }}</span>
+                    {% endif %}
                 {% endfor %}
             </label>
             <label for="" class="w-full">

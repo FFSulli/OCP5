@@ -93,6 +93,7 @@ final class UserController
         $data = $request->request()->all();
 
         if ($request->getMethod() === 'POST') {
+
             if ($registerFormValidator->isValid($data)) {
                 $password = password_hash($data['password'], PASSWORD_BCRYPT);
                 $user = new User();

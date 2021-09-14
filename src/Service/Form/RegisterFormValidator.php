@@ -4,16 +4,19 @@ declare(strict_types=1);
 
 namespace App\Service\Form;
 
+use App\Model\Repository\UserRepository;
 use App\Service\Http\Session\Session;
 
 class RegisterFormValidator extends FormValidatorService implements FormInterface
 {
 
     private Session $session;
+    private UserRepository $userRepository;
 
-    public function __construct(Session $session)
+    public function __construct(Session $session, UserRepository $userRepository)
     {
         $this->session = $session;
+        $this->userRepository = $userRepository;
     }
 
     public function isValid(array $form): bool
@@ -53,6 +56,11 @@ class RegisterFormValidator extends FormValidatorService implements FormInterfac
 
         if (! $this->isEmpty($form['email']) && ! $this->isEmail($form['email'])) {
             $this->session->addFlashes('errorEmailIsNotValid', "Le champ email n'est pas valide");
+            $isValid = false;
+        }
+
+        if (! $this->isEmpty($form['email']) && $this->userRepository->findOneBy(['email' => $form['email']])) {
+            $this->session->addFlashes('emailAlreadyExists', 'Cette adresse email est déjà utilisée');
             $isValid = false;
         }
 
