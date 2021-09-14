@@ -33,12 +33,13 @@ class HomeController
             "post_status_fk" => 2
         ], null, 3, 0);
 
+        $data = $request->request()->all();
 
         if ($request->getMethod() === 'POST') {
 
-            if ($this->contactFormValidator->isValid($request->request()->all())) {
+            if ($this->contactFormValidator->isValid($data)) {
                 $mailer = $emailService->prepareEmail();
-                $message = $emailService->createMessage();
+                $message = $emailService->createMessage('Sullivan Berger - Demande de contact' ,$data['email'], $data['message']);
                 $mailer->send($message);
                 $this->session->addFlashes('success', 'Merci pour votre message, je vous répondrai dans les meilleurs délais.');
 

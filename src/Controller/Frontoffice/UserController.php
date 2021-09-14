@@ -6,6 +6,7 @@ namespace  App\Controller\Frontoffice;
 
 use App\Model\Entity\User;
 use App\Model\Repository\PostRepository;
+use App\Service\Email\EmailService;
 use App\Service\Form\LoginFormValidator;
 use App\Service\Form\RegisterFormValidator;
 use App\View\View;
@@ -83,7 +84,7 @@ final class UserController
         ]));
     }
 
-    public function registerAction(Request $request, RegisterFormValidator $registerFormValidator): Response
+    public function registerAction(Request $request, RegisterFormValidator $registerFormValidator, EmailService $emailService): Response
     {
         $posts = $this->postRepository->findBy([
             "post_status_fk" => 2
@@ -102,6 +103,10 @@ final class UserController
                     ->setPassword((string) $password);
 
                 $this->userRepository->create($user);
+
+                $mailer = $emailService->prepareEmail();
+                $message = $emailService->createMessage('Sullivan Berger - Nouveau compte' ,$data['email'], 'Merci de vous êtes inscrit sur sullivan-berger.fr.');
+                $mailer->send($message);
                 $this->session->addFlashes('success', 'Vous êtes désormais inscrit, bienvenue !');
 
                 return new Response($this->view->render([

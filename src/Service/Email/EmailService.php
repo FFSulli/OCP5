@@ -35,13 +35,12 @@ class EmailService
         return new \Swift_Mailer($transport);
     }
 
-    public function createMessage(): \Swift_Message
+    public function createMessage(string $subject, string $from, string $body): \Swift_Message
     {
-        return (new \Swift_Message('Subject'))
-            ->setFrom($this->email)
-            ->setTo('test@test.com')
-            ->setBcc('toto@toto.com')
-            ->setBody('message')
+        return (new \Swift_Message($subject))
+            ->setFrom($from)
+            ->setTo($this->email)
+            ->setBody($body)
             ;
     }
 }

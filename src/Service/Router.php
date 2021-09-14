@@ -37,11 +37,19 @@ final class Router
     private Request $request;
     private Session $session;
     private DotEnv $dotEnv;
+    private EmailService $emailService;
 
     public function __construct(Request $request, DotEnv $dotEnv)
     {
         $this->dotEnv = $dotEnv;
         $this->database = new MySQLDB($this->dotEnv->get('DATABASE_HOST'), $this->dotEnv->get('DATABASE_NAME'), $this->dotEnv->get('DATABASE_USER'), $this->dotEnv->get('DATABASE_PASSWORD'));
+        $this->emailService = new EmailService(
+            $this->dotEnv->get('EMAIL_SMTP'),
+            $this->dotEnv->get('EMAIL_SMTP_PORT'),
+            $this->dotEnv->get('EMAIL_USERNAME'),
+            $this->dotEnv->get('EMAIL_PASSWORD'),
+            $this->dotEnv->get('EMAIL_ADDRESS')
+        );
         $this->session = new Session();
         $this->view = new View($this->session);
         $this->request = $request;
@@ -76,15 +84,8 @@ final class Router
             $postRepo = new PostRepository($this->database);
             $contactFormValidator = new ContactFormValidator($this->session);
             $controller = new HomeController($postRepo, $contactFormValidator, $this->view, $this->session);
-            $emailService = new EmailService(
-                $this->dotEnv->get('EMAIL_SMTP'),
-                $this->dotEnv->get('EMAIL_SMTP_PORT'),
-                $this->dotEnv->get('EMAIL_USERNAME'),
-                $this->dotEnv->get('EMAIL_PASSWORD'),
-                $this->dotEnv->get('EMAIL_ADDRESS')
-            );
 
-            return $controller->displayHomepageAction($this->request, $emailService);
+            return $controller->displayHomepageAction($this->request, $this->emailService);
 
         // *** @Route http://localhost:8000/?action=login ***
         } elseif ($action === 'login') {
@@ -110,7 +111,8 @@ final class Router
             $registerFormValidator = new RegisterFormValidator($this->session);
             $controller = new UserController($userRepo, $postRepo, $this->view, $this->session);
 
-            return $controller->registerAction($this->request, $registerFormValidator);
+
+            return $controller->registerAction($this->request, $registerFormValidator, $this->emailService);
 
         // *** @Route http://localhost:8000/?action=admin ***
         } elseif ($action === 'admin') {
