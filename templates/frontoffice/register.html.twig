@@ -46,6 +46,17 @@
                         <span class="text-red-400">{{ message }}</span>
                     {% endif %}
                 {% endfor %}
+                {% for key, message in flashes %}
+                    <ul>
+                        {% if key == 'errorPasswordIsTooShort' %}
+                            <li class="text-red-400">{{ message }}</li>
+                        {% endif %}
+                        {% if key == 'errorPasswordNeedsSpecialCharacters' %}
+                            <li class="text-red-400">{{ message }}</li>
+                        {% endif %}
+                    </ul>
+
+                {% endfor %}
             </label>
             <label for="" class="w-full">
                 <input type="password" name="confirmPassword" class="lg:w-full bg-gray-50 dark:bg-gray-400 dark:placeholder-gray-200 rounded focus:ring focus:ring-indigo-500 dark:focus:ring-green-400 focus:outline-none transition ease-in-out duration-200 p-4" placeholder="Confirmation du mot de passe">

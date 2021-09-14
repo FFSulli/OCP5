@@ -61,6 +61,16 @@ class RegisterFormValidator extends FormValidatorService implements FormInterfac
             $isValid = false;
         }
 
+        if (! $this->isEmpty($form['password']) && strlen($form['password']) < 8) {
+            $this->session->addFlashes('errorPasswordIsTooShort', 'Le champ mot de passe doit faire plus de 8 caractères');
+            $isValid = false;
+        }
+
+        if (! $this->isEmpty($form['password']) && ! preg_match("#[0-9]+#", $form['password']) || !preg_match("#[a-zA-Z]+#", $form['password'])) {
+            $this->session->addFlashes('errorPasswordNeedsSpecialCharacters', 'Le champ mot de passe doit contenir au moins une lettre et un chiffre');
+            $isValid = false;
+        }
+
         if ($this->isEmpty($form['confirmPassword'])) {
             $this->session->addFlashes('errorConfirmPasswordIsNull', 'Le champ confirmation du mot de passe ne peut pas être vide');
             $isValid = false;
