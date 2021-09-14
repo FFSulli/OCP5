@@ -16,6 +16,7 @@ use App\Model\Repository\PostRepository;
 use App\Model\Repository\CommentRepository;
 use App\Model\Repository\UserRepository;
 use App\Service\Database\MySQLDB;
+use App\Service\Email\EmailService;
 use App\Service\Form\CommentFormValidator;
 use App\Service\Form\ContactFormValidator;
 use App\Service\Form\LoginFormValidator;
@@ -55,7 +56,7 @@ final class Router
             $postRepo = new PostRepository($this->database);
             $paginationService = new PaginationService($this->database, $postRepo, 3);
             $userRepo = new UserRepository($this->database);
-            $controller = new PostController($postRepo, $userRepo, $this->view);
+            $controller = new PostController($postRepo, $userRepo, $this->view, $this->session);
 
             return $controller->displayAllPostsAction($paginationService);
 
@@ -63,43 +64,51 @@ final class Router
         } elseif ($action === 'post' && $this->request->query()->has('id')) {
             $postRepo = new PostRepository($this->database);
             $userRepo = new UserRepository($this->database);
-            $controller = new PostController($postRepo, $userRepo, $this->view);
+            $controller = new PostController($postRepo, $userRepo, $this->view, $this->session);
             $commentFormValidator = new CommentFormValidator($this->session);
 
             $commentRepo = new CommentRepository($this->database);
 
-            return $controller->displayOneAction($this->request, $this->session, (int) $this->request->query()->get('id'), $commentRepo, $commentFormValidator);
+            return $controller->displayOneAction($this->request, (int) $this->request->query()->get('id'), $commentRepo, $commentFormValidator);
 
         // *** @Route http://localhost:8000/?action=home ***
         } elseif ($action === 'home') {
             $postRepo = new PostRepository($this->database);
             $contactFormValidator = new ContactFormValidator($this->session);
             $controller = new HomeController($postRepo, $contactFormValidator, $this->view, $this->session);
+            $emailService = new EmailService(
+                $this->dotEnv->get('EMAIL_SMTP'),
+                $this->dotEnv->get('EMAIL_SMTP_PORT'),
+                $this->dotEnv->get('EMAIL_USERNAME'),
+                $this->dotEnv->get('EMAIL_PASSWORD'),
+                $this->dotEnv->get('EMAIL_ADDRESS')
+            );
 
-            return $controller->displayHomepageAction($this->request);
+            return $controller->displayHomepageAction($this->request, $emailService);
 
         // *** @Route http://localhost:8000/?action=login ***
         } elseif ($action === 'login') {
             $userRepo = new UserRepository($this->database);
-            $registerFormValidator = new RegisterFormValidator($this->session);
+            $postRepo = new PostRepository($this->database);
             $loginFormValidator = new LoginFormValidator($userRepo, $this->session);
-            $controller = new UserController($userRepo, $this->view, $this->session);
+            $controller = new UserController($userRepo, $postRepo, $this->view, $this->session);
 
             return $controller->loginAction($this->request, $loginFormValidator);
 
         // *** @Route http://localhost:8000/?action=logout ***
         } elseif ($action === 'logout') {
             $userRepo = new UserRepository($this->database);
-            $registerFormValidator = new RegisterFormValidator($this->session);
-            $controller = new UserController($userRepo, $this->view, $this->session);
+            $postRepo = new PostRepository($this->database);
+            $controller = new UserController($userRepo, $postRepo, $this->view, $this->session);
 
             return $controller->logoutAction();
 
             // *** @Route http://localhost:8000/?action=register ***
         } elseif ($action === 'register') {
             $userRepo = new UserRepository($this->database);
+            $postRepo = new PostRepository($this->database);
             $registerFormValidator = new RegisterFormValidator($this->session);
-            $controller = new UserController($userRepo, $this->view, $this->session);
+            $controller = new UserController($userRepo, $postRepo, $this->view, $this->session);
 
             return $controller->registerAction($this->request, $registerFormValidator);
 
