@@ -20,22 +20,24 @@ final class PostController
     private PostRepository $postRepository;
     private UserRepository $userRepository;
     private View $view;
+    private Session $session;
 
-    public function __construct(PostRepository $postRepository, UserRepository $userRepository, View $view)
+    public function __construct(PostRepository $postRepository, UserRepository $userRepository, View $view, Session $session)
     {
         $this->postRepository = $postRepository;
         $this->userRepository = $userRepository;
         $this->view = $view;
+        $this->session = $session;
     }
 
-    public function displayOneAction(Request $request, Session $session, int $postId, CommentRepository $commentRepository, CommentFormValidator $commentFormValidator): Response
+    public function displayOneAction(Request $request, int $postId, CommentRepository $commentRepository, CommentFormValidator $commentFormValidator): Response
     {
         $post = $this->postRepository->find($postId);
         $comments = $commentRepository->findBy([
             "post_fk" => $postId,
             "verified" => 1
         ]);
-        $user = $this->userRepository->findOneBy(['email' => $session->get('user')]);
+        $user = $this->userRepository->findOneBy(['email' => $this->session->get('user')]);
 
         $data = $request->request()->all();
 
@@ -47,13 +49,13 @@ final class PostController
                 $comment->setPostFk($postId);
 
                 $commentRepository->create($comment);
-                $session->addFlashes('success', 'Votre commentaire a bien été ajouté');
+                $this->session->addFlashes('success', 'Votre commentaire a bien été ajouté');
 
                 return new Response($this->view->render([
                     'template' => 'post',
                     'data' => [
                         'post' => $post,
-                        'comments' => $comments,
+                        'comments' => $comments
                     ],
                 ]));
             }
@@ -68,7 +70,8 @@ final class PostController
                 'data' => [
                     'post' => $post,
                     'comments' => $comments,
-                    ],
+                    'connected' => $this->session->get('user')
+                ],
                 ],
             ));
         }
@@ -85,7 +88,8 @@ final class PostController
             'template' => 'posts',
             'data' => [
                 'posts' => $posts,
-                'pages' => $pages
+                'pages' => $pages,
+                'connected' => $this->session->get('user')
             ],
         ]));
     }

@@ -30,7 +30,7 @@ class PgSQLDB implements DatabaseInterface
      * @param string $PDOClass
      * @return array
      */
-    public function execute(PDOStatement $prepared, array $args, string $PDOClass): ?array
+    public function fetchAll(PDOStatement $prepared, array $args, string $PDOClass): ?array
     {
         $prepared->execute($args);
 

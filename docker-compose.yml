@@ -34,10 +34,10 @@ services:
 
   oc_blog_nginx:
     container_name: oc_blog_nginx
-    image: nginx:1.19.5-alpine
+    image: nginx:1.19.5
     volumes:
       - './public/:/srv/public:ro'
-      - './docker/nginx/default.conf:/etc/nginx/conf.d/default.conf:ro'
+      - './docker/nginx/default.conf:/etc/nginx/conf.d/default.conf:rw'
     ports:
       - 8022:80
     depends_on:

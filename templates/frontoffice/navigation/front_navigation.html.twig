@@ -21,7 +21,12 @@
         </div>
         <ul class="hidden space-y-4 sm:space-y-0 sm:space-x-8 sm:flex sm:flex-row" id="navItems">
             <li><a href="/?action=posts" class="font-medium hover:text-indigo-500 dark:hover:text-green-400 transition ease-in-out duration-500">Articles</a></li>
-            <li><a href="/?action=login" class="font-medium bg-indigo-500 hover:bg-indigo-600 dark:bg-green-400 dark:hover:bg-green-500 text-white rounded py-2 px-4 transition ease-in-out duration-500">Connexion</a></li>
+            {% if session.user == false %}
+                <li><a href="/?action=login" class="font-medium bg-indigo-500 hover:bg-indigo-600 dark:bg-green-400 dark:hover:bg-green-500 text-white rounded py-2 px-4 transition ease-in-out duration-500">Connexion</a></li>
+            {% else %}
+                <li><p class="font-medium hover:text-indigo-500 dark:hover:text-green-400 transition ease-in-out duration-500">{{ session.user }}</p></li>
+                <li><a href="/?action=logout" class="font-medium bg-indigo-500 hover:bg-indigo-600 dark:bg-green-400 dark:hover:bg-green-500 text-white rounded py-2 px-4 transition ease-in-out duration-500">Déconnexion</a></li>
+            {% endif %}
             <li>
                 <button id="toggleDarkIcon" class="block focus:outline-none">
                     <svg class="pointer-events-none" width="24" height="25" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12.428 24.998A12.429 12.429 0 010 12.569c0-5.036 2.893-9.55 7.372-11.5A.857.857 0 018.5 2.197c-.514 1.18-.786 2.693-.786 4.372 0 5.908 4.807 10.714 10.714 10.714 1.68 0 3.192-.271 4.372-.786a.858.858 0 011.129 1.129c-1.95 4.479-6.465 7.372-11.5 7.372z" fill="currentColor"/></svg>

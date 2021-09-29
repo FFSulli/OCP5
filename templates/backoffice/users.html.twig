@@ -1,5 +1,63 @@
 {% extends "/backoffice/base.html.twig" %}
 
 {% block content %}
-    Users
+    <section class="mt-8 p-4">
+        <h1 class="md:text-4xl sm:text-6xl font-bold mb-8">Gestion des utilisateurs</h1>
+        <table class="w-full text-center">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th class="w-1/6">Utilisateur</th>
+                <th class="w-1/6">Date de création</th>
+                <th class="w-1/6">Adresse e-mail</th>
+                <th class="w-1/6">Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for user in users %}
+                <tr class="hover:bg-gray-50 rounded-xl transition ease-in-out duration-500">
+                    <td class="py-8 px-4">{{ user.id }}</td>
+                    <td class="px-4">{{ user.firstName }} {{ user.lastName }}</td>
+                    <td class="px-4">{{ user.createdAt | date("d/m/Y \\à H:i") }}</td>
+                    <td class="px-4">{{ user.email }}</td>
+                    <td class="flex items-center text-center space-x-2 py-8 px-4">
+                        {% if (user.roleFk != 1) %}
+                        <a href="" class="inline-block bg-blue-400 hover:bg-blue-500 text-white p-2 rounded-full transition ease-in-out duration-300">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16">
+                                <circle cx="8" cy="6" r="2.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" data-cap="butt" data-color="color-2"/>
+                                <path d="M12.953 13.621a5.491 5.491 0 0 0-9.906 0" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" data-cap="butt" data-color="color-2"/>
+                                <circle cx="8" cy="8" r="7.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" data-cap="butt"/>
+                            </svg>
+                        </a>
+                        {% endif %}
+                        {% if (user.roleFk != 2) %}
+                            <a href="" class="inline-block bg-yellow-400 hover:bg-yellow-500 text-white p-2 rounded-full transition ease-in-out duration-300">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16">
+                                    <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" d="M6.5 15.5h-6V.5h13v5M3.5 3.5h7M3.5 6.5h4M3.5 9.5h2M3.5 12.5h2"/>
+                                    <circle fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" cx="11.5" cy="11.5" r="4" data-color="color-2"/>
+                                    <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" data-color="color-2" d="M11.5 9.5v4M9.5 11.5h4"/>
+                                </svg>
+                            </a>
+                        {% endif %}
+                        {% if (user.roleFk != 3)  %}
+                            <a href="" class="inline-block bg-indigo-400 hover:bg-indigo-500 text-white p-2 rounded-full transition ease-in-out duration-300">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16">
+                                    <circle cx="5" cy="7" r="1" fill="currentColor" data-cap="butt" data-color="color-2" data-stroke="none"/>
+                                    <path d="M5 9a2 2 0 0 1 2 2H3a2 2 0 0 1 2-2Z" fill="currentColor" data-cap="butt" data-color="color-2" data-stroke="none"/>
+                                    <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" data-cap="butt" data-color="color-2" d="M8.5 7.5h4M9.5 10.5h3"/>
+                                    <path d="M14.5 1.5h-2V2a1.5 1.5 0 0 1-3 0v-.5h-3V2a1.5 1.5 0 0 1-3 0v-.5h-2a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h13a1 1 0 0 0 1-1v-10a1 1 0 0 0-1-1Z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" data-cap="butt"/>
+                                </svg>
+                            </a>
+                        {% endif %}
+                        <a href="" class="inline-block bg-red-400 hover:bg-red-500 text-white p-2 rounded-full transition ease-in-out duration-300">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16">
+                                <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" data-cap="butt" d="m13.5 2.5-11 11M2.5 2.5l11 11"/>
+                            </svg>
+                        </a>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </section>
 {% endblock %}

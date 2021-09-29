@@ -30,7 +30,7 @@ class MySQLDB implements DatabaseInterface
      * @param string $PDOClass
      * @return array
      */
-    public function execute(PDOStatement $prepared, array $args, string $PDOClass): ?array
+    public function fetchAll(PDOStatement $prepared, array $args, string $PDOClass): ?array
     {
         $prepared->execute($args);
 
@@ -43,10 +43,22 @@ class MySQLDB implements DatabaseInterface
         return $execute;
     }
 
-    public function executeAggregat(PDOStatement $prepared, array $args)
+    public function fetch(PDOStatement $prepared, array $args, string $class)
     {
         $prepared->execute($args);
+        $prepared->setFetchMode(PDO::FETCH_CLASS, $class);
+        $execute = $prepared->fetch();
 
+        if ($execute === false) {
+            return null;
+        }
+
+        return $execute;
+    }
+
+    public function execute(PDOStatement $prepared, array $args): ?array
+    {
+        $prepared->execute($args);
         $execute = $prepared->fetch();
 
         if ($execute === false) {

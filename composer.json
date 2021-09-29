@@ -23,9 +23,10 @@
         }
     },
     "require": {
+        "ext-http": "*",
+        "ext-json": "*",
         "ext-pdo": "*",
-        "twig/twig": "^3.3",
-      "ext-http": "*",
-      "ext-json": "*"
+        "swiftmailer/swiftmailer": "^6.0",
+        "twig/twig": "^3.3"
     }
 }

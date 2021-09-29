@@ -1,4 +1,4 @@
-FROM php:7.4.16-fpm
+FROM php:7.4.13-fpm
 
 # Update repos
 RUN apt update -yqq
