@@ -27,43 +27,22 @@ final class UserRepository implements EntityRepositoryInterface
 
     public function findOneBy(array $criteria, array $orderBy = null): ?User
     {
-        return $this->findBy($criteria, $orderBy, 1, 0)[0] ?? null;
+        $prefetch = $this->preFetch($criteria, $orderBy, 1, 0) ?? null;
+
+        return $this->database->fetch($prefetch['statement'], $prefetch['binds'], User::class);
     }
 
     public function findBy(array $criteria, array $orderBy = null, int $limit = null, int $offset = null): ?array
     {
-        $criteriaFields = [];
-        $orderByFields = [];
-        $binds = [];
+        $prefetch = $this->preFetch($criteria, $orderBy, $limit, $offset);
 
-        foreach ($criteria as $key => $value) {
-            $criteriaFields[] = sprintf("%s = :%s", $key, $key);
-            $binds[sprintf(":%s", $key)] = $value;
-        }
-
-        if (null !== $orderBy) {
-            foreach ($orderBy as $key => $value) {
-                $orderByFields[] = sprintf("%s %s", $key, $value);
-            }
-        }
-
-        $criteriaList = implode(' AND ', $criteriaFields);
-        $orderByList = implode(', ', $orderByFields);
-
-        $whereClause = 0 !== count($criteriaFields) ? sprintf('WHERE %s', $criteriaList) : '';
-        $orderByClause = 0 !== count($orderByFields) ? sprintf(' ORDER BY %s', $orderByList) : '';
-        $limitClause = null !== $limit ? ' LIMIT ' . $limit : '';
-        $offsetClause = null !== $offset ? ' OFFSET ' . $offset : '';
-
-        $prepared = $this->database->prepare('SELECT * FROM users ' . $whereClause . $orderByClause . $limitClause . $offsetClause);
-
-        return $this->database->execute($prepared, $binds, User::class);
+        return $this->database->fetchAll($prefetch['statement'], $prefetch['binds'], User::class);
     }
 
     public function findAll(): ?array
     {
         $prepared = $this->database->prepare('select * from users');
-        return $this->database->execute($prepared, [], User::class);
+        return $this->database->fetchAll($prepared, [], User::class);
     }
 
     public function create(object $user): bool
@@ -101,5 +80,36 @@ final class UserRepository implements EntityRepositoryInterface
         $prepared->bindValue(':id', $user->getId());
 
         return $prepared->execute();
+    }
+
+    private function preFetch(array $criteria, array $orderBy = null, int $limit = null, int $offset = null): ?array
+    {
+        $criteriaFields = [];
+        $orderByFields = [];
+        $binds = [];
+
+        foreach ($criteria as $key => $value) {
+            $criteriaFields[] = sprintf("%s = :%s", $key, $key);
+            $binds[sprintf(":%s", $key)] = $value;
+        }
+
+        if (null !== $orderBy) {
+            foreach ($orderBy as $key => $value) {
+                $orderByFields[] = sprintf("%s %s", $key, $value);
+            }
+        }
+
+        $criteriaList = implode(' AND ', $criteriaFields);
+        $orderByList = implode(', ', $orderByFields);
+
+        $whereClause = 0 !== count($criteriaFields) ? sprintf('WHERE %s', $criteriaList) : '';
+        $orderByClause = 0 !== count($orderByFields) ? sprintf(' ORDER BY %s', $orderByList) : '';
+        $limitClause = null !== $limit ? ' LIMIT ' . $limit : '';
+        $offsetClause = null !== $offset ? ' OFFSET ' . $offset : '';
+
+        return [
+            'statement' => $this->database->prepare('SELECT * FROM users ' . $whereClause . $orderByClause . $limitClause . $offsetClause),
+            'binds' => $binds
+        ];
     }
 }

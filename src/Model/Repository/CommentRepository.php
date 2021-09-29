@@ -27,43 +27,22 @@ final class CommentRepository implements EntityRepositoryInterface
 
     public function findOneBy(array $criteria, array $orderBy = null): ?Comment
     {
-        return $this->findBy($criteria, $orderBy, 1, 1)[0] ?? null;
+        $prefetch = $this->preFetch($criteria, $orderBy, 1, 1)[0] ?? null;
+
+        return $this->database->fetch($prefetch['statement'], $prefetch['binds'], Comment::class);
     }
 
     public function findBy(array $criteria, array $orderBy = null, int $limit = null, int $offset = null): ?array
     {
-        $criteriaFields = [];
-        $orderByFields = [];
-        $binds = [];
+        $prefetch = $this->preFetch($criteria, $orderBy, $limit, $offset);
 
-        foreach ($criteria as $key => $value) {
-            $criteriaFields[] = sprintf("%s = :%s", $key, $key);
-            $binds[sprintf(":%s", $key)] = $value;
-        }
-
-        if (null !== $orderBy) {
-            foreach ($orderBy as $key => $value) {
-                $orderByFields[] = sprintf("%s %s", $key, $value);
-            }
-        }
-
-        $criteriaList = implode(' AND ', $criteriaFields);
-        $orderByList = implode(', ', $orderByFields);
-
-        $whereClause = 0 !== count($criteriaFields) ? sprintf('WHERE %s', $criteriaList) : '';
-        $orderByClause = 0 !== count($orderByFields) ? sprintf(' ORDER BY %s', $orderByList) : '';
-        $limitClause = null !== $limit ? ' LIMIT ' . $limit : '';
-        $offsetClause = null !== $offset ? ' OFFSET ' . $offset : '';
-
-        $prepared = $this->database->prepare('SELECT * FROM comments ' . $whereClause . $orderByClause . $limitClause . $offsetClause);
-
-        return $this->database->execute($prepared, $binds, Comment::class);
+        return $this->database->fetchAll($prefetch['statement'], $prefetch['binds'], Comment::class);
     }
 
     public function findAll(): ?array
     {
         $prepared = $this->database->prepare('select * from comments');
-        return $this->database->execute($prepared, [], Comment::class);
+        return $this->database->fetchAll($prepared, [], Comment::class);
     }
 
     public function create(object $comment): bool
@@ -103,5 +82,36 @@ final class CommentRepository implements EntityRepositoryInterface
         $prepared->bindValue(':id', $comment->getId());
 
         return $prepared->execute();
+    }
+
+    private function preFetch(array $criteria, array $orderBy = null, int $limit = null, int $offset = null): ?array
+    {
+        $criteriaFields = [];
+        $orderByFields = [];
+        $binds = [];
+
+        foreach ($criteria as $key => $value) {
+            $criteriaFields[] = sprintf("%s = :%s", $key, $key);
+            $binds[sprintf(":%s", $key)] = $value;
+        }
+
+        if (null !== $orderBy) {
+            foreach ($orderBy as $key => $value) {
+                $orderByFields[] = sprintf("%s %s", $key, $value);
+            }
+        }
+
+        $criteriaList = implode(' AND ', $criteriaFields);
+        $orderByList = implode(', ', $orderByFields);
+
+        $whereClause = 0 !== count($criteriaFields) ? sprintf('WHERE %s', $criteriaList) : '';
+        $orderByClause = 0 !== count($orderByFields) ? sprintf(' ORDER BY %s', $orderByList) : '';
+        $limitClause = null !== $limit ? ' LIMIT ' . $limit : '';
+        $offsetClause = null !== $offset ? ' OFFSET ' . $offset : '';
+
+        return [
+            'statement' => $this->database->prepare('SELECT * FROM comments ' . $whereClause . $orderByClause . $limitClause . $offsetClause),
+            'binds' => $binds
+        ];
     }
 }
