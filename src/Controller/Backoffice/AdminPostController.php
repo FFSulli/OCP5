@@ -22,6 +22,7 @@ class AdminPostController
     {
 
         $posts = $this->postRepository->findAll();
+
         return new Response($this->view->render([
             'template' => '../backoffice/posts',
             'data' => [
