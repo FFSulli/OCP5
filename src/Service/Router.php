@@ -21,6 +21,7 @@ use App\Service\Form\CommentFormValidator;
 use App\Service\Form\ContactFormValidator;
 use App\Service\Form\LoginFormValidator;
 use App\Service\Form\RegisterFormValidator;
+use App\Service\Authentication\Authentication;
 use App\Service\Http\Request;
 use App\Service\Http\Response;
 use App\Service\Http\Session\Session;
@@ -91,8 +92,9 @@ final class Router
         } elseif ($action === 'login') {
             $userRepo = new UserRepository($this->database);
             $postRepo = new PostRepository($this->database);
+            $authentication = new Authentication($this->session);
             $loginFormValidator = new LoginFormValidator($userRepo, $this->session);
-            $controller = new UserController($userRepo, $postRepo, $this->view, $this->session);
+            $controller = new UserController($userRepo, $postRepo, $authentication, $this->view, $this->session);
 
             return $controller->loginAction($this->request, $loginFormValidator);
 
@@ -100,7 +102,8 @@ final class Router
         } elseif ($action === 'logout') {
             $userRepo = new UserRepository($this->database);
             $postRepo = new PostRepository($this->database);
-            $controller = new UserController($userRepo, $postRepo, $this->view, $this->session);
+            $authentication = new Authentication($this->session);
+            $controller = new UserController($userRepo, $postRepo, $authentication, $this->view, $this->session);
 
             return $controller->logoutAction();
 
@@ -108,8 +111,9 @@ final class Router
         } elseif ($action === 'register') {
             $userRepo = new UserRepository($this->database);
             $postRepo = new PostRepository($this->database);
+            $authentication = new Authentication($this->session);
             $registerFormValidator = new RegisterFormValidator($this->session, $userRepo);
-            $controller = new UserController($userRepo, $postRepo, $this->view, $this->session);
+            $controller = new UserController($userRepo, $postRepo, $authentication, $this->view, $this->session);
 
 
             return $controller->registerAction($this->request, $registerFormValidator, $this->emailService);
@@ -129,13 +133,15 @@ final class Router
 
         // *** @Route http://localhost:8000/?action=admin_comments ***
         } elseif ($action === 'admin_comments') {
-            $controller = new AdminCommentController($this->view);
+            $commentRepo = new CommentRepository($this->database);
+            $controller = new AdminCommentController($this->view, $commentRepo);
 
             return $controller->displayAdminCommentAction();
 
         // *** @Route http://localhost:8000/?action=admin_users ***
         } elseif ($action === 'admin_users') {
-            $controller = new AdminUserController($this->view);
+            $userRepo = new UserRepository($this->database);
+            $controller = new AdminUserController($this->view, $userRepo);
 
             return $controller->displayAdminUserAction();
         } else {
