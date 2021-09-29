@@ -3,6 +3,9 @@
 {% block content %}
     <section class="mt-8 p-4">
         <h1 class="md:text-4xl sm:text-6xl font-bold mb-8">Gestion des articles</h1>
+        <a href="#" class="inline-block bg-indigo-400 hover:bg-indigo-500 text-white rounded py-2 px-4 mb-4 transition ease-in-out duration-500">
+            Ajouter un article
+        </a>
         <table class="w-full text-center">
             <thead>
                 <tr>
@@ -22,9 +25,34 @@
                         <td class="px-4">{{ post.createdAt | date("d/m/Y \\à H:i") }}</td>
                         <td class="px-4">{{ post.updatedAt | date("d/m/Y \\à H:i") }}</td>
                         <td class="px-4">Sullivan Berger</td>
-                        <td class="flex flex-col content-center px-4">
-                            <a href="">Publier</a>
-                            <a href="">Supprimer</a>
+                        <td class="flex items-center mx-auto space-x-2 py-8 px-4">
+                            <a href="" aria-label="Editer" class="bg-indigo-400 hover:bg-indigo-500 text-white p-2 rounded-full transition ease-in-out duration-300">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16">
+                                    <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" d="M1 15.5h14"/>
+                                    <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" d="m10.5.5 3 3L5 12l-4 1 1-4zM8.5 2.5l3 3"/>
+                                </svg>
+                            </a>
+                            {% if post.post_status_fk == 1 %}
+                                <a href="" class="bg-green-400 hover:bg-green-500 text-white p-2 rounded-full transition ease-in-out duration-300">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16">
+                                        <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" d="M1.5.5h13v15h-13z"/>
+                                        <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" data-color="color-2" d="M9.5 3.5h2M9.5 6.5h2M4.5 9.5h7M4.5 12.5h7M4.5 3.5h3v3h-3z"/>
+                                    </svg>
+                                </a>
+                            {% elseif post.post_status_fk == 2 %}
+                                <a href="" class="bg-yellow-400 hover:bg-yellow-500 text-white p-2 rounded-full transition ease-in-out duration-300">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16">
+                                        <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" d="M6.5 15.5h-6V.5h13v5M3.5 3.5h7M3.5 6.5h4M3.5 9.5h2M3.5 12.5h2"/>
+                                        <circle fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" cx="11.5" cy="11.5" r="4" data-color="color-2"/>
+                                        <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" data-color="color-2" d="M9.5 11.5h4"/>
+                                    </svg>
+                                </a>
+                            {% endif %}
+                            <a href="" class="bg-red-400 hover:bg-red-500 text-white p-2 rounded-full transition ease-in-out duration-300">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16">
+                                    <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" data-cap="butt" d="m13.5 2.5-11 11M2.5 2.5l11 11"/>
+                                </svg>
+                            </a>
                         </td>
                     </tr>
                 {% endfor %}

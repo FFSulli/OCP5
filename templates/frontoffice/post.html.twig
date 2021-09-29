@@ -5,7 +5,7 @@
 {% block content %}
     <article class="container flex flex-col space-y-3 text-justify">
         <h2 class="text-xl font-bold text-indigo-500 dark:text-green-400">{{ post.title }}</h2>
-        <p class="text-sm text-gray-400">Publié le {{ post.createdAt|date("d/m/Y \\à h:m") }} par {{ user.last_name }}, {% if post.updatedAt is not empty %}mis à jour le {{ post.updatedAt | date("d/m/Y \\à H:i") }}
+        <p class="text-sm text-gray-400">Publié le {{ post.createdAt | date("d/m/Y \\à H:i") }} par {{ user.last_name }}, {% if post.updatedAt is not empty %}mis à jour le {{ post.updatedAt | date("d/m/Y \\à H:i") }}
         {% endif %}</p>
         <p class="font-bold">{{ post.excerpt }}</p>
         <p>{{ post.content }}</p>
