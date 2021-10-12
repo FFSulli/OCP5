@@ -92,7 +92,7 @@ final class Router
         } elseif ($action === 'login') {
             $userRepo = new UserRepository($this->database);
             $postRepo = new PostRepository($this->database);
-            $authentication = new Authentication($this->session);
+            $authentication = new Authentication($this->session, $userRepo);
             $loginFormValidator = new LoginFormValidator($userRepo, $this->session);
             $controller = new UserController($userRepo, $postRepo, $authentication, $this->view, $this->session);
 
@@ -102,7 +102,7 @@ final class Router
         } elseif ($action === 'logout') {
             $userRepo = new UserRepository($this->database);
             $postRepo = new PostRepository($this->database);
-            $authentication = new Authentication($this->session);
+            $authentication = new Authentication($this->session, $userRepo);
             $controller = new UserController($userRepo, $postRepo, $authentication, $this->view, $this->session);
 
             return $controller->logoutAction();
@@ -111,7 +111,7 @@ final class Router
         } elseif ($action === 'register') {
             $userRepo = new UserRepository($this->database);
             $postRepo = new PostRepository($this->database);
-            $authentication = new Authentication($this->session);
+            $authentication = new Authentication($this->session, $userRepo);
             $registerFormValidator = new RegisterFormValidator($this->session, $userRepo);
             $controller = new UserController($userRepo, $postRepo, $authentication, $this->view, $this->session);
 
@@ -120,7 +120,9 @@ final class Router
 
         // *** @Route http://localhost:8000/?action=admin ***
         } elseif ($action === 'admin') {
-            $controller = new AdminHomeController($this->view);
+            $userRepo = new UserRepository($this->database);
+            $authentication = new Authentication($this->session, $userRepo);
+            $controller = new AdminHomeController($this->view, $authentication);
 
             return $controller->displayAdminHomepageAction();
 

@@ -10,7 +10,7 @@ use App\Service\Authentication\Authentication;
 use App\Service\Email\EmailService;
 use App\Service\Form\LoginFormValidator;
 use App\Service\Form\RegisterFormValidator;
-use App\Service\Http\Redirect;
+use App\Service\Http\RedirectResponse;
 use App\View\View;
 use App\Service\Http\Request;
 use App\Service\Http\Response;
@@ -42,16 +42,13 @@ final class UserController
         $data = $request->request()->all();
 
         if ($this->authentication->isAuthenticated()) {
-            return new Response($this->view->render([
-                'template' => 'home',
-            ]), 403);
+            return new RedirectResponse('index.php?action=home', 200);
         }
 
         if ($request->getMethod() === 'POST') {
             if ($loginFormValidator->isValid($data)) {
                 $this->session->addFlashes('success', 'Vous êtes désormais connecté.');
                 $this->authentication->authenticate($data['email']);
-//                return new Redirect("Location: /index.php");
             } else {
                 $this->session->addFlashes('error', "Le formulaire n'est pas valide, merci de vérifier les informations renseignées.");
             }

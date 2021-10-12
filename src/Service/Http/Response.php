@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Service\Http;
 
-final class Response
+class Response
 {
     private string $content;
     private int $status;
@@ -19,7 +19,13 @@ final class Response
 
     public function send(): void
     {
-        // TODO Il faut renvoyer aussi le status de la réponse
+        if ($this->headers['url']) {
+            header('Location: ' . $this->headers['url'], true, $this->status);
+            exit();
+        }
+
+//        header();
+
         echo $this->content;
     }
 }
