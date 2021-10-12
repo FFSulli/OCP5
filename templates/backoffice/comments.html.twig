@@ -8,7 +8,8 @@
             <tr>
                 <th>ID</th>
                 <th>ID Article</th>
-                <th class="w-2/6">Commentaire</th>
+                <th class="w-1/6">Commentaire</th>
+                <th class="w-1/6">Statut</th>
                 <th class="w-1/6">Date de création</th>
                 <th class="w-1/6">Auteur</th>
                 <th class="w-1/6">Actions</th>
@@ -20,6 +21,13 @@
                     <td class="py-8 px-4">{{ comment.id }}</td>
                     <td class="py-8 px-4"><a href="?action=post&id={{ comment.postFk }}">{{ comment.postFk }}</a></td>
                     <td class="text-left px-4"><a href="" class="hover:text-indigo-500 transition ease-in-out duration-500">{{ comment.content }}</a></td>
+                    <td class="py-8 px-4">
+                        {% if comment.verified == 1 %}
+                            <span class="bg-green-500 py-2 px-4 rounded text-white">Validé</span>
+                        {% else %}
+                            <span class="bg-yellow-500 py-2 px-4 rounded text-white">En attente de validation</span>
+                        {% endif %}
+                    </td>
                     <td class="px-4">{{ comment.createdAt | date("d/m/Y \\à H:i") }}</td>
                     <td class="px-4">Sullivan Berger</td>
                     <td class="flex items-center mx-auto space-x-2 py-8 px-4">

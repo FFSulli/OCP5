@@ -7,7 +7,8 @@
             <thead>
             <tr>
                 <th>ID</th>
-                <th class="w-1/6">Utilisateur</th>
+                <th class="w-2/6">Utilisateur</th>
+                <th class="w-1/6">Rôle</th>
                 <th class="w-1/6">Date de création</th>
                 <th class="w-1/6">Adresse e-mail</th>
                 <th class="w-1/6">Actions</th>
@@ -18,6 +19,15 @@
                 <tr class="hover:bg-gray-50 rounded-xl transition ease-in-out duration-500">
                     <td class="py-8 px-4">{{ user.id }}</td>
                     <td class="px-4">{{ user.firstName }} {{ user.lastName }}</td>
+                    <td>
+                        {% if user.roleFk == 1 %}
+                            <span class="bg-blue-500 py-2 px-4 rounded text-white">Lecteur</span>
+                        {% elseif user.roleFk == 2 %}
+                            <span class="bg-yellow-500 py-2 px-4 rounded text-white">Editor</span>
+                        {% else %}
+                            <span class="bg-red-500 py-2 px-4 rounded text-white">Admin</span>
+                        {% endif %}
+                    </td>
                     <td class="px-4">{{ user.createdAt | date("d/m/Y \\à H:i") }}</td>
                     <td class="px-4">{{ user.email }}</td>
                     <td class="flex items-center text-center space-x-2 py-8 px-4">
