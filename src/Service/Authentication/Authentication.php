@@ -23,7 +23,7 @@ class Authentication
         $this->session->set('user', $email);
     }
 
-    private function getAuthenticatedUser()
+    public function getAuthenticatedUser()
     {
         return $this->userRepository->findOneBy(['email' => $this->session->get('user')]);
     }
