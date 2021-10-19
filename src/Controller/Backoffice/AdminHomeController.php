@@ -28,6 +28,6 @@ class AdminHomeController
             ]));
         }
 
-        return new RedirectResponse('index.php?action=home', 200);
+        return new RedirectResponse('index.php?action=home', 403);
     }
 }

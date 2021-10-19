@@ -12,6 +12,14 @@
 <body class="flex flex-col h-screen font-cabin text-gray-600 transition ease-in-out duration-500">
 {% include "backoffice/navigation/back_navigation.html.twig" %}
 <main class="container flex-grow mx-auto">
+    {% for key, message in flashes %}
+        {% if key == 'error' %}
+            <p class="{{ key }}"> {{ message }} </p>
+        {% endif %}
+        {% if key == 'success' %}
+            <p class="{{ key }}"> {{ message }} </p>
+        {% endif %}
+    {% endfor %}
     {% block content %}
     {% endblock %}
 </main>
