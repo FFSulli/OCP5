@@ -10,13 +10,12 @@ use App\Model\Repository\Interfaces\EntityRepositoryInterface;
 use App\Service\DotEnv\DotEnvService;
 
 
-final class PostRepository implements EntityRepositoryInterface
+final class PostRepository extends BaseRepository implements EntityRepositoryInterface
 {
-    private MySQLDB $database;
 
     public function __construct(MySQLDB $database)
     {
-        $this->database = $database;
+        parent::__construct($database);
     }
 
     public function find(int $postId): ?Post
@@ -26,7 +25,7 @@ final class PostRepository implements EntityRepositoryInterface
 
     public function findOneBy(array $criteria, array $orderBy = null): ?Post
     {
-        $prefetch = $this->preFetch($criteria, $orderBy, 1, 0);
+        $prefetch = $this->preFetch($criteria, $orderBy, 1, 0, 'posts');
 
         return $this->database->fetch($prefetch['statement'], $prefetch['binds'], Post::class);
     }
@@ -34,7 +33,7 @@ final class PostRepository implements EntityRepositoryInterface
     public function findBy(array $criteria, ?array $orderBy = null, ?int $limit = null, ?int $offset = null): array
     {
 
-        $prefetch = $this->preFetch($criteria, $orderBy, $limit, $offset);
+        $prefetch = $this->preFetch($criteria, $orderBy, $limit, $offset, 'posts');
 
         return $this->database->fetchAll($prefetch['statement'], $prefetch['binds'], Post::class);
     }
@@ -49,11 +48,10 @@ final class PostRepository implements EntityRepositoryInterface
     {
         /** @var Post $post */
 
-        $prepared = $this->database->prepare('INSERT INTO users (title, excerpt, content, slug, user_fk) VALUES (:title, :excerpt, :content, :slug, :user_fk)');
+        $prepared = $this->database->prepare('INSERT INTO posts (title, excerpt, content, user_fk) VALUES (:title, :excerpt, :content, :user_fk)');
         $prepared->bindValue(':title', $post->getTitle());
         $prepared->bindValue(':excerpt', $post->getExcerpt());
         $prepared->bindValue(':content', $post->getContent());
-        $prepared->bindValue(':slug', $post->getSlug());
         $prepared->bindValue(':user_fk', $post->getUserFk());
 
         return $prepared->execute();
@@ -63,14 +61,12 @@ final class PostRepository implements EntityRepositoryInterface
     {
         /** @var Post $post */
 
-        $prepared = $this->database->prepare('UPDATE posts SET title = :title, excerpt = :excerpt, content = :content, slug = :slug, user_fk = :user_fk, post_status_fk = :post_status_fk WHERE id = :id');
+        $prepared = $this->database->prepare('UPDATE posts SET title = :title, excerpt = :excerpt, content = :content, user_fk = :user_fk WHERE id = :id');
         $prepared->bindValue(':id', $post->getId());
         $prepared->bindValue(':title', $post->getTitle());
         $prepared->bindValue(':excerpt', $post->getExcerpt());
         $prepared->bindValue(':content', $post->getContent());
-        $prepared->bindValue(':slug', $post->getSlug());
         $prepared->bindValue(':user_fk', $post->getUserFk());
-        $prepared->bindValue(':post_status_fk', $post->getStatusFk());
 
         return $prepared->execute();
     }
@@ -83,37 +79,6 @@ final class PostRepository implements EntityRepositoryInterface
         $prepared->bindValue(':id', $post->getId());
 
         return $prepared->execute();
-    }
-
-    private function preFetch(array $criteria, array $orderBy = null, int $limit = null, int $offset = null): array
-    {
-        $criteriaFields = [];
-        $orderByFields = [];
-        $binds = [];
-
-        foreach ($criteria as $key => $value) {
-            $criteriaFields[] = sprintf("%s = :%s", $key, $key);
-            $binds[sprintf(":%s", $key)] = $value;
-        }
-
-        if (null !== $orderBy) {
-            foreach ($orderBy as $key => $value) {
-                $orderByFields[] = sprintf("%s %s", $key, $value);
-            }
-        }
-
-        $criteriaList = implode(' AND ', $criteriaFields);
-        $orderByList = implode(', ', $orderByFields);
-
-        $whereClause = 0 !== count($criteriaFields) ? sprintf('WHERE %s', $criteriaList) : '';
-        $orderByClause = 0 !== count($orderByFields) ? sprintf(' ORDER BY %s', $orderByList) : '';
-        $limitClause = null !== $limit ? ' LIMIT ' . $limit : '';
-        $offsetClause = null !== $offset ? ' OFFSET ' . $offset : '';
-
-        return [
-            'statement' => $this->database->prepare('SELECT * FROM posts ' . $whereClause . $orderByClause . $limitClause . $offsetClause),
-            'binds' => $binds
-        ];
     }
 
     public function countPosts(?array $criteria): int

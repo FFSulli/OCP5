@@ -3,7 +3,7 @@
 {% block content %}
     <section class="mt-8 p-4">
         <h1 class="md:text-4xl sm:text-6xl font-bold mb-8">Gestion des articles</h1>
-        <a href="#" class="inline-block bg-indigo-400 hover:bg-indigo-500 text-white rounded py-2 px-4 mb-4 transition ease-in-out duration-500">
+        <a href="/?action=admin_add_post" class="inline-block bg-indigo-400 hover:bg-indigo-500 text-white rounded py-2 px-4 mb-4 transition ease-in-out duration-500">
             Ajouter un article
         </a>
         <table class="w-full text-center">
@@ -11,7 +11,6 @@
                 <tr>
                     <th>ID</th>
                     <th class="w-1/6">Titre</th>
-                    <th class="w-1/6">Statut</th>
                     <th class="w-1/6">Date de création</th>
                     <th class="w-1/6">Date de mise à jour</th>
                     <th class="w-1/6">Auteur</th>
@@ -23,18 +22,11 @@
                     <tr class="hover:bg-gray-50 rounded-xl transition ease-in-out duration-500">
                         <td class="py-8 px-4">{{ post.id }}</td>
                         <td class="text-left px-4"><a href="" class="hover:text-indigo-500 transition ease-in-out duration-500">{{ post.title }}</a></td>
-                        <td>
-                            {% if post.post_status_fk == 1 %}
-                                <span class="bg-yellow-500 py-2 px-4 rounded text-white">Brouillon</span>
-                            {% else %}
-                                <span class="bg-green-500 py-2 px-4 rounded text-white">Publié</span>
-                            {% endif %}
-                        </td>
                         <td class="px-4">{{ post.createdAt | date("d/m/Y \\à H:i") }}</td>
                         <td class="px-4">{{ post.updatedAt | date("d/m/Y \\à H:i") }}</td>
                         <td class="px-4">{{ post.userFk }}</td>
                         <td class="flex items-center mx-auto space-x-2 py-8 px-4">
-                            <a href="" aria-label="Editer" class="bg-indigo-400 hover:bg-indigo-500 text-white p-2 rounded-full transition ease-in-out duration-300">
+                            <a href="/?action=admin_edit_post&id={{ post.id }}" aria-label="Editer" class="bg-indigo-400 hover:bg-indigo-500 text-white p-2 rounded-full transition ease-in-out duration-300">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16">
                                     <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" d="M1 15.5h14"/>
                                     <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" d="m10.5.5 3 3L5 12l-4 1 1-4zM8.5 2.5l3 3"/>
@@ -56,11 +48,14 @@
                                     </svg>
                                 </a>
                             {% endif %}
-                            <a href="" class="bg-red-400 hover:bg-red-500 text-white p-2 rounded-full transition ease-in-out duration-300">
+                            <form method="post" name="deletePostForm" id="deletePostForm">
+                                <input name="deletePost" type="hidden" value="{{ post.id }}">
+                            </form>
+                            <button type="submit" form="deletePostForm" name="deletePostFormSubmit" class="bg-red-400 hover:bg-red-500 text-white p-2 rounded-full transition ease-in-out duration-300">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16">
                                     <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" data-cap="butt" d="m13.5 2.5-11 11M2.5 2.5l11 11"/>
                                 </svg>
-                            </a>
+                            </button>
                         </td>
                     </tr>
                 {% endfor %}
