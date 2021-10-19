@@ -42,7 +42,7 @@ final class UserController
         $data = $request->request()->all();
 
         if ($this->authentication->isAuthenticated()) {
-            return new RedirectResponse('index.php?action=home', 200);
+            return new RedirectResponse('index.php?action=home', 302);
         }
 
         if ($request->getMethod() === 'POST') {
@@ -75,6 +75,10 @@ final class UserController
 
     public function registerAction(Request $request, RegisterFormValidator $registerFormValidator, EmailService $emailService): Response
     {
+        if ($this->authentication->isAuthenticated()) {
+            return new RedirectResponse('index.php?action=home', 302);
+        }
+
         $posts = $this->postRepository->findBy([
             "post_status_fk" => 2
         ], null, 3, 0);

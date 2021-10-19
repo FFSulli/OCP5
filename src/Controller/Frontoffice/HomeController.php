@@ -29,9 +29,9 @@ class HomeController
     public function displayHomepageAction(Request $request, EmailService $emailService): Response
     {
 
-        $posts = $this->postRepository->findBy([
-            "post_status_fk" => 2
-        ], null, 3, 0);
+        $posts = $this->postRepository->findBy([], null, 3, 0);
+
+
 
         $data = $request->request()->all();
 

@@ -19,11 +19,6 @@ class Response
 
     public function send(): void
     {
-        if ($this->headers['url']) {
-            header('Location: ' . $this->headers['url'], true, $this->status);
-            exit();
-        }
-
         switch ($this->status) {
             case 200: header("HTTP/1.0 200 OK"); break;
             case 201: header("HTTP/1.0 201 Created"); break;
@@ -40,6 +35,11 @@ class Response
                 exit("Unknown HTTP status code : " . $this->status);
         }
 
+        if ($this->headers['url']) {
+            header('Location: ' . $this->headers['url'], true, $this->status);
+            exit();
+        }
+        
         echo $this->content;
     }
 }
