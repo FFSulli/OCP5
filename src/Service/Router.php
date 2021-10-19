@@ -17,6 +17,7 @@ use App\Model\Repository\CommentRepository;
 use App\Model\Repository\UserRepository;
 use App\Service\Database\MySQLDB;
 use App\Service\Email\EmailService;
+use App\Service\Form\PostFormValidator;
 use App\Service\Form\CommentFormValidator;
 use App\Service\Form\ContactFormValidator;
 use App\Service\Form\LoginFormValidator;
@@ -129,14 +130,38 @@ final class Router
         // *** @Route http://localhost:8000/?action=admin_posts ***
         } elseif ($action === 'admin_posts') {
             $postRepo = new PostRepository($this->database);
-            $controller = new AdminPostController($this->view, $postRepo);
+            $userRepo = new UserRepository($this->database);
+            $postFormValidator = new PostFormValidator($this->session);
+            $authentication = new Authentication($this->session, $userRepo);
+            $controller = new AdminPostController($this->request, $this->view, $this->session, $postRepo, $userRepo, $postFormValidator, $authentication);
 
             return $controller->displayAdminPostAction();
 
+        // *** @Route http://localhost:8000/?action=admin_add_post ***
+        } elseif ($action === 'admin_add_post') {
+            $postRepo = new PostRepository($this->database);
+            $userRepo = new UserRepository($this->database);
+            $postFormValidator = new PostFormValidator($this->session);
+            $authentication = new Authentication($this->session, $userRepo);
+            $controller = new AdminPostController($this->request, $this->view, $this->session, $postRepo, $userRepo, $postFormValidator, $authentication);
+
+            return $controller->addPostAction($this->request);
+
+        // *** @Route http://localhost:8000/?action=admin_edit_post&id=1 ***
+        } elseif ($action === 'admin_edit_post' && $this->request->query()->has('id')) {
+            $postRepo = new PostRepository($this->database);
+            $userRepo = new UserRepository($this->database);
+            $postFormValidator = new PostFormValidator($this->session);
+            $authentication = new Authentication($this->session, $userRepo);
+            $controller = new AdminPostController($this->request, $this->view, $this->session, $postRepo, $userRepo, $postFormValidator, $authentication);
+
+            return $controller->editPostAction((int) $this->request->query()->get('id'));
         // *** @Route http://localhost:8000/?action=admin_comments ***
         } elseif ($action === 'admin_comments') {
             $commentRepo = new CommentRepository($this->database);
-            $controller = new AdminCommentController($this->view, $commentRepo);
+            $userRepo = new UserRepository($this->database);
+            $authentication = new Authentication($this->session, $userRepo);
+            $controller = new AdminCommentController($this->request, $this->view, $this->session, $authentication, $commentRepo);
 
             return $controller->displayAdminCommentAction();
 
