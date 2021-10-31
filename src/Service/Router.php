@@ -15,6 +15,7 @@ use App\Model\Entity\User;
 use App\Model\Repository\PostRepository;
 use App\Model\Repository\CommentRepository;
 use App\Model\Repository\UserRepository;
+use App\Service\CSRF\Csrf;
 use App\Service\Database\MySQLDB;
 use App\Service\Email\EmailService;
 use App\Service\Form\PostFormValidator;
@@ -87,8 +88,9 @@ final class Router
             $postRepo = new PostRepository($this->database);
             $contactFormValidator = new ContactFormValidator($this->session);
             $controller = new HomeController($postRepo, $contactFormValidator, $this->view, $this->session);
+            $csrf = new Csrf($this->session);
 
-            return $controller->displayHomepageAction($this->request, $this->emailService);
+            return $controller->displayHomepageAction($this->request, $this->emailService, $csrf);
 
         // *** @Route http://localhost:8000/?action=login ***
         } elseif ($action === 'login') {

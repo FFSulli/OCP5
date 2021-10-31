@@ -3,6 +3,7 @@
 namespace App\Controller\Frontoffice;
 
 use App\Model\Repository\PostRepository;
+use App\Service\CSRF\Csrf;
 use App\Service\Email\EmailService;
 use App\Service\Form\ContactFormValidator;
 use App\Service\Http\Response;
@@ -26,12 +27,10 @@ class HomeController
         $this->session = $session;
     }
 
-    public function displayHomepageAction(Request $request, EmailService $emailService): Response
+    public function displayHomepageAction(Request $request, EmailService $emailService, Csrf $csrf): Response
     {
 
         $posts = $this->postRepository->findBy([], null, 3, 0);
-
-
 
         $data = $request->request()->all();
 
