@@ -49,6 +49,7 @@ final class UserController
             if ($loginFormValidator->isValid($data)) {
                 $this->session->addFlashes('success', 'Vous êtes désormais connecté.');
                 $this->authentication->authenticate($data['email']);
+                return new RedirectResponse('index.php', 200);
             } else {
                 $this->session->addFlashes('error', "Le formulaire n'est pas valide, merci de vérifier les informations renseignées.");
             }
@@ -58,26 +59,20 @@ final class UserController
 
     public function logoutAction(): Response
     {
-        // TODO : Faire la redirection
+        if ($this->authentication->isAuthenticated()) {
+            $this->session->addFlashes('success', 'Vous avez été correctement déconnecté.');
+            $this->authentication->logout();
+            return new RedirectResponse('index.php', 302);
+        }
 
-        $this->session->addFlashes('success', 'Vous avez été correctement déconnecté.');
-        $this->authentication->logout();
-        return new Response($this->view->render([
-            'template' => 'home',
-            'data' => [
-                'posts' => $posts,
-                'connected' => $this->session->get('user')
-            ]
-        ]));
+        return new RedirectResponse('index.php', 403);
     }
 
     public function registerAction(Request $request, RegisterFormValidator $registerFormValidator, EmailService $emailService): Response
     {
         if ($this->authentication->isAuthenticated()) {
-            return new RedirectResponse('index.php?action=home', 302);
+            return new RedirectResponse('index.php', 302);
         }
-
-        // TODO : Faire la redirection
 
         $data = $request->request()->all();
 
@@ -99,13 +94,7 @@ final class UserController
                 $mailer->send($message);
                 $this->session->addFlashes('success', 'Vous êtes désormais inscrit, bienvenue !');
 
-                return new Response($this->view->render([
-                    'template' => 'home',
-                    'data' => [
-                        'posts' => $posts,
-                        'connected' => $this->session->get('user')
-                    ]
-                ]));
+                return new RedirectResponse('index.php', 201);
             } else {
                 $oldRequest = $request->request()->all();
                 $this->session->addFlashes('error', "Le formulaire n'est pas valide, merci de vérifier les informations renseignées.");
