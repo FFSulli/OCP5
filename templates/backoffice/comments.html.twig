@@ -34,6 +34,7 @@
                         {% if comment.verified == 0 %}
                             <form method="post" name="allowCommentForm" id="allowCommentForm">
                                 <input name="allowComment" type="hidden" value="{{ comment.id }}">
+                                <input name="csrfToken" type="hidden" value="{{ csrfToken }}">
                             </form>
                             <button type="submit" form="allowCommentForm" name="allowCommentFormSubmit" class="bg-green-400 hover:bg-green-500 text-white p-2 rounded-full transition ease-in-out duration-300">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16">

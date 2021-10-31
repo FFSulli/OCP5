@@ -136,7 +136,8 @@ final class Router
             $userRepo = new UserRepository($this->database);
             $postFormValidator = new PostFormValidator($this->session);
             $authentication = new Authentication($this->session, $userRepo);
-            $controller = new AdminPostController($this->request, $this->view, $this->session, $postRepo, $userRepo, $postFormValidator, $authentication);
+            $csrf = new Csrf($this->session);
+            $controller = new AdminPostController($this->request, $this->view, $this->session, $postRepo, $userRepo, $postFormValidator, $authentication, $csrf);
 
             return $controller->displayAdminPostAction();
 
@@ -146,7 +147,8 @@ final class Router
             $userRepo = new UserRepository($this->database);
             $postFormValidator = new PostFormValidator($this->session);
             $authentication = new Authentication($this->session, $userRepo);
-            $controller = new AdminPostController($this->request, $this->view, $this->session, $postRepo, $userRepo, $postFormValidator, $authentication);
+            $csrf = new Csrf($this->session);
+            $controller = new AdminPostController($this->request, $this->view, $this->session, $postRepo, $userRepo, $postFormValidator, $authentication, $csrf);
 
             return $controller->addPostAction($this->request);
 
@@ -156,7 +158,8 @@ final class Router
             $userRepo = new UserRepository($this->database);
             $postFormValidator = new PostFormValidator($this->session);
             $authentication = new Authentication($this->session, $userRepo);
-            $controller = new AdminPostController($this->request, $this->view, $this->session, $postRepo, $userRepo, $postFormValidator, $authentication);
+            $csrf = new Csrf($this->session);
+            $controller = new AdminPostController($this->request, $this->view, $this->session, $postRepo, $userRepo, $postFormValidator, $authentication, $csrf);
 
             return $controller->editPostAction((int) $this->request->query()->get('id'));
         // *** @Route http://localhost:8000/?action=admin_comments ***
@@ -164,7 +167,8 @@ final class Router
             $commentRepo = new CommentRepository($this->database);
             $userRepo = new UserRepository($this->database);
             $authentication = new Authentication($this->session, $userRepo);
-            $controller = new AdminCommentController($this->request, $this->view, $this->session, $authentication, $commentRepo);
+            $csrf = new Csrf($this->session);
+            $controller = new AdminCommentController($this->request, $this->view, $this->session, $authentication, $commentRepo, $csrf);
 
             return $controller->displayAdminCommentAction();
 

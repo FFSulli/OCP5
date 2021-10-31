@@ -50,6 +50,7 @@
                             {% endif %}
                             <form method="post" name="deletePostForm" id="deletePostForm">
                                 <input name="deletePost" type="hidden" value="{{ post.id }}">
+                                <input name="csrfToken" type="hidden" value="{{ csrfToken }}">
                             </form>
                             <button type="submit" form="deletePostForm" name="deletePostFormSubmit" class="bg-red-400 hover:bg-red-500 text-white p-2 rounded-full transition ease-in-out duration-300">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16">

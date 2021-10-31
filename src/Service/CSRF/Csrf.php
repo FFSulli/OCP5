@@ -20,18 +20,27 @@ class Csrf
     /**
      * @throws Exception
      */
-    public function generateToken(): void
+    public function generateToken(): string
     {
-        $this->session->set('csrf_token', bin2hex(random_bytes(20)));
-    }
 
-    public function getToken(): string
-    {
-        return $this->session->get('csrf_token');
+        if ($this->session->get('csrfToken') === null) {
+            $this->session->set('csrfToken', bin2hex(openssl_random_pseudo_bytes(32)));
+        }
+
+        return $this->session->get('csrfToken');
     }
 
     public function deleteToken(): void
     {
-        $this->session->remove('csrf_token');
+        $this->session->remove('csrfToken');
+    }
+
+    public function checkToken(string $token): bool
+    {
+        if ($token === $this->session->get('csrfToken')) {
+            return true;
+        }
+
+        return false;
     }
 }
