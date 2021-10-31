@@ -37,124 +37,142 @@ class AdminPostController
 
     public function displayAdminPostAction(): Response
     {
+        if ($this->authentication->isAdmin() || $this->authentication->isEditor()) {
+            $posts = $this->postRepository->findAll();
 
-        $posts = $this->postRepository->findAll();
+            $data = $this->request->request()->all();
 
-        $data = $this->request->request()->all();
+            if ($this->request->getMethod() === 'POST') {
 
-        if ($this->request->getMethod() === 'POST') {
+                if ($this->authentication->isAdmin()) {
 
-            if ($this->authentication->getAuthenticatedUser() && $this->authentication->isAdmin()) {
+                    $post = $this->postRepository->find($data['deletePost']);
+                    $this->postRepository->delete($post);
 
-                $post = $this->postRepository->find($data['deletePost']);
-                $this->postRepository->delete($post);
-
-                $this->session->addFlashes('success', 'Article supprimé.');
-                return new RedirectResponse('index.php?action=admin_posts', 302);
+                    $this->session->addFlashes('success', 'Article supprimé.');
+                    return new RedirectResponse('index.php?action=admin_posts', 302);
+                }
             }
+
+            return new Response($this->view->render([
+                'template' => '../backoffice/posts',
+                'data' => [
+                    'posts' => $posts
+                ]
+            ]));
         }
 
-        return new Response($this->view->render([
-            'template' => '../backoffice/posts',
-            'data' => [
-                'posts' => $posts
-            ]
-        ]));
+        return new RedirectResponse('index.php', 403);
+
     }
 
     public function addPostAction()
     {
-        $user = $this->authentication->getAuthenticatedUser();
+        if ($this->authentication->isAdmin() || $this->authentication->isEditor()) {
+            $user = $this->authentication->getAuthenticatedUser();
 
-        $data = $this->request->request()->all();
+            $data = $this->request->request()->all();
 
-        if ($this->request->getMethod() === 'POST') {
+            if ($this->request->getMethod() === 'POST') {
 
-            if ($this->postFormValidator->isValid($data)) {
+                if ($this->postFormValidator->isValid($data)) {
 
-                $post = new Post();
+                    $post = new Post();
 
-                $post
-                    ->setTitle($data['title'])
-                    ->setExcerpt($data['excerpt'])
-                    ->setContent($data['content'])
-                    ->setUserFk($user->getId());
+                    $post
+                        ->setTitle($data['title'])
+                        ->setExcerpt($data['excerpt'])
+                        ->setContent($data['content'])
+                        ->setUserFk($user->getId());
 
-                $this->postRepository->create($post);
+                    $this->postRepository->create($post);
 
-                $this->session->addFlashes('success', 'Article enregistré.');
-                return new RedirectResponse('index.php?action=admin_posts', 302);
+                    $this->session->addFlashes('success', 'Article enregistré.');
+                    return new RedirectResponse('index.php?action=admin_posts', 302);
 
-            } else {
-                $oldRequest = $this->request->request()->all();
-                $this->session->addFlashes('error', "Le formulaire n'est pas valide, merci de vérifier les informations renseignées.");
+                } else {
+                    $oldRequest = $this->request->request()->all();
+                    $this->session->addFlashes('error', "Le formulaire n'est pas valide, merci de vérifier les informations renseignées.");
+                }
             }
+
+            return new Response($this->view->render([
+                'template' => '../backoffice/add_post'
+            ]));
         }
 
-        return new Response($this->view->render([
-            'template' => '../backoffice/add_post'
-        ]));
+        return new RedirectResponse('index.php', 403);
     }
 
     public function editPostAction(int $id)
     {
-        $user = $this->authentication->getAuthenticatedUser();
-        $post = $this->postRepository->find($id);
+        if ($this->authentication->isAdmin() || $this->authentication->isEditor()) {
+            $user = $this->authentication->getAuthenticatedUser();
+            $post = $this->postRepository->find($id);
 
-        $data = $this->request->request()->all();
+            $data = $this->request->request()->all();
 
-        if ($this->request->getMethod() === 'POST') {
+            if ($this->request->getMethod() === 'POST') {
 
-            if ($this->postFormValidator->isValid($data)) {
+                if ($this->postFormValidator->isValid($data)) {
 
-                $post
-                    ->setId($post->getId())
-                    ->setTitle($data['title'])
-                    ->setExcerpt($data['excerpt'])
-                    ->setContent($data['content'])
-                    ->setUserFk($user->getId());
+                    $post
+                        ->setId($post->getId())
+                        ->setTitle($data['title'])
+                        ->setExcerpt($data['excerpt'])
+                        ->setContent($data['content'])
+                        ->setUserFk($user->getId());
 
-                $this->postRepository->update($post);
+                    $this->postRepository->update($post);
 
-                $this->session->addFlashes('success', 'Article mis à jour.');
-                return new RedirectResponse('index.php?action=admin_posts', 302);
+                    $this->session->addFlashes('success', 'Article mis à jour.');
+                    return new RedirectResponse('index.php?action=admin_posts', 302);
 
-            } else {
-                $oldRequest = $this->request->request()->all();
-                $this->session->addFlashes('error', "Le formulaire n'est pas valide, merci de vérifier les informations renseignées.");
+                } else {
+                    $oldRequest = $this->request->request()->all();
+                    $this->session->addFlashes('error', "Le formulaire n'est pas valide, merci de vérifier les informations renseignées.");
+                }
             }
+
+            return new Response($this->view->render([
+                'template' => '../backoffice/edit_post',
+                'data' => [
+                    'post' => $post
+                ]
+            ]));
         }
 
-        return new Response($this->view->render([
-            'template' => '../backoffice/edit_post',
-            'data' => [
-                'post' => $post
-            ]
-        ]));
+        return new RedirectResponse('index.php', 403);
     }
 
     public function deletePostAction(int $id)
     {
-        $post = $this->postRepository->find($id);
+        if ($this->authentication->isAdmin() || $this->authentication->isEditor()) {
+// TODO : Ajouter confirmation de suppression
 
-        $data = $this->request->request()->all();
+            $post = $this->postRepository->find($id);
 
-        if ($this->request->getMethod() === 'POST') {
+            $data = $this->request->request()->all();
 
-            if ($this->authentication->getAuthenticatedUser() && $this->authentication->isAdmin()) {
+            if ($this->request->getMethod() === 'POST') {
 
-                $this->postRepository->delete($post);
+                if ($this->authentication->isAdmin()) {
 
-                $this->session->addFlashes('success', 'Article supprimé.');
-                return new RedirectResponse('index.php?action=admin_posts', 302);
+                    $this->postRepository->delete($post);
+
+                    $this->session->addFlashes('success', 'Article supprimé.');
+                    return new RedirectResponse('index.php?action=admin_posts', 302);
+                }
             }
+
+            return new Response($this->view->render([
+                'template' => '../backoffice/delete_post',
+                'data' => [
+                    'post' => $post
+                ]
+            ]));
         }
 
-        return new Response($this->view->render([
-            'template' => '../backoffice/delete_post',
-            'data' => [
-                'post' => $post
-            ]
-        ]));
+        return new RedirectResponse('index.php', 403);
     }
 }

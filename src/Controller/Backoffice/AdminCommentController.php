@@ -29,18 +29,19 @@ class AdminCommentController
 
     public function displayAdminCommentAction(): Response
     {
+        if (!$this->authentication->isAdmin()) {
+            return new RedirectResponse('index.php', 403);
+        }
         $comments = $this->commentRepository->findAll();
 
         $data = $this->request->request()->all();
 
         if ($this->request->getMethod() === 'POST') {
 
-            if ($this->authentication->getAuthenticatedUser() && $this->authentication->isAdmin()) {
+            if ($this->authentication->isAdmin()) {
 
                 if ($data['allowComment']) {
                     $comment = $this->commentRepository->find((int) $data['allowComment']);
-//                    var_dump($data['allowComment']);
-//                    die();
                     $this->commentRepository->allowComment($comment);
 
                     $this->session->addFlashes('success', 'Commentaire validé.');

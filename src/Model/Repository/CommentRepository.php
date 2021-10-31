@@ -25,7 +25,7 @@ final class CommentRepository extends BaseRepository implements EntityRepository
 
     public function findOneBy(array $criteria, array $orderBy = null): ?Comment
     {
-        $prefetch = $this->preFetch($criteria, $orderBy, 1, 1, 'comments') ?? null;
+        $prefetch = $this->preFetch($criteria, $orderBy, 1, 0, 'comments') ?? null;
 
         return $this->database->fetch($prefetch['statement'], $prefetch['binds'], Comment::class);
     }

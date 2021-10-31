@@ -58,9 +58,7 @@ final class UserController
 
     public function logoutAction(): Response
     {
-        $posts = $this->postRepository->findBy([
-            "post_status_fk" => 2
-        ], null, 3, 0);
+        // TODO : Faire la redirection
 
         $this->session->addFlashes('success', 'Vous avez été correctement déconnecté.');
         $this->authentication->logout();
@@ -79,9 +77,7 @@ final class UserController
             return new RedirectResponse('index.php?action=home', 302);
         }
 
-        $posts = $this->postRepository->findBy([
-            "post_status_fk" => 2
-        ], null, 3, 0);
+        // TODO : Faire la redirection
 
         $data = $request->request()->all();
 

@@ -21,13 +21,12 @@ class AdminHomeController
 
     public function displayAdminHomepageAction(): Response
     {
-
         if ($this->authentication->isAdmin() || $this->authentication->isEditor()) {
             return new Response($this->view->render([
                 'template' => '../backoffice/home',
             ]));
         }
 
-        return new RedirectResponse('index.php?action=home', 403);
+        return new RedirectResponse('index.php', 403);
     }
 }

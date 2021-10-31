@@ -44,9 +44,7 @@ class PaginationService
 
     public function countPages(): int
     {
-        $postsCount = $this->postRepository->countPosts([
-            "post_status_fk" => 2
-        ]);
+        $postsCount = $this->postRepository->countPosts([]);
 
         if ($this->postsPerPage <= 0) {
             return 0;
@@ -80,7 +78,7 @@ class PaginationService
 
         $start = ($currentPage - 1) * $this->postsPerPage;
 
-        return $this->postRepository->findBy(["post_status_fk" => 2], ["created_at" => "DESC"], $this->postsPerPage, $start);
+        return $this->postRepository->findBy([], ["created_at" => "DESC"], $this->postsPerPage, $start);
 
     }
 

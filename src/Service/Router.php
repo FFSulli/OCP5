@@ -23,6 +23,7 @@ use App\Service\Form\ContactFormValidator;
 use App\Service\Form\LoginFormValidator;
 use App\Service\Form\RegisterFormValidator;
 use App\Service\Authentication\Authentication;
+use App\Service\Http\RedirectResponse;
 use App\Service\Http\Request;
 use App\Service\Http\Response;
 use App\Service\Http\Session\Session;
@@ -168,11 +169,13 @@ final class Router
         // *** @Route http://localhost:8000/?action=admin_users ***
         } elseif ($action === 'admin_users') {
             $userRepo = new UserRepository($this->database);
-            $controller = new AdminUserController($this->view, $userRepo);
+            $authentication = new Authentication($this->session, $userRepo);
+            $controller = new AdminUserController($this->view, $userRepo, $authentication);
 
             return $controller->displayAdminUserAction();
         } else {
-            return new Response("Error 404 - cette page n'existe pas<br><a href='index.php?action=posts'>Aller Ici</a>", 404);
+            // TODO : Pas de redirection sur 404 ?
+            return new RedirectResponse('index.php?action=home', 404);
         }
     }
 }
