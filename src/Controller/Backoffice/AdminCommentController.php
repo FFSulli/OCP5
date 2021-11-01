@@ -36,8 +36,6 @@ class AdminCommentController
             return new RedirectResponse('index.php', 403);
         }
 
-        $this->csrf->generateToken();
-
         $comments = $this->commentRepository->findAll();
 
         $data = $this->request->request()->all();
@@ -45,13 +43,29 @@ class AdminCommentController
         if ($this->request->getMethod() === 'POST') {
 
             if ($this->authentication->isAdmin()) {
-                if ($this->commentRepository->find($data['allowComment']) !== null) {
-                    if ($data['allowComment'] && $this->csrf->checkToken($data['csrfToken'])) {
+                if ($data['allowComment']) {
+                    if ($this->commentRepository->find($data['allowComment']) !== null) {
                         $comment = $this->commentRepository->find((int) $data['allowComment']);
+                        if ($this->csrf->checkToken($data['csrfToken'])) {
+                            $this->csrf->deleteToken();
+                        }
                         $this->commentRepository->allowComment($comment);
-                        $this->csrf->deleteToken();
 
                         $this->session->addFlashes('success', 'Commentaire validé.');
+                        return new RedirectResponse('index.php?action=admin_comments', 302);
+                    }
+                }
+                if ($data['deleteComment']) {
+                    if ($this->commentRepository->find($data['deleteComment']) !== null) {
+
+                        $comment = $this->commentRepository->find((int) $data['deleteComment']);
+
+                        if ($this->csrf->checkToken($data['csrfToken'])) {
+                            $this->csrf->deleteToken();
+                        }
+                        $this->commentRepository->delete($comment);
+
+                        $this->session->addFlashes('success', 'Commentaire supprimé.');
                         return new RedirectResponse('index.php?action=admin_comments', 302);
                     }
                 }
