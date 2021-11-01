@@ -60,12 +60,13 @@ final class UserRepository extends BaseRepository implements EntityRepositoryInt
     {
         /** @var User $user */
 
-        $prepared = $this->database->prepare('UPDATE users SET first_name = :firstName, last_name = :lastName, email = :email, password = :password WHERE id = :id');
+        $prepared = $this->database->prepare('UPDATE users SET first_name = :firstName, last_name = :lastName, email = :email, password = :password, role_fk = :roleFk WHERE id = :id');
         $prepared->bindValue(':id', $user->getId());
         $prepared->bindValue(':firstName', $user->getFirstName());
         $prepared->bindValue(':lastName', $user->getLastName());
         $prepared->bindValue(':email', $user->getEmail());
         $prepared->bindValue(':password', $user->getPassword());
+        $prepared->bindValue(':roleFk', $user->getRoleFk());
 
         return $prepared->execute();
     }

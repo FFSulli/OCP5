@@ -32,8 +32,6 @@ use App\Service\Pagination\PaginationService;
 use App\View\View;
 use App\Service\DotEnv\DotEnv;
 
-// TODO cette classe router est un exemple très basic. Cette façon de faire n'est pas optimale
-// TODO Le router ne devrait pas avoir la responsabilité de l'injection des dépendances
 final class Router
 {
     private MySQLDB $database;
@@ -180,11 +178,11 @@ final class Router
         } elseif ($action === 'admin_users') {
             $userRepo = new UserRepository($this->database);
             $authentication = new Authentication($this->session, $userRepo);
-            $controller = new AdminUserController($this->view, $userRepo, $authentication);
+            $csrf = new Csrf($this->session);
+            $controller = new AdminUserController($this->view, $userRepo, $authentication, $this->request, $csrf, $this->session);
 
             return $controller->displayAdminUserAction();
         } else {
-            // TODO : Pas de redirection sur 404 ?
             return new RedirectResponse('index.php?action=home', 404);
         }
     }
