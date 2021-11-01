@@ -5,7 +5,7 @@
         <h1 class="md:text-4xl sm:text-6xl font-bold mb-8">Ajouter un article</h1>
         <form action="/?action=admin_add_post" class="flex flex-col space-y-4 my-8" method="post" name="addPostForm" id="addPostForm">
             <input name="csrfToken" type="hidden" value="{{ csrfToken }}">
-            <label for="" class="w-full">
+            <label class="w-full"> Titre de l'article
                 <input type="text" name="title" {% if request.title %} value="{{ request.title }}"{% endif %} autocomplete="off" class="lg:w-full bg-gray-50 rounded focus:ring focus:ring-indigo-500 focus:outline-none transition ease-in-out duration-200 p-4" placeholder="Titre de l'article">
                 {% for key, message in flashes %}
                     {% if key == 'errorTitleIsNull' %}
@@ -13,18 +13,22 @@
                     {% endif %}
                 {% endfor %}
             </label>
-            <textarea name="excerpt" id="" cols="30" rows="4" class="bg-gray-50 rounded focus:ring focus:ring-indigo-500 focus:outline-none transition resize-none ease-in-out duration-200 p-4" placeholder="Extrait de l'article">{% if request.excerpt %}{{ request.excerpt }}{% endif %}</textarea>
-            {% for key, message in flashes %}
-                {% if key == 'errorExcerptIsNull' %}
-                    <span class="text-red-400">{{ message }}</span>
-                {% endif %}
-            {% endfor %}
-            <textarea name="content" id="" cols="30" rows="10" class="bg-gray-50 rounded focus:ring focus:ring-indigo-500 focus:outline-none transition resize-none ease-in-out duration-200 p-4" placeholder="Corps de l'article">{% if request.content %}{{ request.content }}{% endif %}</textarea>
-            {% for key, message in flashes %}
-                {% if key == 'errorContentIsNull' %}
-                    <span class="text-red-400">{{ message }}</span>
-                {% endif %}
-            {% endfor %}
+            <label class="w-full"> Extrait de l'article
+                <textarea name="excerpt" id="" cols="30" rows="4" class="block w-full bg-gray-50 rounded focus:ring focus:ring-indigo-500 focus:outline-none transition resize-none ease-in-out duration-200 p-4" placeholder="Extrait de l'article">{% if request.excerpt %}{{ request.excerpt }}{% endif %}</textarea>
+                {% for key, message in flashes %}
+                    {% if key == 'errorExcerptIsNull' %}
+                        <span class="text-red-400">{{ message }}</span>
+                    {% endif %}
+                {% endfor %}
+            </label>
+            <label class="w-full">Corps de l'article
+                <textarea name="content" id="" cols="30" rows="10" class="block w-full bg-gray-50 rounded focus:ring focus:ring-indigo-500 focus:outline-none transition resize-none ease-in-out duration-200 p-4" placeholder="Corps de l'article">{% if request.content %}{{ request.content }}{% endif %}</textarea>
+                {% for key, message in flashes %}
+                    {% if key == 'errorContentIsNull' %}
+                        <span class="text-red-400">{{ message }}</span>
+                    {% endif %}
+                {% endfor %}
+            </label>
         </form>
         <button type="submit" form="addPostForm" name="addPostFormSubmit" class="block bg-indigo-500 hover:bg-indigo-600 transition ease-in-out text-white rounded mx-auto py-2 px-4">
             <span class="flex items-center">
