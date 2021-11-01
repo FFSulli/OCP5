@@ -51,12 +51,14 @@ class AdminPostController
             if ($this->request->getMethod() === 'POST' && $this->csrf->checkToken($data['csrfToken'])) {
 
                 if ($this->authentication->isAdmin()) {
-                    $post = $this->postRepository->find($data['deletePost']);
-                    $this->postRepository->delete($post);
-                    $this->csrf->deleteToken();
+                    if ($this->postRepository->find($data['deletePost']) !== null) {
+                        $post = $this->postRepository->find($data['deletePost']);
+                        $this->postRepository->delete($post);
+                        $this->csrf->deleteToken();
 
-                    $this->session->addFlashes('success', 'Article supprimé.');
-                    return new RedirectResponse('index.php?action=admin_posts', 302);
+                        $this->session->addFlashes('success', 'Article supprimé.');
+                        return new RedirectResponse('index.php?action=admin_posts', 302);
+                    }
                 }
             }
 
@@ -125,12 +127,17 @@ class AdminPostController
 
             $user = $this->authentication->getAuthenticatedUser();
             $post = $this->postRepository->find($id);
+            $editors = $this->userRepository->findBy(['role_fk' => 2]);
 
             $data = $this->request->request()->all();
 
             if ($this->request->getMethod() === 'POST' && $this->csrf->checkToken($data['csrfToken'])) {
 
                 if ($this->postFormValidator->isValid($data)) {
+
+                    if ($user->getId() !== $data['author']) {
+                        $user = $this->userRepository->find($data['author']);
+                    }
 
                     $post
                         ->setId($post->getId())
@@ -156,6 +163,7 @@ class AdminPostController
                 'data' => [
                     'request' => $oldRequest,
                     'post' => $post,
+                    'editors' => $editors,
                     'csrfToken' => $this->session->get('csrfToken')
                 ]
             ]));
@@ -164,37 +172,4 @@ class AdminPostController
         return new RedirectResponse('index.php', 403);
     }
 
-    public function deletePostAction(int $id)
-    {
-        if ($this->authentication->isAdmin() || $this->authentication->isEditor()) {
-// TODO : Ajouter confirmation de suppression
-
-            $this->csrf->generateToken();
-
-            $post = $this->postRepository->find($id);
-
-            $data = $this->request->request()->all();
-
-            if ($this->request->getMethod() === 'POST' && $this->csrf->checkToken($data['csrfToken'])) {
-
-                if ($this->authentication->isAdmin()) {
-
-                    $this->postRepository->delete($post);
-                    $this->csrf->deleteToken();
-
-                    $this->session->addFlashes('success', 'Article supprimé.');
-                    return new RedirectResponse('index.php?action=admin_posts', 302);
-                }
-            }
-
-            return new Response($this->view->render([
-                'template' => '../backoffice/delete_post',
-                'data' => [
-                    'post' => $post
-                ]
-            ]));
-        }
-
-        return new RedirectResponse('index.php', 403);
-    }
 }

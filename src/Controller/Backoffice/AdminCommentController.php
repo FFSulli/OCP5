@@ -45,13 +45,15 @@ class AdminCommentController
         if ($this->request->getMethod() === 'POST') {
 
             if ($this->authentication->isAdmin()) {
-                if ($data['allowComment'] && $this->csrf->checkToken($data['csrfToken'])) {
-                    $comment = $this->commentRepository->find((int) $data['allowComment']);
-                    $this->commentRepository->allowComment($comment);
-                    $this->csrf->deleteToken();
+                if ($this->commentRepository->find($data['allowComment']) !== null) {
+                    if ($data['allowComment'] && $this->csrf->checkToken($data['csrfToken'])) {
+                        $comment = $this->commentRepository->find((int) $data['allowComment']);
+                        $this->commentRepository->allowComment($comment);
+                        $this->csrf->deleteToken();
 
-                    $this->session->addFlashes('success', 'Commentaire validé.');
-                    return new RedirectResponse('index.php?action=admin_comments', 302);
+                        $this->session->addFlashes('success', 'Commentaire validé.');
+                        return new RedirectResponse('index.php?action=admin_comments', 302);
+                    }
                 }
             }
         }
