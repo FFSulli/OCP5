@@ -68,7 +68,8 @@ final class Router
             $postRepo = new PostRepository($this->database);
             $paginationService = new PaginationService($this->database, $postRepo, 3);
             $userRepo = new UserRepository($this->database);
-            $controller = new PostController($postRepo, $userRepo, $this->view, $this->session);
+            $csrf = new Csrf($this->session);
+            $controller = new PostController($postRepo, $userRepo, $this->view, $this->session, $csrf);
 
             return $controller->displayAllPostsAction($paginationService);
 
@@ -76,7 +77,8 @@ final class Router
         } elseif ($action === 'post' && $this->request->query()->has('id')) {
             $postRepo = new PostRepository($this->database);
             $userRepo = new UserRepository($this->database);
-            $controller = new PostController($postRepo, $userRepo, $this->view, $this->session);
+            $csrf = new Csrf($this->session);
+            $controller = new PostController($postRepo, $userRepo, $this->view, $this->session, $csrf);
             $commentFormValidator = new CommentFormValidator($this->session);
 
             $commentRepo = new CommentRepository($this->database);
@@ -87,37 +89,39 @@ final class Router
         } elseif ($action === 'home') {
             $postRepo = new PostRepository($this->database);
             $contactFormValidator = new ContactFormValidator($this->session);
-            $controller = new HomeController($postRepo, $contactFormValidator, $this->view, $this->session);
             $csrf = new Csrf($this->session);
+            $controller = new HomeController($postRepo, $contactFormValidator, $this->view, $this->session, $csrf);
 
-            return $controller->displayHomepageAction($this->request, $this->emailService, $csrf);
+            return $controller->displayHomepageAction($this->request, $this->emailService);
 
         // *** @Route http://localhost:8000/?action=login ***
         } elseif ($action === 'login') {
             $userRepo = new UserRepository($this->database);
-            $postRepo = new PostRepository($this->database);
             $authentication = new Authentication($this->session, $userRepo);
             $loginFormValidator = new LoginFormValidator($userRepo, $this->session);
-            $controller = new UserController($userRepo, $postRepo, $authentication, $this->view, $this->session);
+            $csrf = new Csrf($this->session);
+
+            $controller = new UserController($userRepo, $authentication, $this->view, $this->session, $csrf);
 
             return $controller->loginAction($this->request, $loginFormValidator);
 
         // *** @Route http://localhost:8000/?action=logout ***
         } elseif ($action === 'logout') {
             $userRepo = new UserRepository($this->database);
-            $postRepo = new PostRepository($this->database);
             $authentication = new Authentication($this->session, $userRepo);
-            $controller = new UserController($userRepo, $postRepo, $authentication, $this->view, $this->session);
+            $csrf = new Csrf($this->session);
+
+            $controller = new UserController($userRepo, $authentication, $this->view, $this->session, $csrf);
 
             return $controller->logoutAction();
 
             // *** @Route http://localhost:8000/?action=register ***
         } elseif ($action === 'register') {
             $userRepo = new UserRepository($this->database);
-            $postRepo = new PostRepository($this->database);
             $authentication = new Authentication($this->session, $userRepo);
             $registerFormValidator = new RegisterFormValidator($this->session, $userRepo);
-            $controller = new UserController($userRepo, $postRepo, $authentication, $this->view, $this->session);
+            $csrf = new Csrf($this->session);
+            $controller = new UserController($userRepo, $authentication, $this->view, $this->session, $csrf);
 
 
             return $controller->registerAction($this->request, $registerFormValidator, $this->emailService);

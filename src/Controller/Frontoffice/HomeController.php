@@ -6,6 +6,7 @@ use App\Model\Repository\PostRepository;
 use App\Service\CSRF\Csrf;
 use App\Service\Email\EmailService;
 use App\Service\Form\ContactFormValidator;
+use App\Service\Http\RedirectResponse;
 use App\Service\Http\Response;
 use App\Service\Http\Session\Session;
 use App\View\View;
@@ -18,17 +19,20 @@ class HomeController
     private PostRepository $postRepository;
     private Session $session;
     private ContactFormValidator $contactFormValidator;
+    private Csrf $csrf;
 
-    public function __construct(PostRepository $postRepository, ContactFormValidator $contactFormValidator, View $view, Session $session)
+    public function __construct(PostRepository $postRepository, ContactFormValidator $contactFormValidator, View $view, Session $session, Csrf $csrf)
     {
         $this->postRepository = $postRepository;
         $this->contactFormValidator = $contactFormValidator;
         $this->view = $view;
         $this->session = $session;
+        $this->csrf = $csrf;
     }
 
-    public function displayHomepageAction(Request $request, EmailService $emailService, Csrf $csrf): Response
+    public function displayHomepageAction(Request $request, EmailService $emailService): Response
     {
+        $this->csrf->generateToken();
 
         $posts = $this->postRepository->findBy([], null, 3, 0);
 
@@ -36,12 +40,13 @@ class HomeController
 
         if ($request->getMethod() === 'POST') {
 
-            if ($this->contactFormValidator->isValid($data)) {
+            if ($this->contactFormValidator->isValid($data) && $this->csrf->checkToken($data['csrfToken'])) {
                 $mailer = $emailService->prepareEmail();
                 $message = $emailService->createMessage('Sullivan Berger - Demande de contact' ,$data['email'], $data['message']);
                 $mailer->send($message);
+                $this->csrf->deleteToken();
                 $this->session->addFlashes('success', 'Merci pour votre message, je vous répondrai dans les meilleurs délais.');
-
+                return new RedirectResponse('index.php', 302);
             } else {
                 $oldRequest = $request->request()->all();
                 $this->session->addFlashes('error', "Le formulaire n'est pas valide, merci de vérifier les informations renseignées.");
@@ -54,7 +59,8 @@ class HomeController
             'data' => [
                 'posts' => $posts,
                 'request' => $oldRequest,
-                'connected' => $this->session->get('user')
+                'connected' => $this->session->get('user'),
+                'csrfToken' => $this->session->get('csrfToken')
             ],
         ]));
     }

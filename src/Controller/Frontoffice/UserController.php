@@ -7,6 +7,7 @@ namespace  App\Controller\Frontoffice;
 use App\Model\Entity\User;
 use App\Model\Repository\PostRepository;
 use App\Service\Authentication\Authentication;
+use App\Service\CSRF\Csrf;
 use App\Service\Email\EmailService;
 use App\Service\Form\LoginFormValidator;
 use App\Service\Form\RegisterFormValidator;
@@ -21,23 +22,24 @@ use Twig\Environment;
 final class UserController
 {
     private UserRepository $userRepository;
-    private PostRepository $postRepository;
     private Authentication $authentication;
     private View $view;
     private Session $session;
+    private Csrf $csrf;
 
 
-    public function __construct(UserRepository $userRepository, PostRepository $postRepository, Authentication $authentication, View $view, Session $session)
+    public function __construct(UserRepository $userRepository, Authentication $authentication, View $view, Session $session, Csrf $csrf)
     {
         $this->userRepository = $userRepository;
-        $this->postRepository = $postRepository;
         $this->authentication = $authentication;
         $this->view = $view;
         $this->session = $session;
+        $this->csrf = $csrf;
     }
 
     public function loginAction(Request $request, LoginFormValidator $loginFormValidator)
     {
+        $this->csrf->generateToken();
 
         $data = $request->request()->all();
 
@@ -46,15 +48,21 @@ final class UserController
         }
 
         if ($request->getMethod() === 'POST') {
-            if ($loginFormValidator->isValid($data)) {
+            if ($loginFormValidator->isValid($data) && $this->csrf->checkToken($data['csrfToken'])) {
                 $this->session->addFlashes('success', 'Vous êtes désormais connecté.');
                 $this->authentication->authenticate($data['email']);
+                $this->csrf->deleteToken();
                 return new RedirectResponse('index.php', 200);
             } else {
                 $this->session->addFlashes('error', "Le formulaire n'est pas valide, merci de vérifier les informations renseignées.");
             }
         }
-        return new Response($this->view->render(['template' => 'login', 'data' => []]));
+        return new Response($this->view->render([
+            'template' => 'login',
+            'data' => [
+                'csrfToken' => $this->session->get('csrfToken')
+            ]
+        ]));
     }
 
     public function logoutAction(): Response
@@ -70,6 +78,8 @@ final class UserController
 
     public function registerAction(Request $request, RegisterFormValidator $registerFormValidator, EmailService $emailService): Response
     {
+        $this->csrf->generateToken();
+
         if ($this->authentication->isAuthenticated()) {
             return new RedirectResponse('index.php', 302);
         }
@@ -78,7 +88,7 @@ final class UserController
 
         if ($request->getMethod() === 'POST') {
 
-            if ($registerFormValidator->isValid($data)) {
+            if ($registerFormValidator->isValid($data) && $this->csrf->checkToken($data['csrfToken'])) {
                 $password = password_hash($data['password'], PASSWORD_BCRYPT);
                 $user = new User();
                 $user
@@ -89,12 +99,14 @@ final class UserController
 
                 $this->userRepository->create($user);
 
+                $this->csrf->deleteToken();
+
                 $mailer = $emailService->prepareEmail();
                 $message = $emailService->createMessage('Sullivan Berger - Nouveau compte' ,$data['email'], 'Merci de vous êtes inscrit sur sullivan-berger.fr.');
                 $mailer->send($message);
                 $this->session->addFlashes('success', 'Vous êtes désormais inscrit, bienvenue !');
 
-                return new RedirectResponse('index.php', 201);
+                return new RedirectResponse('index.php', 302);
             } else {
                 $oldRequest = $request->request()->all();
                 $this->session->addFlashes('error', "Le formulaire n'est pas valide, merci de vérifier les informations renseignées.");
@@ -105,7 +117,8 @@ final class UserController
         return new Response($this->view->render([
             'template' => 'register',
             'data' => [
-                'request' => $oldRequest
+                'request' => $oldRequest,
+                'csrfToken' => $this->session->get('csrfToken')
             ]
         ]));
     }

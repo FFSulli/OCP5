@@ -6,7 +6,9 @@ namespace  App\Controller\Frontoffice;
 
 use App\Model\Entity\Comment;
 use App\Model\Repository\UserRepository;
+use App\Service\CSRF\Csrf;
 use App\Service\Form\CommentFormValidator;
+use App\Service\Http\RedirectResponse;
 use App\Service\Http\Request;
 use App\Service\Http\Session\Session;
 use App\Service\Pagination\PaginationService;
@@ -21,17 +23,21 @@ final class PostController
     private UserRepository $userRepository;
     private View $view;
     private Session $session;
+    private Csrf $csrf;
 
-    public function __construct(PostRepository $postRepository, UserRepository $userRepository, View $view, Session $session)
+    public function __construct(PostRepository $postRepository, UserRepository $userRepository, View $view, Session $session, Csrf $csrf)
     {
         $this->postRepository = $postRepository;
         $this->userRepository = $userRepository;
         $this->view = $view;
         $this->session = $session;
+        $this->csrf = $csrf;
     }
 
     public function displayOneAction(Request $request, int $postId, CommentRepository $commentRepository, CommentFormValidator $commentFormValidator): Response
     {
+        $this->csrf->generateToken();
+
         $post = $this->postRepository->find($postId);
         $comments = $commentRepository->findBy([
             "post_fk" => $postId,
@@ -42,22 +48,17 @@ final class PostController
         $data = $request->request()->all();
 
         if ($request->getMethod() === 'POST') {
-            if ($commentFormValidator->isValid($data)) {
+            if ($commentFormValidator->isValid($data) && $this->csrf->checkToken($data['csrfToken'])) {
                 $comment = new Comment();
                 $comment->setContent($data['content']);
                 $comment->setUserFk($user->getId());
                 $comment->setPostFk($postId);
 
                 $commentRepository->create($comment);
-                $this->session->addFlashes('success', 'Votre commentaire a bien été ajouté');
+                $this->csrf->deleteToken();
+                $this->session->addFlashes('success', 'Votre commentaire est en attente de validation.');
 
-                return new Response($this->view->render([
-                    'template' => 'post',
-                    'data' => [
-                        'post' => $post,
-                        'comments' => $comments
-                    ],
-                ]));
+                return new RedirectResponse('index.php?action=post&id=' . $postId, 302);
             }
         }
 
@@ -70,7 +71,8 @@ final class PostController
                 'data' => [
                     'post' => $post,
                     'comments' => $comments,
-                    'connected' => $this->session->get('user')
+                    'connected' => $this->session->get('user'),
+                    'csrfToken' => $this->session->get('csrfToken')
                 ],
                 ],
             ));

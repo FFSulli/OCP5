@@ -20,6 +20,7 @@
         {% endfor %}
         {% if connected %}
         <form action="" method="post" class="w-full my-8 " id="addCommentForm" name="addCommentForm">
+            <input name="csrfToken" type="hidden" value="{{ csrfToken }}">
             <label>
                 <textarea name="content" cols="30" rows="6" class="w-full bg-gray-50 dark:bg-gray-400 dark:placeholder-gray-200 rounded focus:ring focus:ring-indigo-500 dark:focus:ring-green-400 focus:outline-none transition resize-none ease-in-out duration-200 p-4" placeholder="Votre commentaire..."></textarea>
             </label>
