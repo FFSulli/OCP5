@@ -109,6 +109,7 @@ class AdminPostController
             return new Response($this->view->render([
                 'template' => '../backoffice/add_post',
                 'data' => [
+                    'request' => $oldRequest,
                     'csrfToken' => $this->session->get('csrfToken')
                 ]
             ]));
@@ -153,6 +154,7 @@ class AdminPostController
             return new Response($this->view->render([
                 'template' => '../backoffice/edit_post',
                 'data' => [
+                    'request' => $oldRequest,
                     'post' => $post,
                     'csrfToken' => $this->session->get('csrfToken')
                 ]
