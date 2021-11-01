@@ -10,14 +10,12 @@ use App\Model\Repository\Interfaces\EntityRepositoryInterface;
 use App\Service\DotEnv\DotEnv;
 use App\Service\DotEnv\DotEnvService;
 
-final class UserRepository implements EntityRepositoryInterface
+final class UserRepository extends BaseRepository implements EntityRepositoryInterface
 {
-    private MySQLDB $database;
 
     public function __construct(MySQLDB $database)
     {
-
-        $this->database = $database;
+        parent::__construct($database);
     }
 
     public function find(int $userId): ?User
@@ -27,14 +25,14 @@ final class UserRepository implements EntityRepositoryInterface
 
     public function findOneBy(array $criteria, array $orderBy = null): ?User
     {
-        $prefetch = $this->preFetch($criteria, $orderBy, 1, 0) ?? null;
+        $prefetch = $this->preFetch($criteria, $orderBy, 1, 0, 'users') ?? null;
 
         return $this->database->fetch($prefetch['statement'], $prefetch['binds'], User::class);
     }
 
     public function findBy(array $criteria, array $orderBy = null, int $limit = null, int $offset = null): ?array
     {
-        $prefetch = $this->preFetch($criteria, $orderBy, $limit, $offset);
+        $prefetch = $this->preFetch($criteria, $orderBy, $limit, $offset, 'users');
 
         return $this->database->fetchAll($prefetch['statement'], $prefetch['binds'], User::class);
     }
@@ -62,12 +60,13 @@ final class UserRepository implements EntityRepositoryInterface
     {
         /** @var User $user */
 
-        $prepared = $this->database->prepare('UPDATE users SET first_name = :firstName, last_name = :lastName, email = :email, password = :password WHERE id = :id');
+        $prepared = $this->database->prepare('UPDATE users SET first_name = :firstName, last_name = :lastName, email = :email, password = :password, role_fk = :roleFk WHERE id = :id');
         $prepared->bindValue(':id', $user->getId());
         $prepared->bindValue(':firstName', $user->getFirstName());
         $prepared->bindValue(':lastName', $user->getLastName());
         $prepared->bindValue(':email', $user->getEmail());
         $prepared->bindValue(':password', $user->getPassword());
+        $prepared->bindValue(':roleFk', $user->getRoleFk());
 
         return $prepared->execute();
     }
@@ -82,34 +81,4 @@ final class UserRepository implements EntityRepositoryInterface
         return $prepared->execute();
     }
 
-    private function preFetch(array $criteria, array $orderBy = null, int $limit = null, int $offset = null): ?array
-    {
-        $criteriaFields = [];
-        $orderByFields = [];
-        $binds = [];
-
-        foreach ($criteria as $key => $value) {
-            $criteriaFields[] = sprintf("%s = :%s", $key, $key);
-            $binds[sprintf(":%s", $key)] = $value;
-        }
-
-        if (null !== $orderBy) {
-            foreach ($orderBy as $key => $value) {
-                $orderByFields[] = sprintf("%s %s", $key, $value);
-            }
-        }
-
-        $criteriaList = implode(' AND ', $criteriaFields);
-        $orderByList = implode(', ', $orderByFields);
-
-        $whereClause = 0 !== count($criteriaFields) ? sprintf('WHERE %s', $criteriaList) : '';
-        $orderByClause = 0 !== count($orderByFields) ? sprintf(' ORDER BY %s', $orderByList) : '';
-        $limitClause = null !== $limit ? ' LIMIT ' . $limit : '';
-        $offsetClause = null !== $offset ? ' OFFSET ' . $offset : '';
-
-        return [
-            'statement' => $this->database->prepare('SELECT * FROM users ' . $whereClause . $orderByClause . $limitClause . $offsetClause),
-            'binds' => $binds
-        ];
-    }
 }

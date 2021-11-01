@@ -2,13 +2,14 @@
 
 {% block content %}
     <section class="mt-8 p-4">
-        <h1 class="md:text-4xl sm:text-6xl font-bold mb-8">Gestion des articles</h1>
+        <h1 class="md:text-4xl sm:text-6xl font-bold mb-8">Gestion des commentaires</h1>
         <table class="w-full text-center">
             <thead>
             <tr>
                 <th>ID</th>
                 <th>ID Article</th>
-                <th class="w-2/6">Commentaire</th>
+                <th class="w-1/6">Commentaire</th>
+                <th class="w-1/6">Statut</th>
                 <th class="w-1/6">Date de création</th>
                 <th class="w-1/6">Auteur</th>
                 <th class="w-1/6">Actions</th>
@@ -20,27 +21,38 @@
                     <td class="py-8 px-4">{{ comment.id }}</td>
                     <td class="py-8 px-4"><a href="?action=post&id={{ comment.postFk }}">{{ comment.postFk }}</a></td>
                     <td class="text-left px-4"><a href="" class="hover:text-indigo-500 transition ease-in-out duration-500">{{ comment.content }}</a></td>
+                    <td class="py-8 px-4">
+                        {% if comment.verified == 1 %}
+                            <span class="block w-32 bg-green-500 py-2 px-4 rounded text-white mx-auto">Validé</span>
+                        {% else %}
+                            <span class="block w-32 bg-yellow-500 py-2 px-4 rounded text-white mx-auto">En attente</span>
+                        {% endif %}
+                    </td>
                     <td class="px-4">{{ comment.createdAt | date("d/m/Y \\à H:i") }}</td>
                     <td class="px-4">Sullivan Berger</td>
-                    <td class="flex items-center mx-auto space-x-2 py-8 px-4">
+                    <td class="flex flex-col items-center mx-auto space-y-2 py-8 px-4">
                         {% if comment.verified == 0 %}
-                            <a href="" class="bg-green-400 hover:bg-green-500 text-white p-2 rounded-full transition ease-in-out duration-300">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16">
+                            <form method="post" name="allowCommentForm" id="allowCommentForm">
+                                <input name="allowComment" type="hidden" value="{{ comment.id }}">
+                                <input name="csrfToken" type="hidden" value="{{ csrfToken }}">
+                            </form>
+                            <button type="submit" form="allowCommentForm" name="allowCommentFormSubmit" class="w-48 flex items-center bg-green-400 hover:bg-green-500 text-white p-2 rounded transition ease-in-out duration-300">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" class="mr-2">
                                     <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" data-cap="butt" d="m1 9 4 4L15 3"/>
                                 </svg>
-                            </a>
-                        {% elseif comment.verified == 1 %}
-                            <a href="" class="bg-yellow-400 hover:bg-yellow-500 text-white p-2 rounded-full transition ease-in-out duration-300">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16">
-                                    <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" d="M1.5 6.5h13v3h-13z"/>
-                                </svg>
-                            </a>
+                                <span>Valider</span>
+                            </button>
                         {% endif %}
-                        <a href="" class="bg-red-400 hover:bg-red-500 text-white p-2 rounded-full transition ease-in-out duration-300">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16">
+                        <form method="post" name="deleteCommentForm" id="deleteCommentForm">
+                            <input name="deleteComment" type="hidden" value="{{ comment.id }}">
+                            <input name="csrfToken" type="hidden" value="{{ csrfToken }}">
+                        </form>
+                        <button type="submit" form="deleteCommentForm" name="deleteCommentFormSubmit" class="w-48 flex items-center bg-red-400 hover:bg-red-500 text-white p-2 rounded transition ease-in-out duration-300">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" class="mr-2">
                                 <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" data-cap="butt" d="m13.5 2.5-11 11M2.5 2.5l11 11"/>
                             </svg>
-                        </a>
+                            <span>Supprimer</span>
+                        </button>
                     </td>
                 </tr>
             {% endfor %}

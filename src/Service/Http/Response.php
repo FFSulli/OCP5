@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Service\Http;
 
-final class Response
+class Response
 {
     private string $content;
     private int $status;
@@ -19,7 +19,27 @@ final class Response
 
     public function send(): void
     {
-        // TODO Il faut renvoyer aussi le status de la réponse
+        switch ($this->status) {
+            case 200: header("HTTP/1.0 200 OK"); break;
+            case 201: header("HTTP/1.0 201 Created"); break;
+            case 202: header("HTTP/1.0 202 Accepted"); break;
+            case 300: header("HTTP/1.0 300 Multiple Choices"); break;
+            case 301: header("HTTP/1.0 301 Moved Permanently"); break;
+            case 302: header("HTTP/1.0 302 Found"); break;
+            case 400: header("HTTP/1.0 302 Bad Request"); break;
+            case 401: header("HTTP/1.0 401 Unauthorized"); break;
+            case 403: header("HTTP/1.0 403 Forbidden"); break;
+            case 404: header("HTTP/1.0 404 Not Found"); break;
+            case 500: header("HTTP/1.0 500 Internal Server Error"); break;
+            default:
+                exit("Unknown HTTP status code : " . $this->status);
+        }
+
+        if ($this->headers['url']) {
+            header('Location: ' . $this->headers['url'], true, $this->status);
+            exit();
+        }
+        
         echo $this->content;
     }
 }

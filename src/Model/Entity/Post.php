@@ -16,7 +16,6 @@ final class Post
     private string $created_at;
     private ?string $updated_at = null;
     private int $user_fk;
-    private string $status_fk;
 
     /**
      * @return int
@@ -93,24 +92,6 @@ final class Post
     /**
      * @return string
      */
-    public function getSlug(): string
-    {
-        return $this->slug;
-    }
-
-    /**
-     * @param string $slug
-     * @return Post
-     */
-    public function setSlug(string $slug): Post
-    {
-        $this->slug = $slug;
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
     public function getCreatedAt()
     {
         return $this->created_at;
@@ -162,21 +143,4 @@ final class Post
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getStatusFk(): string
-    {
-        return $this->status_fk;
-    }
-
-    /**
-     * @param string $status_fk
-     * @return Post
-     */
-    public function setStatusFk(string $status_fk): Post
-    {
-        $this->status_fk = $status_fk;
-        return $this;
-    }
 }

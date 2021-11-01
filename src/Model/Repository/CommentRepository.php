@@ -8,16 +8,14 @@ use App\Service\Database\MySQLDB;
 use App\Model\Entity\Comment;
 use App\Model\Entity\Interfaces\EntityObjectInterface;
 use App\Model\Repository\Interfaces\EntityRepositoryInterface;
-use App\Service\DotEnv\DotEnv;
 use App\Service\DotEnv\DotEnvService;
 
-final class CommentRepository implements EntityRepositoryInterface
+final class CommentRepository extends BaseRepository implements EntityRepositoryInterface
 {
-    private MySQLDB $database;
 
     public function __construct(MySQLDB $database)
     {
-        $this->database = $database;
+        parent::__construct($database);
     }
 
     public function find(int $commentId): ?Comment
@@ -27,14 +25,14 @@ final class CommentRepository implements EntityRepositoryInterface
 
     public function findOneBy(array $criteria, array $orderBy = null): ?Comment
     {
-        $prefetch = $this->preFetch($criteria, $orderBy, 1, 1)[0] ?? null;
+        $prefetch = $this->preFetch($criteria, $orderBy, 1, 0, 'comments') ?? null;
 
         return $this->database->fetch($prefetch['statement'], $prefetch['binds'], Comment::class);
     }
 
     public function findBy(array $criteria, array $orderBy = null, int $limit = null, int $offset = null): ?array
     {
-        $prefetch = $this->preFetch($criteria, $orderBy, $limit, $offset);
+        $prefetch = $this->preFetch($criteria, $orderBy, $limit, $offset, 'comments');
 
         return $this->database->fetchAll($prefetch['statement'], $prefetch['binds'], Comment::class);
     }
@@ -84,34 +82,14 @@ final class CommentRepository implements EntityRepositoryInterface
         return $prepared->execute();
     }
 
-    private function preFetch(array $criteria, array $orderBy = null, int $limit = null, int $offset = null): ?array
+    public function allowComment(object $comment): bool
     {
-        $criteriaFields = [];
-        $orderByFields = [];
-        $binds = [];
+        /** @var Comment $comment */
 
-        foreach ($criteria as $key => $value) {
-            $criteriaFields[] = sprintf("%s = :%s", $key, $key);
-            $binds[sprintf(":%s", $key)] = $value;
-        }
+        $prepared = $this->database->prepare('UPDATE comments SET verified = 1 WHERE id = :id');
+        $prepared->bindValue(':id', $comment->getId());
 
-        if (null !== $orderBy) {
-            foreach ($orderBy as $key => $value) {
-                $orderByFields[] = sprintf("%s %s", $key, $value);
-            }
-        }
-
-        $criteriaList = implode(' AND ', $criteriaFields);
-        $orderByList = implode(', ', $orderByFields);
-
-        $whereClause = 0 !== count($criteriaFields) ? sprintf('WHERE %s', $criteriaList) : '';
-        $orderByClause = 0 !== count($orderByFields) ? sprintf(' ORDER BY %s', $orderByList) : '';
-        $limitClause = null !== $limit ? ' LIMIT ' . $limit : '';
-        $offsetClause = null !== $offset ? ' OFFSET ' . $offset : '';
-
-        return [
-            'statement' => $this->database->prepare('SELECT * FROM comments ' . $whereClause . $orderByClause . $limitClause . $offsetClause),
-            'binds' => $binds
-        ];
+        return $prepared->execute();
     }
+
 }

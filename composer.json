@@ -27,6 +27,7 @@
         "ext-json": "*",
         "ext-pdo": "*",
         "swiftmailer/swiftmailer": "^6.0",
-        "twig/twig": "^3.3"
+        "twig/twig": "^3.3",
+      "ext-openssl": "*"
     }
 }
