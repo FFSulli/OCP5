@@ -45,6 +45,11 @@ class AdminPostController
 
             $posts = $this->postRepository->findAll();
 
+            foreach ($posts as $post) {
+                /** @var Post $post */
+                $author = $this->userRepository->find($post->getUserFk());
+            }
+
             $data = $this->request->request()->all();
 
 
@@ -66,6 +71,7 @@ class AdminPostController
                 'template' => '../backoffice/posts',
                 'data' => [
                     'posts' => $posts,
+                    'author' => $author,
                     'csrfToken' => $this->session->get('csrfToken')
                 ]
             ]));

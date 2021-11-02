@@ -170,7 +170,7 @@ final class Router
             $userRepo = new UserRepository($this->database);
             $authentication = new Authentication($this->session, $userRepo);
             $csrf = new Csrf($this->session);
-            $controller = new AdminCommentController($this->request, $this->view, $this->session, $authentication, $commentRepo, $csrf);
+            $controller = new AdminCommentController($this->request, $this->view, $this->session, $authentication, $commentRepo, $csrf, $userRepo);
 
             return $controller->displayAdminCommentAction();
 

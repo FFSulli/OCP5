@@ -43,6 +43,12 @@ final class PostController
             "post_fk" => $postId,
             "verified" => 1
         ]);
+
+        foreach ($comments as $comment) {
+            /** @var Comment $comment */
+            $commentor = $this->userRepository->find($comment->getUserFk());
+        }
+
         $user = $this->userRepository->findOneBy(['email' => $this->session->get('user')]);
 
         $data = $request->request()->all();
@@ -70,6 +76,8 @@ final class PostController
                 'template' => 'post',
                 'data' => [
                     'post' => $post,
+                    'user' => $user,
+                    'commentor' => $commentor,
                     'comments' => $comments,
                     'connected' => $this->session->get('user'),
                     'csrfToken' => $this->session->get('csrfToken')
