@@ -2,7 +2,9 @@
 
 namespace App\Controller\Backoffice;
 
+use App\Model\Entity\Comment;
 use App\Model\Repository\CommentRepository;
+use App\Model\Repository\UserRepository;
 use App\Service\Authentication\Authentication;
 use App\Service\CSRF\Csrf;
 use App\Service\Http\RedirectResponse;
@@ -19,8 +21,9 @@ class AdminCommentController
     private Authentication $authentication;
     private CommentRepository $commentRepository;
     private Csrf $csrf;
+    private UserRepository $userRepository;
 
-    public function __construct(Request $request, View $view, Session $session, Authentication $authentication, CommentRepository $commentRepository, Csrf $csrf)
+    public function __construct(Request $request, View $view, Session $session, Authentication $authentication, CommentRepository $commentRepository, Csrf $csrf, UserRepository $userRepository)
     {
         $this->request = $request;
         $this->view = $view;
@@ -28,6 +31,7 @@ class AdminCommentController
         $this->authentication = $authentication;
         $this->commentRepository = $commentRepository;
         $this->csrf = $csrf;
+        $this->userRepository = $userRepository;
     }
 
     public function displayAdminCommentAction(): Response
@@ -37,6 +41,11 @@ class AdminCommentController
         }
 
         $comments = $this->commentRepository->findAll();
+
+        foreach ($comments as $comment) {
+            /** @var Comment $comment */
+            $commentor = $this->userRepository->find($comment->getUserFk());
+        }
 
         $data = $this->request->request()->all();
 
@@ -76,6 +85,7 @@ class AdminCommentController
             'template' => '../backoffice/comments',
             'data' => [
                 'comments' => $comments,
+                'commentor' => $commentor,
                 'csrfToken' => $this->session->get('csrfToken')
             ]
         ]));

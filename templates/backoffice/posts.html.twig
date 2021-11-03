@@ -3,7 +3,7 @@
 {% block content %}
     <section class="mt-8 p-4">
         <h1 class="md:text-4xl sm:text-6xl font-bold mb-8">Gestion des articles</h1>
-        <a href="/?action=admin_add_post" class="inline-block bg-indigo-400 hover:bg-indigo-500 text-white rounded py-2 px-4 mb-4 transition ease-in-out duration-500">
+        <a href="/admin/posts/add" class="inline-block bg-indigo-400 hover:bg-indigo-500 text-white rounded py-2 px-4 mb-4 transition ease-in-out duration-500">
             Ajouter un article
         </a>
         <table class="w-full text-center">
@@ -24,7 +24,7 @@
                         <td class="text-left px-4"><a href="" class="hover:text-indigo-500 transition ease-in-out duration-500">{{ post.title }}</a></td>
                         <td class="px-4">{{ post.createdAt | date("d/m/Y \\à H:i") }}</td>
                         <td class="px-4">{{ post.updatedAt | date("d/m/Y \\à H:i") }}</td>
-                        <td class="px-4">{{ post.userFk }}</td>
+                        <td class="px-4">{{ author.firstName }} {{ author.lastName }}</td>
                         <td class="flex flex-col items-center mx-auto space-y-2 py-8 px-4">
                             <a href="/?action=admin_edit_post&id={{ post.id }}" aria-label="Editer" class="w-48 flex flex-row items-center bg-indigo-400 hover:bg-indigo-500 text-white p-2 rounded transition ease-in-out duration-300">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" class="mr-2">

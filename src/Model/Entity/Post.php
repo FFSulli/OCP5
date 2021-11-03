@@ -12,7 +12,6 @@ final class Post
     private string $title;
     private string $excerpt;
     private string $content;
-    private string $slug;
     private string $created_at;
     private ?string $updated_at = null;
     private int $user_fk;
