@@ -20,12 +20,12 @@
             </button>
         </div>
         <ul class="hidden space-y-4 sm:space-y-0 sm:space-x-8 sm:flex sm:flex-row" id="navItems">
-            <li><a href="/?action=posts" class="font-medium hover:text-indigo-500 dark:hover:text-green-400 transition ease-in-out duration-500">Articles</a></li>
+            <li><a href="/posts" class="font-medium hover:text-indigo-500 dark:hover:text-green-400 transition ease-in-out duration-500">Articles</a></li>
             {% if session.user == false %}
-                <li><a href="/?action=login" class="font-medium bg-indigo-500 hover:bg-indigo-600 dark:bg-green-400 dark:hover:bg-green-500 text-white rounded py-2 px-4 transition ease-in-out duration-500">Connexion</a></li>
+                <li><a href="/login" class="font-medium bg-indigo-500 hover:bg-indigo-600 dark:bg-green-400 dark:hover:bg-green-500 text-white rounded py-2 px-4 transition ease-in-out duration-500">Connexion</a></li>
             {% else %}
                 <li><p class="font-medium hover:text-indigo-500 dark:hover:text-green-400 transition ease-in-out duration-500">{{ session.user }}</p></li>
-                <li><a href="/?action=logout" class="font-medium bg-indigo-500 hover:bg-indigo-600 dark:bg-green-400 dark:hover:bg-green-500 text-white rounded py-2 px-4 transition ease-in-out duration-500">Déconnexion</a></li>
+                <li><a href="/logout" class="font-medium bg-indigo-500 hover:bg-indigo-600 dark:bg-green-400 dark:hover:bg-green-500 text-white rounded py-2 px-4 transition ease-in-out duration-500">Déconnexion</a></li>
             {% endif %}
             <li>
                 <button id="toggleDarkIcon" class="block focus:outline-none">

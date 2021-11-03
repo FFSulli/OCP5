@@ -32,8 +32,6 @@ class HomeController
 
     public function displayHomepageAction(Request $request, EmailService $emailService): Response
     {
-        $this->csrf->generateToken();
-
         $posts = $this->postRepository->findBy([], null, 3, 0);
 
         $data = $request->request()->all();
@@ -44,14 +42,16 @@ class HomeController
                 $mailer = $emailService->prepareEmail();
                 $message = $emailService->createMessage('Sullivan Berger - Demande de contact' ,$data['email'], $data['message']);
                 $mailer->send($message);
-                $this->csrf->deleteToken();
+
                 $this->session->addFlashes('success', 'Merci pour votre message, je vous répondrai dans les meilleurs délais.');
-                return new RedirectResponse('index.php', 302);
+                return new RedirectResponse('/', 302);
             } else {
                 $oldRequest = $request->request()->all();
                 $this->session->addFlashes('error', "Le formulaire n'est pas valide, merci de vérifier les informations renseignées.");
             }
         }
+
+        $this->csrf->generateToken();
 
         return new Response($this->view->render([
             'template' => 'home',

@@ -43,4 +43,9 @@ final class Request
     {
         return $this->server->get('REQUEST_METHOD');
     }
+
+    public function getPath(): string
+    {
+        return $this->server->get('REQUEST_URI');
+    }
 }

@@ -40,9 +40,15 @@ final class Router
     private Session $session;
     private DotEnv $dotEnv;
     private EmailService $emailService;
+    private Container $container;
 
     public function __construct(Request $request, DotEnv $dotEnv)
     {
+        $this->container = Container::instance();
+        $this->container->set("dotenv", $dotEnv);
+        $this->container->set("request", $request);
+        $this->container->get('database_connection');
+
         $this->dotEnv = $dotEnv;
         $this->database = new MySQLDB($this->dotEnv->get('DATABASE_HOST'), $this->dotEnv->get('DATABASE_NAME'), $this->dotEnv->get('DATABASE_USER'), $this->dotEnv->get('DATABASE_PASSWORD'));
         $this->emailService = new EmailService(
@@ -59,20 +65,28 @@ final class Router
 
     public function run(): Response
     {
+
+        $routes = $this->loadRoutes();
+
+        $controller = null;
+
+        $response = null;
+        foreach ($routes as $route) {
+            if ($route->match($this->request->getPath())) {
+                $handler = $route->getHandler();
+                return $handler($this->container);
+                break;
+            }
+        }
+
+        if ($controller === null) {
+            return new RedirectResponse('/', 404);
+    }
+
         $action = $this->request->query()->has('action') ? $this->request->query()->get('action') : 'home';
 
-        // *** @Route http://localhost:8000/?action=posts ***
-        if ($action === 'posts') {
-            $postRepo = new PostRepository($this->database);
-            $paginationService = new PaginationService($this->database, $postRepo, 3);
-            $userRepo = new UserRepository($this->database);
-            $csrf = new Csrf($this->session);
-            $controller = new PostController($postRepo, $userRepo, $this->view, $this->session, $csrf);
-
-            return $controller->displayAllPostsAction($paginationService);
-
         // *** @Route http://localhost:8000/?action=post&id=5 ***
-        } elseif ($action === 'post' && $this->request->query()->has('id')) {
+        if ($action === 'post' && $this->request->query()->has('id')) {
             $postRepo = new PostRepository($this->database);
             $userRepo = new UserRepository($this->database);
             $csrf = new Csrf($this->session);
@@ -82,77 +96,6 @@ final class Router
             $commentRepo = new CommentRepository($this->database);
 
             return $controller->displayOneAction($this->request, (int) $this->request->query()->get('id'), $commentRepo, $commentFormValidator);
-
-        // *** @Route http://localhost:8000/?action=home ***
-        } elseif ($action === 'home') {
-            $postRepo = new PostRepository($this->database);
-            $contactFormValidator = new ContactFormValidator($this->session);
-            $csrf = new Csrf($this->session);
-            $controller = new HomeController($postRepo, $contactFormValidator, $this->view, $this->session, $csrf);
-
-            return $controller->displayHomepageAction($this->request, $this->emailService);
-
-        // *** @Route http://localhost:8000/?action=login ***
-        } elseif ($action === 'login') {
-            $userRepo = new UserRepository($this->database);
-            $authentication = new Authentication($this->session, $userRepo);
-            $loginFormValidator = new LoginFormValidator($userRepo, $this->session);
-            $csrf = new Csrf($this->session);
-
-            $controller = new UserController($userRepo, $authentication, $this->view, $this->session, $csrf);
-
-            return $controller->loginAction($this->request, $loginFormValidator);
-
-        // *** @Route http://localhost:8000/?action=logout ***
-        } elseif ($action === 'logout') {
-            $userRepo = new UserRepository($this->database);
-            $authentication = new Authentication($this->session, $userRepo);
-            $csrf = new Csrf($this->session);
-
-            $controller = new UserController($userRepo, $authentication, $this->view, $this->session, $csrf);
-
-            return $controller->logoutAction();
-
-            // *** @Route http://localhost:8000/?action=register ***
-        } elseif ($action === 'register') {
-            $userRepo = new UserRepository($this->database);
-            $authentication = new Authentication($this->session, $userRepo);
-            $registerFormValidator = new RegisterFormValidator($this->session, $userRepo);
-            $csrf = new Csrf($this->session);
-            $controller = new UserController($userRepo, $authentication, $this->view, $this->session, $csrf);
-
-
-            return $controller->registerAction($this->request, $registerFormValidator, $this->emailService);
-
-        // *** @Route http://localhost:8000/?action=admin ***
-        } elseif ($action === 'admin') {
-            $userRepo = new UserRepository($this->database);
-            $authentication = new Authentication($this->session, $userRepo);
-            $controller = new AdminHomeController($this->view, $authentication);
-
-            return $controller->displayAdminHomepageAction();
-
-        // *** @Route http://localhost:8000/?action=admin_posts ***
-        } elseif ($action === 'admin_posts') {
-            $postRepo = new PostRepository($this->database);
-            $userRepo = new UserRepository($this->database);
-            $postFormValidator = new PostFormValidator($this->session);
-            $authentication = new Authentication($this->session, $userRepo);
-            $csrf = new Csrf($this->session);
-            $controller = new AdminPostController($this->request, $this->view, $this->session, $postRepo, $userRepo, $postFormValidator, $authentication, $csrf);
-
-            return $controller->displayAdminPostAction();
-
-        // *** @Route http://localhost:8000/?action=admin_add_post ***
-        } elseif ($action === 'admin_add_post') {
-            $postRepo = new PostRepository($this->database);
-            $userRepo = new UserRepository($this->database);
-            $postFormValidator = new PostFormValidator($this->session);
-            $authentication = new Authentication($this->session, $userRepo);
-            $csrf = new Csrf($this->session);
-            $controller = new AdminPostController($this->request, $this->view, $this->session, $postRepo, $userRepo, $postFormValidator, $authentication, $csrf);
-
-            return $controller->addPostAction($this->request);
 
         // *** @Route http://localhost:8000/?action=admin_edit_post&id=1 ***
         } elseif ($action === 'admin_edit_post' && $this->request->query()->has('id')) {
@@ -164,26 +107,26 @@ final class Router
             $controller = new AdminPostController($this->request, $this->view, $this->session, $postRepo, $userRepo, $postFormValidator, $authentication, $csrf);
 
             return $controller->editPostAction((int) $this->request->query()->get('id'));
-        // *** @Route http://localhost:8000/?action=admin_comments ***
-        } elseif ($action === 'admin_comments') {
-            $commentRepo = new CommentRepository($this->database);
-            $userRepo = new UserRepository($this->database);
-            $authentication = new Authentication($this->session, $userRepo);
-            $csrf = new Csrf($this->session);
-            $controller = new AdminCommentController($this->request, $this->view, $this->session, $authentication, $commentRepo, $csrf, $userRepo);
 
-            return $controller->displayAdminCommentAction();
-
-        // *** @Route http://localhost:8000/?action=admin_users ***
-        } elseif ($action === 'admin_users') {
-            $userRepo = new UserRepository($this->database);
-            $authentication = new Authentication($this->session, $userRepo);
-            $csrf = new Csrf($this->session);
-            $controller = new AdminUserController($this->view, $userRepo, $authentication, $this->request, $csrf, $this->session);
-
-            return $controller->displayAdminUserAction();
         } else {
-            return new RedirectResponse('index.php?action=home', 404);
+            return new RedirectResponse('/', 404);
         }
+    }
+
+    /**
+     * @return Route[]
+     */
+    private function loadRoutes(): array
+    {
+        $raw_routes = require __DIR__ . '/../../config/routes.php';
+
+        $routes = [];
+
+        foreach ($raw_routes as $raw_route) {
+            $route = new Route($raw_route['path'], $raw_route['methods'], $raw_route['handler']);
+            $routes[] = $route;
+        }
+
+        return $routes;
     }
 }

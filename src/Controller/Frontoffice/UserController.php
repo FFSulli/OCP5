@@ -39,7 +39,6 @@ final class UserController
 
     public function loginAction(Request $request, LoginFormValidator $loginFormValidator)
     {
-        $this->csrf->generateToken();
 
         $data = $request->request()->all();
 
@@ -51,12 +50,14 @@ final class UserController
             if ($loginFormValidator->isValid($data) && $this->csrf->checkToken($data['csrfToken'])) {
                 $this->session->addFlashes('success', 'Vous êtes désormais connecté.');
                 $this->authentication->authenticate($data['email']);
-                $this->csrf->deleteToken();
-                return new RedirectResponse('index.php', 200);
+                return new RedirectResponse('/', 200);
             } else {
                 $this->session->addFlashes('error', "Le formulaire n'est pas valide, merci de vérifier les informations renseignées.");
             }
         }
+
+        $this->csrf->generateToken();
+
         return new Response($this->view->render([
             'template' => 'login',
             'data' => [
@@ -70,18 +71,17 @@ final class UserController
         if ($this->authentication->isAuthenticated()) {
             $this->session->addFlashes('success', 'Vous avez été correctement déconnecté.');
             $this->authentication->logout();
-            return new RedirectResponse('index.php', 302);
+            return new RedirectResponse('/', 302);
         }
 
-        return new RedirectResponse('index.php', 403);
+        return new RedirectResponse('/', 403);
     }
 
     public function registerAction(Request $request, RegisterFormValidator $registerFormValidator, EmailService $emailService): Response
     {
-        $this->csrf->generateToken();
 
         if ($this->authentication->isAuthenticated()) {
-            return new RedirectResponse('index.php', 302);
+            return new RedirectResponse('/', 302);
         }
 
         $data = $request->request()->all();
@@ -99,20 +99,20 @@ final class UserController
 
                 $this->userRepository->create($user);
 
-                $this->csrf->deleteToken();
-
                 $mailer = $emailService->prepareEmail();
                 $message = $emailService->createMessage('Sullivan Berger - Nouveau compte' ,$data['email'], 'Merci de vous êtes inscrit sur sullivan-berger.fr.');
                 $mailer->send($message);
                 $this->session->addFlashes('success', 'Vous êtes désormais inscrit, bienvenue !');
 
-                return new RedirectResponse('index.php', 302);
+                return new RedirectResponse('/', 302);
             } else {
                 $oldRequest = $request->request()->all();
                 $this->session->addFlashes('error', "Le formulaire n'est pas valide, merci de vérifier les informations renseignées.");
             }
 
         }
+
+        $this->csrf->generateToken();
 
         return new Response($this->view->render([
             'template' => 'register',

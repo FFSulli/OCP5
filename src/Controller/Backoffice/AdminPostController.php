@@ -26,7 +26,15 @@ class AdminPostController
     private Authentication $authentication;
     private Csrf $csrf;
 
-    public function __construct(Request $request, View $view, Session $session, PostRepository $postRepository, UserRepository $userRepository, PostFormValidator $postFormValidator, Authentication $authentication, Csrf $csrf)
+    public function __construct(Request $request,
+        View $view,
+        Session $session,
+        PostRepository $postRepository,
+        UserRepository $userRepository,
+        PostFormValidator $postFormValidator,
+        Authentication $authentication,
+        Csrf $csrf
+    )
     {
         $this->request = $request;
         $this->view = $view;
@@ -40,8 +48,8 @@ class AdminPostController
 
     public function displayAdminPostAction(): Response
     {
+
         if ($this->authentication->isAdmin() || $this->authentication->isEditor()) {
-            $this->csrf->generateToken();
 
             $posts = $this->postRepository->findAll();
 
@@ -59,13 +67,14 @@ class AdminPostController
                     if ($this->postRepository->find($data['deletePost']) !== null) {
                         $post = $this->postRepository->find($data['deletePost']);
                         $this->postRepository->delete($post);
-                        $this->csrf->deleteToken();
 
                         $this->session->addFlashes('success', 'Article supprimé.');
                         return new RedirectResponse('index.php?action=admin_posts', 302);
                     }
                 }
             }
+
+            $this->csrf->generateToken();
 
             return new Response($this->view->render([
                 'template' => '../backoffice/posts',

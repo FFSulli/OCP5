@@ -36,7 +36,6 @@ final class PostController
 
     public function displayOneAction(Request $request, int $postId, CommentRepository $commentRepository, CommentFormValidator $commentFormValidator): Response
     {
-        $this->csrf->generateToken();
 
         $post = $this->postRepository->find($postId);
         $comments = $commentRepository->findBy([
@@ -51,6 +50,9 @@ final class PostController
 
         $user = $this->userRepository->findOneBy(['email' => $this->session->get('user')]);
 
+        var_dump($request->getPath());
+        die();
+
         $data = $request->request()->all();
 
         if ($request->getMethod() === 'POST') {
@@ -61,12 +63,14 @@ final class PostController
                 $comment->setPostFk($postId);
 
                 $commentRepository->create($comment);
-                $this->csrf->deleteToken();
                 $this->session->addFlashes('success', 'Votre commentaire est en attente de validation.');
 
                 return new RedirectResponse('index.php?action=post&id=' . $postId, 302);
             }
         }
+
+        $this->csrf->generateToken();
+
 
         $response = new Response('<h1>faire une redirection vers la page d\'erreur, ce post n\'existe pas</h1><a href="index.php?action=posts">Liste des posts</a><br>', 404);
 

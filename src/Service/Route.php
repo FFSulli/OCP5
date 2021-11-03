@@ -7,29 +7,31 @@ namespace App\Service;
 class Route
 {
     const HTTP_METHODS = ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'];
-    private string $path;
+    private $path;
     private ?array $methods;
+    private $handler;
 
-    public function __construct(string $path, ?array $methods)
+    public function __construct(callable $path, ?array $methods, callable $handler)
     {
 
         $this->path = $path;
         $this->methods = $methods;
+        $this->handler = $handler;
     }
 
     /**
-     * @return string
+     * @return callable
      */
-    public function getPath(): string
+    public function getPath(): callable
     {
         return $this->path;
     }
 
     /**
-     * @param string $path
+     * @param callable $path
      * @return Route
      */
-    public function setPath(string $path): Route
+    public function setPath(callable $path): Route
     {
         $this->path = $path;
         return $this;
@@ -55,5 +57,31 @@ class Route
 
         $this->methods = $methods;
         return $this;
+    }
+
+    /**
+     * @return callable
+     */
+    public function getHandler(): callable
+    {
+        return $this->handler;
+    }
+
+    /**
+     * @param callable $handler
+     * @return Route
+     */
+    public function setHandler(callable $handler): Route
+    {
+        $this->handler = $handler;
+        return $this;
+
+    }
+
+    public function match(string $path): bool
+    {
+        $pathHandler = $this->path;
+
+        return $pathHandler($path);
     }
 }
