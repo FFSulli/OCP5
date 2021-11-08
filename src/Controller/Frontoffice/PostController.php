@@ -50,9 +50,6 @@ final class PostController
 
         $user = $this->userRepository->findOneBy(['email' => $this->session->get('user')]);
 
-        var_dump($request->getPath());
-        die();
-
         $data = $request->request()->all();
 
         if ($request->getMethod() === 'POST') {

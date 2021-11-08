@@ -24,6 +24,7 @@ class Route
      */
     public function getPath(): callable
     {
+        dump($this->path);
         return $this->path;
     }
 

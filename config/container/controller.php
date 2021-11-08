@@ -96,16 +96,6 @@ $container->registerService("post_controller_index", function (Container $contai
     return $controller->displayAllPostsAction($container->get("pagination_service"));
 });
 
-$container->registerService("post_controller_show", function (Container $container) {
-    /** @var PostController $controller */
-    $controller = $container->get("base_post_controller");
-
-    return $controller->displayOneAction(
-        $container->get("request"),
-        $container->get("request"),
-    );
-});
-
 $container->registerService("user_controller_login", function (Container $container) {
     /** @var UserController $controller */
     $controller = $container->get("base_user_controller");
@@ -162,10 +152,27 @@ $container->registerService("admin_user_controller_index", function (Container $
     return $controller->displayAdminUserAction();
 });
 
-$container->registerService("with_id_controller", function (Container $container) {
+$container->registerService("post_controller_show", function (Container $container) {
     return function ($id) use ($container) {
-        $controller = $container->get("with_id_controller");
+        /** @var PostController $controller */
+        $controller = $container->get("base_post_controller");
 
-        return $controller->displayHomepageAction($id);
+        $request = $container->get("request");
+
+        return $controller->displayOneAction(
+            $container->get("request"),
+            $id,
+            $container->get("comment_repository"),
+            $container->get("comment_form_validator")
+        );
+    };
+});
+
+$container->registerService("admin_post_controller_edit", function (Container $container) {
+    return function ($id) use ($container) {
+        /** @var AdminPostController $controller */
+        $controller = $container->get("base_admin_post_controller");
+        
+        return $controller->editPostAction($id);
     };
 });

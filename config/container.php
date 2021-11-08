@@ -48,6 +48,10 @@ $container->registerService("post_form_validator", function (Container $containe
    return new \App\Service\Form\PostFormValidator($container->get("session"));
 });
 
+$container->registerService("comment_form_validator", function (Container $container) {
+    return new \App\Service\Form\CommentFormValidator($container->get("session"));
+});
+
 $container->registerService("email_service", function (Container $container) {
     /** @var DotEnv $dotEnv */
     $dotEnv = $container->get("dotenv");
