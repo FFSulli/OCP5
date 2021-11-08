@@ -25,9 +25,10 @@
     "require": {
         "ext-http": "*",
         "ext-json": "*",
+        "ext-openssl": "*",
         "ext-pdo": "*",
         "swiftmailer/swiftmailer": "^6.0",
-        "twig/twig": "^3.3",
-      "ext-openssl": "*"
+        "twig/intl-extra": "^3.3",
+        "twig/twig": "^3.3"
     }
 }
