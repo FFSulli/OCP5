@@ -41,8 +41,7 @@ class AdminUserController
             if ($this->request->getMethod() === 'POST') {
                 if ($this->authentication->isAdmin()) {
                     if ($data['readerRole']) {
-                        var_dump($data);
-                        die();
+
                         if ($this->userRepository->find($data['readerRole']) !== null && $this->csrf->checkToken($data['csrfToken'])) {
                             $user = $this->userRepository->find((int) $data['readerRole']);
 

@@ -50,15 +50,6 @@ return [
     ],
     [
         'path' => function (string $path) {
-            return $path === '/admin';
-        },
-        'methods' => ['GET'],
-        'handler' => function (\App\Service\Container $container) {
-            return $container->get('admin_home_controller_index');
-        }
-    ],
-    [
-        'path' => function (string $path) {
             return $path === '/admin/posts';
         },
         'methods' => ['GET'],

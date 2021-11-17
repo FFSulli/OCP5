@@ -1,7 +1,6 @@
 <?php
 
 use App\Controller\Backoffice\AdminCommentController;
-use App\Controller\Backoffice\AdminHomeController;
 use App\Controller\Backoffice\AdminPostController;
 use App\Controller\Backoffice\AdminUserController;
 use App\Controller\Frontoffice\PostController;
@@ -16,7 +15,8 @@ $container->registerService("base_home_controller", function (Container $contain
         $container->get("contact_form_validator"),
         $container->get("view"),
         $container->get("session"),
-        $container->get("csrf")
+        $container->get("csrf"),
+        $container->get("authentication")
     );
 });
 
@@ -26,7 +26,8 @@ $container->registerService("base_post_controller", function (Container $contain
         $container->get("user_repository"),
         $container->get("view"),
         $container->get("session"),
-        $container->get("csrf")
+        $container->get("csrf"),
+        $container->get("authentication")
     );
 });
 
@@ -37,13 +38,6 @@ $container->registerService("base_user_controller", function (Container $contain
        $container->get("view"),
        $container->get("session"),
        $container->get("csrf"),
-   );
-});
-
-$container->registerService("base_admin_home_controller", function (Container $container) {
-   return new AdminHomeController(
-       $container->get("view"),
-       $container->get("authentication")
    );
 });
 
@@ -117,13 +111,6 @@ $container->registerService("user_controller_register", function (Container $con
     return $controller->registerAction($container->get("request"), $container->get("register_form_validator"), $container->get("email_service"));
 });
 
-$container->registerService("admin_home_controller_index", function (Container $container) {
-    /** @var AdminHomeController $controller */
-    $controller = $container->get("base_admin_home_controller");
-
-    return $controller->displayAdminHomepageAction();
-});
-
 $container->registerService("admin_post_controller_index", function (Container $container) {
     /** @var AdminPostController $controller */
     $controller = $container->get("base_admin_post_controller");
@@ -172,7 +159,7 @@ $container->registerService("admin_post_controller_edit", function (Container $c
     return function ($id) use ($container) {
         /** @var AdminPostController $controller */
         $controller = $container->get("base_admin_post_controller");
-        
+
         return $controller->editPostAction($id);
     };
 });

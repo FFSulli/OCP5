@@ -1,5 +1,11 @@
 {% extends "/frontoffice/base.html.twig" %}
 
+{% block stylesheets %}
+    <link href="css/style.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Cabin:wght@400;500;700&display=swap" rel="stylesheet">
+{% endblock %}
+
 {% block title %}Inscription{% endblock %}
 
 {% block content %}
@@ -85,4 +91,8 @@
             <a href="/login" class="hover:text-indigo-500 dark:hover:text-green-400 transition ease-in-out duration-500">Vous avez déjà un compte ? Cliquez ici pour vous connecter</a>
         </div>
     </section>
+{% endblock %}
+
+{% block scripts %}
+    <script src="js/app.js"></script>
 {% endblock %}

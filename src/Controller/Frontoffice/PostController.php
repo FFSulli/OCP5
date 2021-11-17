@@ -6,6 +6,7 @@ namespace  App\Controller\Frontoffice;
 
 use App\Model\Entity\Comment;
 use App\Model\Repository\UserRepository;
+use App\Service\Authentication\Authentication;
 use App\Service\CSRF\Csrf;
 use App\Service\Form\CommentFormValidator;
 use App\Service\Http\RedirectResponse;
@@ -24,18 +25,25 @@ final class PostController
     private View $view;
     private Session $session;
     private Csrf $csrf;
+    private Authentication $authentication;
 
-    public function __construct(PostRepository $postRepository, UserRepository $userRepository, View $view, Session $session, Csrf $csrf)
+    public function __construct(PostRepository $postRepository, UserRepository $userRepository, View $view, Session $session, Csrf $csrf, Authentication $authentication)
     {
         $this->postRepository = $postRepository;
         $this->userRepository = $userRepository;
         $this->view = $view;
         $this->session = $session;
         $this->csrf = $csrf;
+        $this->authentication = $authentication;
     }
 
     public function displayOneAction(Request $request, int $postId, CommentRepository $commentRepository, CommentFormValidator $commentFormValidator): Response
     {
+        if ($this->authentication->isAuthenticated()) {
+            if ($this->authentication->isAdmin() || $this->authentication->isEditor()) {
+                $authorizedUser = $this->authentication->getAuthenticatedUser();
+            }
+        }
 
         $post = $this->postRepository->find($postId);
         $comments = $commentRepository->findBy([
@@ -62,14 +70,11 @@ final class PostController
                 $commentRepository->create($comment);
                 $this->session->addFlashes('success', 'Votre commentaire est en attente de validation.');
 
-                return new RedirectResponse('index.php?action=post&id=' . $postId, 302);
+                return new RedirectResponse('/posts/' . $postId, 302);
             }
         }
 
         $this->csrf->generateToken();
-
-
-        $response = new Response('<h1>faire une redirection vers la page d\'erreur, ce post n\'existe pas</h1><a href="index.php?action=posts">Liste des posts</a><br>', 404);
 
         if ($post !== null) {
             $response = new Response($this->view->render(
@@ -81,7 +86,8 @@ final class PostController
                     'commentor' => $commentor,
                     'comments' => $comments,
                     'connected' => $this->session->get('user'),
-                    'csrfToken' => $this->session->get('csrfToken')
+                    'csrfToken' => $this->session->get('csrfToken'),
+                    'authorizedUser' => $authorizedUser
                 ],
                 ],
             ));
@@ -92,6 +98,12 @@ final class PostController
 
     public function displayAllPostsAction(PaginationService $paginationService): Response
     {
+        if ($this->authentication->isAuthenticated()) {
+            if ($this->authentication->isAdmin() || $this->authentication->isEditor()) {
+                $authorizedUser = $this->authentication->getAuthenticatedUser();
+            }
+        }
+
         $posts = $paginationService->paginatePosts();
         $pages = $paginationService->displayPages();
 
@@ -100,7 +112,8 @@ final class PostController
             'data' => [
                 'posts' => $posts,
                 'pages' => $pages,
-                'connected' => $this->session->get('user')
+                'connected' => $this->session->get('user'),
+                'authorizedUser' => $authorizedUser
             ],
         ]));
     }
