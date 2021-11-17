@@ -7,6 +7,7 @@ namespace App\View;
 use Twig\Environment;
 use App\Service\Http\Session\Session;
 use Twig\Loader\FilesystemLoader;
+use Twig\Extra\Intl\IntlExtension;
 
 final class View
 {
@@ -24,6 +25,9 @@ final class View
     {
         $data['data']['session'] = $this->session->toArray();
         $data['data']['flashes'] = $this->session->getFlashes();
+
+        $this->twig->addExtension(new IntlExtension());
+//        $this->twig->getExtension(\Twig\Extension\CoreExtension::class)->setTimezone('Europe/Paris');
 
         return $this->twig->render("frontoffice/${data['template']}.html.twig", $data['data']);
     }

@@ -10,6 +10,7 @@ final class Request
     private ParametersBag $request; // $_POST
     private ParametersBag $files; // $_FILES
     private ParametersBag $server; // $_SERVER
+    private string $path = "";
 
     function __construct(array $query, array $request, array $files, array $server)
     {
@@ -17,6 +18,8 @@ final class Request
         $this->request = new ParametersBag($request);
         $this->files = new ParametersBag($files);
         $this->server = new ParametersBag($server);
+
+        $this->path = explode("?", $this->server->get('REQUEST_URI'))[0];
     }
 
     public function query(): ParametersBag
@@ -46,6 +49,6 @@ final class Request
 
     public function getPath(): string
     {
-        return $this->server->get('REQUEST_URI');
+        return $this->path;
     }
 }

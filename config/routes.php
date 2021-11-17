@@ -95,14 +95,32 @@ return [
     ],
     [
         'path' => function (string $path) {
-            return $path === ('/posts');
+
+            return 1 === preg_match("#^/posts/[0-9]+$#", $path);
         },
         'methods' => ['GET'],
         'handler' => function (\App\Service\Container $container) {
             /** @var \App\Service\Http\Request $request */
             $request = $container->get('request');
-            $id = 4; // Faire des trucs avec la requete
-            $handler = $container->get("with_id_controller");
+            $path_array = explode("/", $request->getPath());
+            $id = end($path_array);
+            $handler = $container->get("post_controller_show");
+
+            return $handler($id);
+        }
+    ],
+    [
+        'path' => function (string $path) {
+
+            return 1 === preg_match("#^/admin/posts/edit/[0-9]+$#", $path);
+        },
+        'methods' => ['GET'],
+        'handler' => function (\App\Service\Container $container) {
+            /** @var \App\Service\Http\Request $request */
+            $request = $container->get('request');
+            $path_array = explode("/", $request->getPath());
+            $id = end($path_array);
+            $handler = $container->get("admin_post_controller_edit");
 
             return $handler($id);
         }

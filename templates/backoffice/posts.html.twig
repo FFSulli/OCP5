@@ -21,12 +21,12 @@
                 {% for post in posts %}
                     <tr class="hover:bg-gray-50 rounded-xl transition ease-in-out duration-500">
                         <td class="py-8 px-4">{{ post.id }}</td>
-                        <td class="text-left px-4"><a href="" class="hover:text-indigo-500 transition ease-in-out duration-500">{{ post.title }}</a></td>
-                        <td class="px-4">{{ post.createdAt | date("d/m/Y \\à H:i") }}</td>
-                        <td class="px-4">{{ post.updatedAt | date("d/m/Y \\à H:i") }}</td>
+                        <td class="text-left px-4"><a href="/posts/{{ post.id }}" class="hover:text-indigo-500 transition ease-in-out duration-500">{{ post.title }}</a></td>
+                        <td class="px-4">{{ post.createdAt | date("d/m/Y \\à H:i", "Europe/Paris") }}</td>
+                        <td class="px-4">{{ post.updatedAt | date("d/m/Y \\à H:i", "Europe/Paris") }}</td>
                         <td class="px-4">{{ author.firstName }} {{ author.lastName }}</td>
                         <td class="flex flex-col items-center mx-auto space-y-2 py-8 px-4">
-                            <a href="/?action=admin_edit_post&id={{ post.id }}" aria-label="Editer" class="w-48 flex flex-row items-center bg-indigo-400 hover:bg-indigo-500 text-white p-2 rounded transition ease-in-out duration-300">
+                            <a href="/admin/posts/edit/{{ post.id }}" aria-label="Editer" class="w-48 flex flex-row items-center bg-indigo-400 hover:bg-indigo-500 text-white p-2 rounded transition ease-in-out duration-300">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" class="mr-2">
                                     <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" d="M1 15.5h14"/>
                                     <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" d="m10.5.5 3 3L5 12l-4 1 1-4zM8.5 2.5l3 3"/>

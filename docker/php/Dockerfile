@@ -12,6 +12,11 @@ RUN apt install -yqq \
     libpq-dev \
     wget
 
+RUN apt-get -y update \
+&& apt-get install -y zlib1g-dev libicu-dev g++ \
+&& docker-php-ext-configure intl \
+&& docker-php-ext-install intl
+
 # Install/enable PHP extensions through docker-php-ext-install helper function
 RUN docker-php-ext-install \
     opcache \

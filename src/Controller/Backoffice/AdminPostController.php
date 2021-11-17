@@ -26,7 +26,8 @@ class AdminPostController
     private Authentication $authentication;
     private Csrf $csrf;
 
-    public function __construct(Request $request,
+    public function __construct(
+        Request $request,
         View $view,
         Session $session,
         PostRepository $postRepository,
@@ -34,8 +35,7 @@ class AdminPostController
         PostFormValidator $postFormValidator,
         Authentication $authentication,
         Csrf $csrf
-    )
-    {
+    ) {
         $this->request = $request;
         $this->view = $view;
         $this->session = $session;
@@ -50,7 +50,6 @@ class AdminPostController
     {
 
         if ($this->authentication->isAdmin() || $this->authentication->isEditor()) {
-
             $posts = $this->postRepository->findAll();
 
             foreach ($posts as $post) {
@@ -61,15 +60,14 @@ class AdminPostController
             $data = $this->request->request()->all();
 
 
-            if ($this->request->getMethod() === 'POST' && $this->csrf->checkToken($data['csrfToken'])) {
-
+            if ($this->request->getMethod() === 'POST') {
                 if ($this->authentication->isAdmin()) {
-                    if ($this->postRepository->find($data['deletePost']) !== null) {
+                    if ($this->postRepository->find($data['deletePost']) !== null && $this->csrf->checkToken($data['csrfToken'])) {
                         $post = $this->postRepository->find($data['deletePost']);
                         $this->postRepository->delete($post);
 
                         $this->session->addFlashes('success', 'Article supprimé.');
-                        return new RedirectResponse('index.php?action=admin_posts', 302);
+                        return new RedirectResponse('/admin/posts', 302);
                     }
                 }
             }
@@ -87,22 +85,18 @@ class AdminPostController
         }
 
         return new RedirectResponse('index.php', 403);
-
     }
 
     public function addPostAction()
     {
         if ($this->authentication->isAdmin() || $this->authentication->isEditor()) {
-            $this->csrf->generateToken();
 
             $user = $this->authentication->getAuthenticatedUser();
 
             $data = $this->request->request()->all();
 
-            if ($this->request->getMethod() === 'POST' && $this->csrf->checkToken($data['csrfToken'])) {
-
-                if ($this->postFormValidator->isValid($data)) {
-
+            if ($this->request->getMethod() === 'POST') {
+                if ($this->postFormValidator->isValid($data) && $this->csrf->checkToken($data['csrfToken'])) {
                     $post = new Post();
 
                     $post
@@ -112,16 +106,16 @@ class AdminPostController
                         ->setUserFk($user->getId());
 
                     $this->postRepository->create($post);
-                    $this->csrf->deleteToken();
 
                     $this->session->addFlashes('success', 'Article enregistré.');
-                    return new RedirectResponse('index.php?action=admin_posts', 302);
-
+                    return new RedirectResponse('/admin/posts', 302);
                 } else {
                     $oldRequest = $this->request->request()->all();
                     $this->session->addFlashes('error', "Le formulaire n'est pas valide, merci de vérifier les informations renseignées.");
                 }
             }
+
+            $this->csrf->generateToken();
 
             return new Response($this->view->render([
                 'template' => '../backoffice/add_post',
@@ -132,13 +126,12 @@ class AdminPostController
             ]));
         }
 
-        return new RedirectResponse('index.php', 403);
+        return new RedirectResponse('/', 403);
     }
 
     public function editPostAction(int $id)
     {
         if ($this->authentication->isAdmin() || $this->authentication->isEditor()) {
-            $this->csrf->generateToken();
 
             $user = $this->authentication->getAuthenticatedUser();
             $post = $this->postRepository->find($id);
@@ -146,10 +139,8 @@ class AdminPostController
 
             $data = $this->request->request()->all();
 
-            if ($this->request->getMethod() === 'POST' && $this->csrf->checkToken($data['csrfToken'])) {
-
-                if ($this->postFormValidator->isValid($data)) {
-
+            if ($this->request->getMethod() === 'POST') {
+                if ($this->postFormValidator->isValid($data) && $this->csrf->checkToken($data['csrfToken'])) {
                     if ($user->getId() !== $data['author']) {
                         $user = $this->userRepository->find($data['author']);
                     }
@@ -162,16 +153,16 @@ class AdminPostController
                         ->setUserFk($user->getId());
 
                     $this->postRepository->update($post);
-                    $this->csrf->deleteToken();
 
                     $this->session->addFlashes('success', 'Article mis à jour.');
-                    return new RedirectResponse('index.php?action=admin_posts', 302);
-
+                    return new RedirectResponse('/admin/posts', 302);
                 } else {
                     $oldRequest = $this->request->request()->all();
                     $this->session->addFlashes('error', "Le formulaire n'est pas valide, merci de vérifier les informations renseignées.");
                 }
             }
+
+            $this->csrf->generateToken();
 
             return new Response($this->view->render([
                 'template' => '../backoffice/edit_post',
@@ -186,5 +177,4 @@ class AdminPostController
 
         return new RedirectResponse('index.php', 403);
     }
-
 }

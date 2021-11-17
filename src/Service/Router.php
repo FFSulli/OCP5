@@ -70,7 +70,6 @@ final class Router
 
         $controller = null;
 
-        $response = null;
         foreach ($routes as $route) {
             if ($route->match($this->request->getPath())) {
                 $handler = $route->getHandler();
@@ -81,37 +80,9 @@ final class Router
 
         if ($controller === null) {
             return new RedirectResponse('/', 404);
-    }
-
-        $action = $this->request->query()->has('action') ? $this->request->query()->get('action') : 'home';
-
-        // *** @Route http://localhost:8000/?action=post&id=5 ***
-        if ($action === 'post' && $this->request->query()->has('id')) {
-            $postRepo = new PostRepository($this->database);
-            $userRepo = new UserRepository($this->database);
-            $csrf = new Csrf($this->session);
-            $controller = new PostController($postRepo, $userRepo, $this->view, $this->session, $csrf);
-            $commentFormValidator = new CommentFormValidator($this->session);
-
-            $commentRepo = new CommentRepository($this->database);
-
-            return $controller->displayOneAction($this->request, (int) $this->request->query()->get('id'), $commentRepo, $commentFormValidator);
-
-        // *** @Route http://localhost:8000/?action=admin_edit_post&id=1 ***
-        } elseif ($action === 'admin_edit_post' && $this->request->query()->has('id')) {
-            $postRepo = new PostRepository($this->database);
-            $userRepo = new UserRepository($this->database);
-            $postFormValidator = new PostFormValidator($this->session);
-            $authentication = new Authentication($this->session, $userRepo);
-            $csrf = new Csrf($this->session);
-            $controller = new AdminPostController($this->request, $this->view, $this->session, $postRepo, $userRepo, $postFormValidator, $authentication, $csrf);
-
-            return $controller->editPostAction((int) $this->request->query()->get('id'));
-
-        } else {
-            return new RedirectResponse('/', 404);
         }
     }
+
 
     /**
      * @return Route[]

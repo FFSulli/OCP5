@@ -41,65 +41,60 @@ class AdminUserController
             if ($this->request->getMethod() === 'POST') {
                 if ($this->authentication->isAdmin()) {
                     if ($data['readerRole']) {
-                        if ($this->userRepository->find($data['readerRole']) !== null) {
+                        var_dump($data);
+                        die();
+                        if ($this->userRepository->find($data['readerRole']) !== null && $this->csrf->checkToken($data['csrfToken'])) {
                             $user = $this->userRepository->find((int) $data['readerRole']);
-                            if ($this->csrf->checkToken($data['csrfToken'])) {
-                                $this->csrf->deleteToken();
-                            }
+
                             $user->setRoleFk(1);
                             $this->userRepository->update($user);
 
                             $this->session->addFlashes('success', 'L\'utilisateur a désormais le rôle lecteur');
-                            return new RedirectResponse('index.php?action=admin_users', 302);
+                            return new RedirectResponse('/admin/users', 302);
                         }
                     }
                     if ($data['editorRole']) {
-                        if ($this->userRepository->find($data['editorRole']) !== null) {
+                        if ($this->userRepository->find($data['editorRole']) !== null && $this->csrf->checkToken($data['csrfToken'])) {
                             $user = $this->userRepository->find((int) $data['editorRole']);
-                            if ($this->csrf->checkToken($data['csrfToken'])) {
-                                $this->csrf->deleteToken();
-                            }
+
                             $user->setRoleFk(2);
                             $this->userRepository->update($user);
 
                             $this->session->addFlashes('success', 'L\'utilisateur a désormais le rôle éditeur');
-                            return new RedirectResponse('index.php?action=admin_users', 302);
+                            return new RedirectResponse('/admin/users', 302);
                         }
                     }
                     if ($data['adminRole']) {
-                        if ($this->userRepository->find($data['adminRole']) !== null) {
+                        if ($this->userRepository->find($data['adminRole']) !== null && $this->csrf->checkToken($data['csrfToken'])) {
                             $user = $this->userRepository->find((int) $data['adminRole']);
-                            if ($this->csrf->checkToken($data['csrfToken'])) {
-                                $this->csrf->deleteToken();
-                            }
+
                             $user->setRoleFk(3);
                             $this->userRepository->update($user);
 
                             $this->session->addFlashes('success', 'L\'utilisateur a désormais le rôle admin');
-                            return new RedirectResponse('index.php?action=admin_users', 302);
+                            return new RedirectResponse('/admin/users', 302);
                         }
                     }
                     if ($data['deleteUser']) {
-                        if ($this->userRepository->find($data['deleteUser']) !== null) {
+                        if ($this->userRepository->find($data['deleteUser']) !== null && $this->csrf->checkToken($data['csrfToken'])) {
                             $user = $this->userRepository->find((int) $data['deleteUser']);
-                            if ($this->csrf->checkToken($data['csrfToken'])) {
-                                $this->csrf->deleteToken();
-                            }
+
                             $this->userRepository->delete($user);
 
                             $this->session->addFlashes('success', 'L\'utilisateur a été supprimé');
-                            return new RedirectResponse('index.php?action=admin_users', 302);
+                            return new RedirectResponse('/admin/users', 302);
                         }
                     }
                 }
-
             }
+
+            $this->csrf->generateToken();
 
             return new Response($this->view->render([
                 'template' => '../backoffice/users',
                 'data' => [
                     'users' => $users,
-                    'csrfToken'=> $this->session->get('csrfToken')
+                    'csrfToken' => $this->session->get('csrfToken')
                 ]
             ]));
         }

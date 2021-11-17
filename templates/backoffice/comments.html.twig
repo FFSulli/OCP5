@@ -19,8 +19,8 @@
             {% for comment in comments %}
                 <tr class="hover:bg-gray-50 rounded-xl transition ease-in-out duration-500">
                     <td class="py-8 px-4">{{ comment.id }}</td>
-                    <td class="py-8 px-4"><a href="?action=post&id={{ comment.postFk }}">{{ comment.postFk }}</a></td>
-                    <td class="text-left px-4"><a href="" class="hover:text-indigo-500 transition ease-in-out duration-500">{{ comment.content }}</a></td>
+                    <td class="py-8 px-4"><a href="/posts/{{ comment.postFk }}">{{ comment.postFk }}</a></td>
+                    <td class="text-left px-4">{{ comment.content }}</td>
                     <td class="py-8 px-4">
                         {% if comment.verified == 1 %}
                             <span class="block w-32 bg-green-500 py-2 px-4 rounded text-white mx-auto">Validé</span>
