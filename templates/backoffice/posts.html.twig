@@ -39,11 +39,11 @@
                                 </svg>
                                 <span>Editer</span>
                             </a>
-                            <form method="post" name="deletePostForm" id="deletePostForm">
+                            <form method="post" name="deletePostForm{{ post.id }}" id="deletePostForm">
                                 <input name="deletePost" type="hidden" value="{{ post.id }}">
                                 <input name="csrfToken" type="hidden" value="{{ csrfToken }}">
                             </form>
-                            <button type="submit" form="deletePostForm" name="deletePostFormSubmit" class="w-48 flex items-center bg-red-400 hover:bg-red-500 text-white p-2 rounded transition ease-in-out duration-300">
+                            <button type="submit" form="deletePostForm{{ post.id }}" name="deletePostFormSubmit" class="w-48 flex items-center bg-red-400 hover:bg-red-500 text-white p-2 rounded transition ease-in-out duration-300">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" class="mr-2">
                                     <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" data-cap="butt" d="m13.5 2.5-11 11M2.5 2.5l11 11"/>
                                 </svg>

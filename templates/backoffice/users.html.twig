@@ -38,7 +38,7 @@
                     <td class="px-4">{{ user.email }}</td>
                     <td class="flex flex-col items-center text-center space-y-2 py-8 px-4">
                         {% if (user.roleFk != 1) %}
-                            <form method="post" name="readerRoleForm" id="readerRoleForm">
+                            <form method="post" name="readerRoleForm{{ user.id }}" id="readerRoleForm{{ user.id }}">
                                 <input name="readerRole" type="hidden" value="{{ user.id }}">
                                 <input name="csrfToken" type="hidden" value="{{ csrfToken }}">
                             </form>
@@ -52,11 +52,11 @@
                             </button>
                         {% endif %}
                         {% if (user.roleFk != 2) %}
-                            <form method="post" name="editorRoleForm" id="editorRoleForm">
+                            <form method="post" name="editorRoleForm{{ user.id }}" id="editorRoleForm{{ user.id }}">
                                 <input name="editorRole" type="hidden" value="{{ user.id }}">
                                 <input name="csrfToken" type="hidden" value="{{ csrfToken }}">
                             </form>
-                            <button type="submit" form="editorRoleForm" class="flex w-40 items-center bg-yellow-400 hover:bg-yellow-500 text-white p-2 rounded transition ease-in-out duration-300">
+                            <button type="submit" form="editorRoleForm{{ user.id }}" class="flex w-40 items-center bg-yellow-400 hover:bg-yellow-500 text-white p-2 rounded transition ease-in-out duration-300">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" class="mr-2">
                                     <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" d="M6.5 15.5h-6V.5h13v5M3.5 3.5h7M3.5 6.5h4M3.5 9.5h2M3.5 12.5h2"/>
                                     <circle fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" cx="11.5" cy="11.5" r="4" data-color="color-2"/>
@@ -66,11 +66,11 @@
                             </button>
                         {% endif %}
                         {% if (user.roleFk != 3)  %}
-                            <form method="post" name="adminRoleForm" id="adminRoleForm">
+                            <form method="post" name="adminRoleForm{{ user.id }}" id="adminRoleForm{{ user.id }}">
                                 <input name="adminRole" type="hidden" value="{{ user.id }}">
                                 <input name="csrfToken" type="hidden" value="{{ csrfToken }}">
                             </form>
-                            <button type="submit" form="adminRoleForm" class="flex w-40 items-center bg-indigo-400 hover:bg-indigo-500 text-white p-2 rounded transition ease-in-out duration-300">
+                            <button type="submit" form="adminRoleForm{{ user.id }}" class="flex w-40 items-center bg-indigo-400 hover:bg-indigo-500 text-white p-2 rounded transition ease-in-out duration-300">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" class="mr-2">
                                     <circle cx="5" cy="7" r="1" fill="currentColor" data-cap="butt" data-color="color-2" data-stroke="none"/>
                                     <path d="M5 9a2 2 0 0 1 2 2H3a2 2 0 0 1 2-2Z" fill="currentColor" data-cap="butt" data-color="color-2" data-stroke="none"/>
@@ -80,11 +80,11 @@
                                 <span>Passer Admin</span>
                             </button>
                         {% endif %}
-                        <form method="post" name="deleteUserForm" id="deleteUserForm">
+                        <form method="post" name="deleteUserForm{{ user.id }}" id="deleteUserForm{{ user.id }}">
                             <input name="deleteUser" type="hidden" value="{{ user.id }}">
                             <input name="csrfToken" type="hidden" value="{{ csrfToken }}">
                         </form>
-                        <button type="submit" form="deleteUserForm" class="flex w-40 items-center bg-red-400 hover:bg-red-500 text-white p-2 rounded transition ease-in-out duration-300">
+                        <button type="submit" form="deleteUserForm{{ user.id }}" class="flex w-40 items-center bg-red-400 hover:bg-red-500 text-white p-2 rounded transition ease-in-out duration-300">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" class="mr-2">
                                 <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" data-cap="butt" d="m13.5 2.5-11 11M2.5 2.5l11 11"/>
                             </svg>
