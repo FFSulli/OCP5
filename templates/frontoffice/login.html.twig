@@ -11,10 +11,10 @@
 {% block content %}
     <section class="my-16">
         <h2 class="text-center text-2xl sm:text-4xl font-bold text-indigo-500 dark:text-green-400 py-8">Connexion à mon compte</h2>
-        <form method="post" class="flex flex-col space-y-3 w-1/2 my-8 mx-auto px-16" id="loginForm" name="loginForm">
+        <form method="post" class="w-full lg:w-1/2 flex-col space-y-3 w-1/2 my-8 mx-auto px-16" id="loginForm" name="loginForm">
             <input name="csrfToken" type="hidden" value="{{ csrfToken }}">
-            <label for="" class="w-full">
-                <input type="text" name="email" class="lg:w-full bg-gray-50 dark:bg-gray-400 dark:placeholder-gray-200 rounded focus:ring focus:ring-indigo-500 dark:focus:ring-green-400 focus:outline-none transition ease-in-out duration-200 p-4" placeholder="E-mail">
+            <label class="w-full">Adresse e-mail
+                <input type="text" name="email" class="w-full bg-gray-50 dark:bg-gray-400 dark:placeholder-gray-200 rounded focus:ring focus:ring-indigo-500 dark:focus:ring-green-400 focus:outline-none transition ease-in-out duration-200 p-4" placeholder="E-mail">
                 {% for key, message in flashes %}
                     {% if key == 'errorEmailIsNull' %}
                         <span class="text-red-400">{{ message }}</span>
@@ -27,8 +27,8 @@
                     {% endif %}
                 {% endfor %}
             </label>
-            <label for="" class="w-full">
-                <input type="password" name="password" class="lg:w-full bg-gray-50 dark:bg-gray-400 dark:placeholder-gray-200 rounded focus:ring focus:ring-indigo-500 dark:focus:ring-green-400 focus:outline-none transition ease-in-out duration-200 p-4" placeholder="Mot de passe">
+            <label class="w-full">Mot de passe
+                <input type="password" name="password" class="w-full bg-gray-50 dark:bg-gray-400 dark:placeholder-gray-200 rounded focus:ring focus:ring-indigo-500 dark:focus:ring-green-400 focus:outline-none transition ease-in-out duration-200 p-4" placeholder="Mot de passe">
                 {% for key, message in flashes %}
                     {% if key == 'errorPasswordIsNull' %}
                         <span class="text-red-400">{{ message }}</span>
@@ -47,7 +47,7 @@
             </span>
         </button>
         <div class="flex justify-center py-4">
-            <a href="/register" class="hover:text-indigo-500 dark:hover:text-green-400 transition ease-in-out duration-500">Vous n'avez pas de compte ? Cliquez ici pour vous inscrire</a>
+            <a href="/register" class="text-center hover:text-indigo-500 dark:hover:text-green-400 transition ease-in-out duration-500">Vous n'avez pas de compte ? Cliquez ici pour vous inscrire</a>
         </div>
     </section>
 {% endblock %}

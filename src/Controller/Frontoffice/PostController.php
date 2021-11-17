@@ -50,6 +50,7 @@ final class PostController
             "post_fk" => $postId,
             "verified" => 1
         ]);
+        $author = $this->userRepository->findOneBy(["id" => $post->getUserFk()]);
 
         foreach ($comments as $comment) {
             /** @var Comment $comment */
@@ -83,6 +84,7 @@ final class PostController
                 'data' => [
                     'post' => $post,
                     'user' => $user,
+                    'author' => $author,
                     'commentor' => $commentor,
                     'comments' => $comments,
                     'connected' => $this->session->get('user'),
