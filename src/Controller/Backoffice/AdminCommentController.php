@@ -50,36 +50,30 @@ class AdminCommentController
         $data = $this->request->request()->all();
 
         if ($this->request->getMethod() === 'POST') {
-
             if ($this->authentication->isAdmin()) {
                 if ($data['allowComment']) {
-                    if ($this->commentRepository->find($data['allowComment']) !== null) {
+                    if ($this->commentRepository->find($data['allowComment']) !== null && $this->csrf->checkToken($data['csrfToken'])) {
                         $comment = $this->commentRepository->find((int) $data['allowComment']);
-                        if ($this->csrf->checkToken($data['csrfToken'])) {
-                            $this->csrf->deleteToken();
-                        }
                         $this->commentRepository->allowComment($comment);
 
                         $this->session->addFlashes('success', 'Commentaire validé.');
-                        return new RedirectResponse('index.php?action=admin_comments', 302);
+                        return new RedirectResponse('/admin/comments', 302);
                     }
                 }
                 if ($data['deleteComment']) {
-                    if ($this->commentRepository->find($data['deleteComment']) !== null) {
-
+                    if ($this->commentRepository->find($data['deleteComment']) !== null && $this->csrf->checkToken($data['csrfToken'])) {
                         $comment = $this->commentRepository->find((int) $data['deleteComment']);
 
-                        if ($this->csrf->checkToken($data['csrfToken'])) {
-                            $this->csrf->deleteToken();
-                        }
                         $this->commentRepository->delete($comment);
 
                         $this->session->addFlashes('success', 'Commentaire supprimé.');
-                        return new RedirectResponse('index.php?action=admin_comments', 302);
+                        return new RedirectResponse('/admin/comments', 302);
                     }
                 }
             }
         }
+
+        $this->csrf->generateToken();
 
         return new Response($this->view->render([
             'template' => '../backoffice/comments',
