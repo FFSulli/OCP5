@@ -39,7 +39,7 @@
                                 </svg>
                                 <span>Editer</span>
                             </a>
-                            <form method="post" name="deletePostForm{{ post.id }}" id="deletePostForm">
+                            <form method="post" name="deletePostForm{{ post.id }}" id="deletePostForm{{ post.id }}">
                                 <input name="deletePost" type="hidden" value="{{ post.id }}">
                                 <input name="csrfToken" type="hidden" value="{{ csrfToken }}">
                             </form>
