@@ -4,31 +4,12 @@ declare(strict_types=1);
 
 namespace  App\Service;
 
-use App\Controller\Backoffice\AdminCommentController;
-use App\Controller\Backoffice\AdminHomeController;
-use App\Controller\Backoffice\AdminPostController;
-use App\Controller\Backoffice\AdminUserController;
-use App\Controller\Frontoffice\HomeController;
-use App\Controller\Frontoffice\PostController;
-use App\Controller\Frontoffice\UserController;
-use App\Model\Entity\User;
-use App\Model\Repository\PostRepository;
-use App\Model\Repository\CommentRepository;
-use App\Model\Repository\UserRepository;
-use App\Service\CSRF\Csrf;
 use App\Service\Database\MySQLDB;
 use App\Service\Email\EmailService;
-use App\Service\Form\PostFormValidator;
-use App\Service\Form\CommentFormValidator;
-use App\Service\Form\ContactFormValidator;
-use App\Service\Form\LoginFormValidator;
-use App\Service\Form\RegisterFormValidator;
-use App\Service\Authentication\Authentication;
 use App\Service\Http\RedirectResponse;
 use App\Service\Http\Request;
 use App\Service\Http\Response;
 use App\Service\Http\Session\Session;
-use App\Service\Pagination\PaginationService;
 use App\View\View;
 use App\Service\DotEnv\DotEnv;
 

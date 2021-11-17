@@ -15,7 +15,6 @@ class DotEnv
         if (!file_exists($this->path)) {
             throw new \InvalidArgumentException(sprintf('%s does not exist', $this->path));
         }
-
     }
 
     public function load(): void
@@ -54,6 +53,5 @@ class DotEnv
         }
 
         return $envKey;
-
     }
 }

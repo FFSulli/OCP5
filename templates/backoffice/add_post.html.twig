@@ -3,7 +3,7 @@
 {% block content %}
     <section class="mt-8 p-4">
         <h1 class="md:text-4xl sm:text-6xl font-bold mb-8">Ajouter un article</h1>
-        <form action="/?action=admin_add_post" class="flex flex-col space-y-4 my-8" method="post" name="addPostForm" id="addPostForm">
+        <form class="flex flex-col space-y-4 my-8" method="post" name="addPostForm" id="addPostForm">
             <input name="csrfToken" type="hidden" value="{{ csrfToken }}">
             <label class="w-full"> Titre de l'article
                 <input type="text" name="title" {% if request.title %} value="{{ request.title }}"{% endif %} autocomplete="off" class="lg:w-full bg-gray-50 rounded focus:ring focus:ring-indigo-500 focus:outline-none transition ease-in-out duration-200 p-4" placeholder="Titre de l'article">

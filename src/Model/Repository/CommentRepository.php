@@ -91,5 +91,4 @@ final class CommentRepository extends BaseRepository implements EntityRepository
 
         return $prepared->execute();
     }
-
 }

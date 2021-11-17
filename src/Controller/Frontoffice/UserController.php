@@ -87,7 +87,6 @@ final class UserController
         $data = $request->request()->all();
 
         if ($request->getMethod() === 'POST') {
-
             if ($registerFormValidator->isValid($data) && $this->csrf->checkToken($data['csrfToken'])) {
                 $password = password_hash($data['password'], PASSWORD_BCRYPT);
                 $user = new User();
@@ -100,7 +99,7 @@ final class UserController
                 $this->userRepository->create($user);
 
                 $mailer = $emailService->prepareEmail();
-                $message = $emailService->createMessage('Sullivan Berger - Nouveau compte' ,$data['email'], 'Merci de vous êtes inscrit sur sullivan-berger.fr.');
+                $message = $emailService->createMessage('Sullivan Berger - Nouveau compte', $data['email'], 'Merci de vous êtes inscrit sur sullivan-berger.fr.');
                 $mailer->send($message);
                 $this->session->addFlashes('success', 'Vous êtes désormais inscrit, bienvenue !');
 
@@ -109,7 +108,6 @@ final class UserController
                 $oldRequest = $request->request()->all();
                 $this->session->addFlashes('error', "Le formulaire n'est pas valide, merci de vérifier les informations renseignées.");
             }
-
         }
 
         $this->csrf->generateToken();

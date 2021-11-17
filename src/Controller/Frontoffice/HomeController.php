@@ -37,10 +37,9 @@ class HomeController
         $data = $request->request()->all();
 
         if ($request->getMethod() === 'POST') {
-
             if ($this->contactFormValidator->isValid($data) && $this->csrf->checkToken($data['csrfToken'])) {
                 $mailer = $emailService->prepareEmail();
-                $message = $emailService->createMessage('Sullivan Berger - Demande de contact' ,$data['email'], $data['message']);
+                $message = $emailService->createMessage('Sullivan Berger - Demande de contact', $data['email'], $data['message']);
                 $mailer->send($message);
 
                 $this->session->addFlashes('success', 'Merci pour votre message, je vous répondrai dans les meilleurs délais.');

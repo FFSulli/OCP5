@@ -141,5 +141,4 @@ final class Post
         $this->user_fk = $user_fk;
         return $this;
     }
-
 }

@@ -28,7 +28,6 @@ class ContactFormValidator extends FormValidatorService implements FormInterface
         if ($this->isEmpty($form['lastName'])) {
             $this->session->addFlashes('errorLastNameIsNull', 'Le champ nom ne peut pas être vide');
             $isValid = false;
-
         }
 
         if ($this->isEmpty($form['firstName'])) {
@@ -39,25 +38,21 @@ class ContactFormValidator extends FormValidatorService implements FormInterface
         if ($this->isEmpty($form['email'])) {
             $this->session->addFlashes('errorEmailIsNull', 'Le champ email ne peut pas être vide');
             $isValid = false;
-
         }
 
         if ($this->isEmpty($form['message'])) {
             $this->session->addFlashes('errorMessageIsNull', 'Le champ message ne peut pas être vide');
             $isValid = false;
-
         }
 
         if (! $this->isEmpty($form['firstName']) && ! $this->isAplhabeticalOnly($form['firstName'])) {
             $this->session->addFlashes('errorFirstNameIsNotAlphabetical', 'Le champ prénom ne doit contenir que des lettres');
             $isValid = false;
-
         }
 
         if (! $this->isEmpty($form['lastName']) && ! $this->isAplhabeticalOnly($form['lastName'])) {
             $this->session->addFlashes('errorLastNameIsNotAlphabetical', 'Le champ nom ne doit contenir que des lettres');
             $isValid = false;
-
         }
 
         if (! $this->isEmpty($form['email']) && ! $this->isEmail($form['email'])) {

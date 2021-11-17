@@ -20,7 +20,6 @@ class PaginationService
         $this->database = $database;
         $this->postsPerPage = $postsPerPage;
         $this->postRepository = $postRepository;
-
     }
 
     /**
@@ -51,7 +50,6 @@ class PaginationService
         }
 
         return (int) ceil($postsCount / $this->postsPerPage);
-
     }
 
     public function displayPages(): array
@@ -79,7 +77,5 @@ class PaginationService
         $start = ($currentPage - 1) * $this->postsPerPage;
 
         return $this->postRepository->findBy([], ["created_at" => "DESC"], $this->postsPerPage, $start);
-
     }
-
 }

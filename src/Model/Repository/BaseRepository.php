@@ -40,10 +40,8 @@ abstract class BaseRepository
         $offsetClause = null !== $offset ? ' OFFSET ' . $offset : '';
 
         return [
-            'statement' => $this->database->prepare('SELECT * FROM '. $table . $whereClause . $orderByClause . $limitClause . $offsetClause),
+            'statement' => $this->database->prepare('SELECT * FROM ' . $table . $whereClause . $orderByClause . $limitClause . $offsetClause),
             'binds' => $binds
         ];
     }
 }
-
-

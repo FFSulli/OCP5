@@ -9,7 +9,6 @@ use App\Service\Database\MySQLDB;
 use App\Model\Repository\Interfaces\EntityRepositoryInterface;
 use App\Service\DotEnv\DotEnvService;
 
-
 final class PostRepository extends BaseRepository implements EntityRepositoryInterface
 {
 
@@ -99,6 +98,5 @@ final class PostRepository extends BaseRepository implements EntityRepositoryInt
         $result = $this->database->execute($prepared, $binds);
 
         return (int) $result['postsCount'];
-
     }
 }

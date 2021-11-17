@@ -14,7 +14,8 @@ class Container
      * Make constructor private for Singleton
      */
     private function __construct()
-    {}
+    {
+    }
 
     /**
      * Access to static prop

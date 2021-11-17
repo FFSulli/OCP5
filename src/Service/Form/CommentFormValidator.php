@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Service\Form;
 
-
 use App\Service\Http\Session\Session;
 
 class CommentFormValidator extends FormValidatorService implements FormInterface

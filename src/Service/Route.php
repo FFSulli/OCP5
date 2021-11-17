@@ -24,7 +24,6 @@ class Route
      */
     public function getPath(): callable
     {
-        dump($this->path);
         return $this->path;
     }
 
@@ -76,7 +75,6 @@ class Route
     {
         $this->handler = $handler;
         return $this;
-
     }
 
     public function match(string $path): bool

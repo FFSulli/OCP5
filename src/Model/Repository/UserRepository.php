@@ -80,5 +80,4 @@ final class UserRepository extends BaseRepository implements EntityRepositoryInt
 
         return $prepared->execute();
     }
-
 }
