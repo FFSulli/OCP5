@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : oc_blog_db
--- Généré le : mar. 19 oct. 2021 à 12:52
+-- Généré le : dim. 21 nov. 2021 à 16:52
 -- Version du serveur : 10.5.9-MariaDB-1:10.5.9+maria~focal
 -- Version de PHP : 7.4.23
 
@@ -41,7 +41,9 @@ CREATE TABLE `comments` (
 --
 
 INSERT INTO `comments` (`id`, `content`, `created_at`, `verified`, `user_fk`, `post_fk`) VALUES
-(21, 'fgdfgdfgfdgfdg', '2021-10-13 15:57:08', 0, 8, 15);
+(43, 'Test commentaire 1', '2021-11-21 16:51:11', 1, 19, 30),
+(44, 'Test commentaire 2', '2021-11-21 16:51:23', 1, 19, 31),
+(45, 'Test commentaire 3', '2021-11-21 16:51:34', 1, 19, 32);
 
 -- --------------------------------------------------------
 
@@ -64,10 +66,9 @@ CREATE TABLE `posts` (
 --
 
 INSERT INTO `posts` (`id`, `title`, `excerpt`, `content`, `created_at`, `updated_at`, `user_fk`) VALUES
-(15, 'nvbnvbn', 'bvnvbnbvn', 'bvnvbnvbnvbn', '2021-10-12 17:29:17', NULL, 8),
-(16, 'gfhfghgf', 'gfhfghfg', 'fghfghfgh', '2021-10-12 17:37:19', NULL, 8),
-(17, 'dsfsdfggjhhdfg', 'hgjghjhgfdhfghdfdgfdgdfgfdgfdgfdg', 'fgjdhdfgjhgfhfgdhgfdh', '2021-10-12 18:01:03', '2021-10-12 18:01:46', 8),
-(18, 'Test article', 'Blablabla', 'dsfsdfdsfsdf', '2021-10-12 18:02:32', NULL, 8);
+(30, 'Or a guy who burns down a bar for the insurance money!', 'Stop it, stop it. It\'s fine. I will \'destroy\' you! Check it out, y\'all. Everyone who was invited is here. I\'ll get my kit! I videotape every customer that comes in here, so that I may blackmail them later.', 'And yet you haven\'t said what I told you to say! How can any of us trust you? It\'s just like the story of the grasshopper and the octopus. All year long, the grasshopper kept burying acorns for winter, while the octopus mooched off his girlfriend and watched TV. But then the winter came, and the grasshopper died, and the octopus ate all his acorns. Also he got a race car. Is any of this getting through to you?\r\n\r\nNo, of course not. It was… uh… porno. Yeah, that\'s it. Oh, you\'re a dollar naughtier than most. Ok, we\'ll go deliver this crate like professionals, and then we\'ll go ride the bumper cars.\r\n\r\nHey, tell me something. You\'ve got all this money. How come you always dress like you\'re doing your laundry? Daddy Bender, we\'re hungry. Why am I sticky and naked? Did I miss something fun? You can crush me but you can\'t crush my spirit!\r\n\r\nYou\'re going back for the Countess, aren\'t you? No! Don\'t jump! You\'ve killed me! Oh, you\'ve killed me! Goodbye, friends. I never thought I\'d die like this. But I always really hoped. Who said that? SURE you can die! You want to die?!', '2021-11-21 16:48:34', NULL, 20),
+(31, 'But, like most politicians, he promised more than he could deliver.', 'Shut up and get to the point! Who are those horrible orange men? Look, everyone wants to be like Germany, but do we really have the pure strength of \'will\'? I guess if you want children beaten, you have to do it yourself.', 'What kind of a father would I be if I said no? What\'s with you kids? Every other day it\'s food, food, food. Alright, I\'ll get you some stupid food. You won\'t have time for sleeping, soldier, not with all the bed making you\'ll be doing.\r\n\r\nUmmm…to eBay? Ow, my spirit! Hello, little man. I will destroy you! Maybe I love you so much I love you no matter who you are pretending to be. Bender, this is Fry\'s decision… and he made it wrong. So it\'s time for us to interfere in his life.\r\n\r\nNow what? Ah, the \'Breakfast Club\' soundtrack! I can\'t wait til I\'m old enough to feel ways about stuff! Come, Comrade Bender! We must take to the streets! Moving along… Or a guy who burns down a bar for the insurance money!', '2021-11-21 16:49:22', NULL, 20),
+(32, 'You, minion. Lift my arm. AFTER HIM!', 'Good man. Nixon\'s pro-war and pro-family. And from now on you\'re all named Bender Jr. Robot 1-X, save my friends! And Zoidberg! Oh dear! She\'s stuck in an infinite loop, and he\'s an idiot! Well, that\'s love for you.', 'And yet you haven\'t said what I told you to say! How can any of us trust you? It\'s just like the story of the grasshopper and the octopus. All year long, the grasshopper kept burying acorns for winter, while the octopus mooched off his girlfriend and watched TV. But then the winter came, and the grasshopper died, and the octopus ate all his acorns. Also he got a race car. Is any of this getting through to you?\r\n\r\nWell I\'da done better, but it\'s plum hard pleading a case while awaiting trial for that there incompetence. Perhaps, but perhaps your civilization is merely the sewer of an even greater society above you!\r\n\r\nHello Morbo, how\'s the family? Wow! A superpowers drug you can just rub onto your skin? You\'d think it would be something you\'d have to freebase. A true inspiration for the children. You lived before you met me?!\r\n\r\nYou wouldn\'t. Ask anyway! Negative, bossy meat creature! I was having the most wonderful dream. Except you were there, and you were there, and you were there! I haven\'t felt much of anything since my guinea pig died.', '2021-11-21 16:50:07', NULL, 20);
 
 -- --------------------------------------------------------
 
@@ -109,16 +110,9 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `first_name`, `last_name`, `email`, `password`, `role_fk`) VALUES
-(1, 'John', 'Dude', 'sulli@sullo.com', '$2y$12$0lJaWwoFf2n3NtGLLz4pdupBp3A6aM8ctrbtJUx34HAKR6AQ3nTT2', 1),
-(2, 'Pete', 'John', 'pete.john@gmail.com', '$2y$12$0lJaWwoFf2n3NtGLLz4pdupBp3A6aM8ctrbtJUx34HAKR6AQ3nTT2', 1),
-(3, 'Jane', 'Doe', 'jane.doe@gmail.com', '$2y$12$0lJaWwoFf2n3NtGLLz4pdupBp3A6aM8ctrbtJUx34HAKR6AQ3nTT2', 2),
-(4, 'John', 'Dude', 'john.dude@gmail.com', '$2y$12$0lJaWwoFf2n3NtGLLz4pdupBp3A6aM8ctrbtJUx34HAKR6AQ3nTT2', 2),
-(5, 'Sullivan', 'Berger', 'sullivan.berger@gmail.com', '$2y$12$0lJaWwoFf2n3NtGLLz4pdupBp3A6aM8ctrbtJUx34HAKR6AQ3nTT2', 3),
-(8, 'Sullivan', 'Berger', 'toto@toto.com', '$2y$10$GKlKALUkpNzHWet8HelsVusnDOgCcCqP3v76EvZAJDiT8/hRYhkKu', 3),
-(9, 'Sullivan', 'Berger', 'sullivan@sullivan.com', '$2y$10$//zo9dvWXDXcCa.wP395KOrDzbPwFJ0trUkUSYKEGt9RXCnOMTV4u', 1),
-(10, 'Sullivan', 'Berger', 'tutu@tutu.com', '$2y$10$GE07k9DxfaIZ3Z11Jl4K4e2UwUDvI6DGW5fzOJB01S0sBdFFVVdyO', 1),
-(11, 'Sullivan', 'Berger', 'sullivan.berger@tutu.com', '$2y$10$wHQwVVtLhwJNYeOsJs2tYeym.pBeHS6fliVaTPGTA5uC4NlHsnDDW', 1),
-(12, 'Sullivan', 'Berger', 'sullivan.berger@popo.com', '$2y$10$TPhbxezTBd8hIKNHX22MPuUbCyecOcJ.XoEeblliSZZvc9X1rNKY.', 1);
+(19, 'Sullivan', 'Admin', 'admin@sullivan.com', '$2y$10$gMtjD/6/sNvTaydvef6O8.iVK4jQ98idxtos/ImyUGrowQAty8eHu', 3),
+(20, 'Sullivan', 'Editor', 'editor@sullivan.com', '$2y$10$UZC0lCnH7zFjUC/v0gv7JuKxMmzNZe20aA5QvMoDQPoILj5l/7GO6', 2),
+(21, 'Sullivan', 'Reader', 'reader@sullivan.com', '$2y$10$eANbvWhbLQN51hH2RAYTGuSsU2oM34Zu8aXe8Xs6G5VQq7UzLs/ey', 1);
 
 --
 -- Index pour les tables déchargées
@@ -162,19 +156,19 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT pour la table `comments`
 --
 ALTER TABLE `comments`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=46;
 
 --
 -- AUTO_INCREMENT pour la table `posts`
 --
 ALTER TABLE `posts`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=33;
 
 --
 -- AUTO_INCREMENT pour la table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
 
 --
 -- Contraintes pour les tables déchargées
