@@ -45,6 +45,9 @@ class HomeController
 
         $data = $request->request()->all();
 
+        $oldRequest = null;
+        $authorizedUser = null;
+
         if ($request->getMethod() === 'POST') {
             if ($this->contactFormValidator->isValid($data) && $this->csrf->checkToken($data['csrfToken'])) {
                 $mailer = $emailService->prepareEmail();

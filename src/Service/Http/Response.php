@@ -57,7 +57,7 @@ class Response
                 exit("Unknown HTTP status code : " . $this->status);
         }
 
-        if ($this->headers['url']) {
+        if ($this->headers['url'] ?? false) {
             header('Location: ' . $this->headers['url'], true, $this->status);
             exit();
         }
