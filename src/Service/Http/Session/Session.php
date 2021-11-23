@@ -11,7 +11,9 @@ final class Session
     function __construct()
     {
 
-        session_start();
+        if (session_status() == PHP_SESSION_NONE) {
+            session_start();
+        }
         $this->sessionParamBag = new SessionParametersBag($_SESSION);
     }
 
